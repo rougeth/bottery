@@ -1,4 +1,6 @@
+import importlib
 import os
+import sys
 
 import click
 
@@ -29,12 +31,17 @@ def run(settings):
 
     here = os.getcwd()
 
-    if settings:
-        file_exists = os.path.isfile(settings)
-    else:
-        file_exists = os.path.isfile(os.path.join(here, 'batteries.py'))
+    if not settings:
+        settings = os.path.join(here, 'batteries.py')
 
-    if file_exists:
-        click.secho('batteries.py found!', fg='green')
-    else:
+    if not os.path.isfile(settings):
         click.secho('batteries.py not found!', fg='red')
+        return 1
+
+    project_path = os.path.dirname(settings)
+    sys.path.insert(0, os.path.dirname(project_path))
+
+    pkg = os.path.basename(project_path)
+    mod = importlib.import_module('{}.batteries'.format(pkg))
+
+    click.secho('batteries.py found!', fg='green')
