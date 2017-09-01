@@ -28,20 +28,11 @@ def run(settings):
     # .py vs init config file
     # Check how Lektor discover settings files
     # https://github.com/lektor/lektor/blob/master/lektor/project.py#L67-L79
+    from batteries.conf import settings
 
-    here = os.getcwd()
+    for plataform in settings.PLATAFORMS:
+        engine = importlib.import_module(plataform['ENGINE'])
+        engine.run(**plataform['OPTIONS'])
 
-    if not settings:
-        settings = os.path.join(here, 'batteries.py')
-
-    if not os.path.isfile(settings):
-        click.secho('batteries.py not found!', fg='red')
-        return 1
-
-    project_path = os.path.dirname(settings)
-    sys.path.insert(0, os.path.dirname(project_path))
-
-    pkg = os.path.basename(project_path)
-    mod = importlib.import_module('{}.batteries'.format(pkg))
 
     click.secho('batteries.py found!', fg='green')
