@@ -30,42 +30,27 @@ def startproject(name):
 
 
 @cli.command('run')
-@click.option('--settings')
-@click.argument('plataform', required=False)
-def run(settings, plataform):
+@click.option('--port', default=8000, type=int)
+def run(port):
+    '''
+    Run a web server to handle webhooks requests from all plataforms
+    configured on the project settings.
+    '''
     # .py vs init config file
     # Check how Lektor discover settings files
     # https://github.com/lektor/lektor/blob/master/lektor/project.py#L67-L79
+    from aiohttp import web
+
     from batteries.conf import settings
 
-    if not plataform:
-        return run_them_all(settings.PLATAFORMS)
+    app = web.Application()
 
-    plataform = settings.PLATAFORMS[plataform]
-    engine = importlib.import_module(plataform['ENGINE'])
-    engine.run(**plataform['OPTIONS'])
-    return 0
-
-
-
-def run_them_all(plataforms):
-    '''Run every plataform configured on settings.py'''
-
-    from subprocess import list2cmdline
-    from honcho.manager import Manager
-
-    daemons = []
+    plataforms = settings.PLATAFORMS.values()
     for plataform in plataforms:
-        daemons += [
-            (plataform, ['batteries', 'run', plataform]),
-        ]
+        mod = importlib.import_module(plataform['ENGINE'])
+        engine = mod.engine(**plataform['OPTIONS'])
+        engine.configure()
 
-    manager = Manager()
-    for name, cmd in daemons:
-        manager.add_process(
-            name,
-            list2cmdline(cmd),
-            quiet=False,
-        )
-    manager.loop()
-    sys.exit(manager.returncode)
+        app.router.add_route('POST', engine.path, engine.handler)
+
+    web.run_app(app, port=port)
