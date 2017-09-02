@@ -1,9 +1,9 @@
 import logging
-
-from aiohttp import web
+from datetime import datetime
 
 from batteries import plataform
 from batteries.conf import settings
+from batteries.message import Message
 
 import requests
 
@@ -14,10 +14,6 @@ logger = logging.getLogger('batteries.telegram')
 class TelegramEngine(plataform.BasePlataform):
     PLATAFORM = 'telegram'
     API_URL = 'https://api.telegram.org'
-
-    @property
-    def webhook_url(self):
-        return 'https://{}{}'.format(settings.HOSTNAME, self.path)
 
     def configure(self):
         '''Setup webhook on Telegram'''
@@ -32,15 +28,14 @@ class TelegramEngine(plataform.BasePlataform):
                         response.status_code,
                         response.json())
 
-    @property
-    def handler(self):
-        async def request_handler(request):
-            data = await request.json()
-            logger.info('[%s] new message from %s', self.PLATAFORM,
-                        data['message']['from']['username'])
-            return web.Response(text='')
-
-        return request_handler
+    def create_message(self, data):
+        return Message(
+            plataform=self.PLATAFORM,
+            text=data['message']['text'],
+            sender=data['message']['from'],
+            timestamp=data['message']['date'],
+            raw=data,
+        )
 
 
 engine = TelegramEngine

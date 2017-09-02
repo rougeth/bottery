@@ -58,6 +58,7 @@ def run(port, debug):
     # https://github.com/lektor/lektor/blob/master/lektor/project.py#L67-L79
     from aiohttp import web
 
+    from batteries import server
     from batteries.conf import settings
 
     _batteries = click.style('Batteries', fg='green')
@@ -66,17 +67,17 @@ def run(port, debug):
     app = web.Application()
 
     plataforms = settings.PLATAFORMS.values()
+    if not plataforms:
+        raise Exception('No plataforms configured')
+
     for plataform in plataforms:
         logger.debug('Importing engine %s', plataform['ENGINE'])
         mod = importlib.import_module(plataform['ENGINE'])
         engine = mod.engine(**plataform['OPTIONS'])
         logger.debug('[%s] Configuring', engine.PLATAFORM)
         engine.configure()
-
-        logger.debug('[%s] Adding handler to %s', engine.PLATAFORM,
-                     engine.path)
-        app.router.add_route('POST', engine.path, engine.handler)
         logger.debug('[%s] Ready', engine.PLATAFORM)
 
+    app.router.add_route('POST', server.WEBHOOK_PATH, server.handler)
     logger.debug('Running server')
     web.run_app(app, port=port, print=lambda x: None)
