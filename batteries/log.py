@@ -26,7 +26,7 @@ DEFAULT_LOGGING = {
         'batteries.server': {
             'class': 'batteries.log.ColoredFormatter',
             'format': '%(asctime)s %(message)s',
-            'datefmt': '%Y/%d/%m %H:%M:%S',
+            'datefmt': '%H:%M:%S',
         }
     },
     'loggers': {

@@ -36,7 +36,8 @@ class TelegramEngine(plataform.BasePlataform):
     def handler(self):
         async def request_handler(request):
             data = await request.json()
-            pprint(data)
+            logger.info('[%s] new message from %s', self.PLATAFORM,
+                        data['message']['from']['username'])
             return web.Response(text='')
 
         return request_handler
