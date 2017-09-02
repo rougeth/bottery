@@ -32,7 +32,7 @@ DEFAULT_LOGGING = {
     'loggers': {
         'batteries': {
             'handlers': ['console'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False,
         },
     },
