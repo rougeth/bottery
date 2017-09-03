@@ -33,7 +33,7 @@ class BasePlataform:
             data = await request.json()
             logger.debug('[%s] Building message', self.plataform)
             message = self.build_message(data)
-            logger.info('[%s] Message from %s', self.plataform, message.sender)
+            logger.info('[%s] Message from %s', self.plataform, message.user)
             return web.Response(text='batteries')
 
         return handler
