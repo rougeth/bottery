@@ -62,7 +62,7 @@ class TelegramEngine(plataform.BasePlataform):
         return Message(
             plataform=self.plataform,
             text=data['message']['text'],
-            sender=TelegramUser.from_telegram(data['message']['from']),
+            user=TelegramUser.from_telegram(data['message']['from']),
             timestamp=data['message']['date'],
             raw=data,
         )
