@@ -7,7 +7,8 @@ from batteries.conf import settings
 
 
 class Message:
-    def __init__(self, plataform, user, text, timestamp, raw):
+    def __init__(self, id, plataform, user, text, timestamp, raw):
+        self.id = id
         self.plataform = plataform
         self.user = user
         self.text = text

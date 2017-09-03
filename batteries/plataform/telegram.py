@@ -60,6 +60,7 @@ class TelegramEngine(plataform.BasePlataform):
         https://core.telegram.org/bots/api#update
         '''
         return Message(
+            id=data['message']['message_id'],
             plataform=self.plataform,
             text=data['message']['text'],
             user=TelegramUser.from_telegram(data['message']['from']),

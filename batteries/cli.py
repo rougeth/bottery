@@ -71,8 +71,9 @@ def run(port, debug):
         raise Exception('No plataforms configured')
 
     for plataform in plataforms:
-        # For each plataform configured, import it and execute its
-        # `configure` method.
+        # For each plataform found on settings.py, create an instance
+        # and run its `configure` method. Once it's configured, create
+        # a route for its handler.
         logger.debug('Importing engine %s', plataform['ENGINE'])
         mod = importlib.import_module(plataform['ENGINE'])
         engine = mod.engine(**plataform['OPTIONS'])

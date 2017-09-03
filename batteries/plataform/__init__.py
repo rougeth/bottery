@@ -1,4 +1,6 @@
+import importlib
 import logging
+import os
 
 from aiohttp import web
 
@@ -7,6 +9,22 @@ from batteries.conf import settings
 
 
 logger = logging.getLogger('batteries.plataforms')
+
+
+def discover_view(message):
+    base = os.getcwd()
+    patterns_path = os.path.join(base, 'patterns.py')
+    if not os.path.isfile(patterns_path):
+        raise Exception('Could not find patterns module')
+
+    patterns = importlib.import_module('patterns').patterns
+    for pattern in patterns:
+        if pattern.check(message):
+            logger.debug('Pattern found')
+            return pattern.view
+
+    # raise Exception('No Pattern found!')
+    return None
 
 
 class BasePlataform:
@@ -33,7 +51,13 @@ class BasePlataform:
             data = await request.json()
             logger.debug('[%s] Building message', self.plataform)
             message = self.build_message(data)
-            logger.info('[%s] Message from %s', self.plataform, message.user)
-            return web.Response(text='batteries')
+            view = discover_view(message)
+            if view:
+                logger.info('[%s] Message from %s', self.plataform,
+                            message.user)
+            else:
+                logger.warn('[%s] Pattern not found for message from %s',
+                            message.plataform, message.user)
+            return web.Response()
 
         return handler
