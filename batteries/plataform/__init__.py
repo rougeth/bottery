@@ -2,7 +2,6 @@ import logging
 
 from aiohttp import web
 
-from batteries import server
 from batteries.conf import settings
 
 
@@ -17,12 +16,24 @@ class BasePlataform:
             setattr(self, item, value)
 
     @property
-    def handler(self):
-        raise NotImplementedError('handler property not implemented')
+    def webhook_endpoint(self):
+        return '/hook/{}'.format(self.plataform)
 
     @property
     def webhook_url(self):
-        return 'https://{}{}'.format(settings.HOSTNAME, server.WEBHOOK_PATH)
+        return 'https://{}{}'.format(settings.HOSTNAME, self.webhook_endpoint)
 
-    def create_message(self):
+    def build_message(self):
         raise NotImplementedError('create_message not implemented')
+
+    @property
+    def handler(self):
+        async def handler(request):
+            logger.debug('[%s] New message', self.plataform)
+            data = await request.json()
+            logger.debug('[%s] Building message', self.plataform)
+            message = self.build_message(data)
+            logger.info('[%s] Message from %s', self.plataform, message.sender)
+            return web.Response(text='batteries')
+
+        return handler
