@@ -7,7 +7,6 @@ from aiohttp import web
 from batteries.conf import settings
 
 
-
 logger = logging.getLogger('batteries.plataforms')
 
 
@@ -20,7 +19,9 @@ def discover_view(message):
     patterns = importlib.import_module('patterns').patterns
     for pattern in patterns:
         if pattern.check(message):
-            logger.debug('Pattern found')
+            logger.debug('[%s] Pattern found', message.plataform)
+            if isinstance(pattern.view, str):
+                return importlib.import_module(pattern.view)
             return pattern.view
 
     # raise Exception('No Pattern found!')
@@ -52,12 +53,28 @@ class BasePlataform:
             logger.debug('[%s] Building message', self.plataform)
             message = self.build_message(data)
             view = discover_view(message)
-            if view:
-                logger.info('[%s] Message from %s', self.plataform,
-                            message.user)
-            else:
+            if not view:
                 logger.warn('[%s] Pattern not found for message from %s',
                             message.plataform, message.user)
+                return web.Response()
+
+            logger.info('[%s] Message from %s', self.plataform, message.user)
+            response = view(message)
+            if isinstance(response, str):
+                attrs = {
+                    'chat_id': message.user.id,
+                    'text': response,
+                }
+                response = type('Response', (object,), attrs)
+                response = self.handler_response(response).json()
+
+                if response['ok']:
+                    logger.info('[%s] Response sent to %s', self.plataform,
+                                message.user)
+                else:
+                    logger.warn('[%s] Response could not be sent to %s',
+                                self.plataform, message.user)
+
             return web.Response()
 
         return handler

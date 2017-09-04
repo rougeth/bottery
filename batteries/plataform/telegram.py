@@ -100,5 +100,12 @@ class TelegramEngine(plataform.BasePlataform):
             raw=data,
         )
 
+    def handler_response(self, response):
+        data = {
+            'chat_id': response.chat_id,
+            'text': response.text,
+        }
+
+        return self.api.send_message(data=data)
 
 engine = TelegramEngine

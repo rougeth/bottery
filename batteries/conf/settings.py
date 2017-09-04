@@ -11,6 +11,3 @@ def import_settings():
     sys.path.insert(0, base)
 
     return importlib.import_module('settings')
-
-
-settings = import_settings()
