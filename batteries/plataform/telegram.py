@@ -12,6 +12,36 @@ import requests
 logger = logging.getLogger('batteries.telegram')
 
 
+def mixed_case(string):
+    words = string.split('_')
+    return words[0].lower() + ''.join([s.title() for s in words[1:]])
+
+
+class TelegramAPI:
+    api_url = 'https://api.telegram.org'
+    methods = [
+        'set_webhook',
+        'send_message',
+    ]
+
+    def __init__(self, token):
+        self.token = token
+
+    def make_url(self, method_name):
+        method_name = mixed_case(method_name)
+        return '{}/bot{}/{}'.format(self.api_url, self.token, method_name)
+
+    def __getattr__(self, attr):
+        if attr not in self.methods:
+            raise AttributeError
+
+        url = self.make_url(attr)
+        def request(data={}):
+            return requests.post(url, json=data)
+
+        return request
+
+
 class TelegramUser(User):
 
     @classmethod
@@ -38,13 +68,15 @@ class TelegramUser(User):
 
 class TelegramEngine(plataform.BasePlataform):
     plataform = 'telegram'
-    api_url = 'https://api.telegram.org'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.api = TelegramAPI(self.token)
 
     def configure(self):
         '''Setup webhook on Telegram'''
 
-        url = '{}/bot{}/setWebhook'.format(self.api_url, self.token)
-        response = requests.post(url, json={'url': self.webhook_url})
+        response = self.api.set_webhook({'url': self.webhook_url})
         if response.status_code == 200:
             logger.debug('[%s] Webhook configured', self.plataform)
         else:
