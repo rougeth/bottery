@@ -1,10 +1,12 @@
 import importlib
 import logging.config
 import os
+import shutil
 import sys
 
 import click
 
+import batteries
 from batteries.log import DEFAULT_LOGGING
 
 
@@ -40,9 +42,14 @@ def startproject(name):
     project_dir = os.path.join(os.getcwd(), name)
     os.mkdir(project_dir)
 
-    # Use jinja2 the settings file
-    settings_files = open(os.path.join(project_dir, 'settings.py'), 'w')
-    settings_files.close()
+    # There's probably a better way to do this :)
+    template_dir = os.path.join(batteries.__path__[0], 'conf/project_template')
+    for root, dirs, files in os.walk(template_dir):
+        for filename in files:
+            new_filename = filename[:-4]  # Removes "-tpl"
+            src = os.path.join(template_dir, filename)
+            dst = os.path.join(project_dir, new_filename)
+            shutil.copy(src, dst)
 
 
 @cli.command('run')

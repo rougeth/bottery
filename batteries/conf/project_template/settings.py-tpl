@@ -1,0 +1,10 @@
+HOSTNAME = ''
+
+PLATAFORMS = {
+    'telegram': {
+        'ENGINE': 'batteries.plataform.telegram',
+        'OPTIONS': {
+            'token': '',
+        }
+    },
+}

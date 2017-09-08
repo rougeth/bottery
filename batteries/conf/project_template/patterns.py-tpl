@@ -1,0 +1,7 @@
+from batteries.conf.patterns import Pattern
+from batteries.views import ping
+
+
+patterns = [
+    Pattern('ping', ping)
+]
