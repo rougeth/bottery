@@ -6,18 +6,18 @@ import sys
 
 import click
 
-import batteries
-from batteries.log import DEFAULT_LOGGING
+import battery
+from battery.log import DEFAULT_LOGGING
 
 
 logging.config.dictConfig(DEFAULT_LOGGING)
-logger = logging.getLogger('batteries')
+logger = logging.getLogger('battery')
 
 
 '''
-╔═════════╗
-╠batteries╠
-╚═════════╝
+╔═══════╗
+╠battery╠
+╚═══════╝
 '''
 
 def debug_option(f):
@@ -32,7 +32,7 @@ def debug_option(f):
 
 @click.group()
 def cli():
-    """Batteries"""
+    """battery"""
 
 
 @cli.command('startproject')
@@ -43,7 +43,7 @@ def startproject(name):
     os.mkdir(project_dir)
 
     # There's probably a better way to do this :)
-    template_dir = os.path.join(batteries.__path__[0], 'conf/project_template')
+    template_dir = os.path.join(battery.__path__[0], 'conf/project_template')
     for root, dirs, files in os.walk(template_dir):
         for filename in files:
             new_filename = filename[:-4]  # Removes "-tpl"
@@ -65,10 +65,10 @@ def run(port, debug):
     # https://github.com/lektor/lektor/blob/master/lektor/project.py#L67-L79
     from aiohttp import web
 
-    from batteries.conf import settings
+    from battery.conf import settings
 
-    _batteries = click.style('Batteries', fg='green')
-    logger.debug('Running {} \o/'.format(_batteries))
+    _battery = click.style('battery', fg='green')
+    logger.debug('Running {} \o/'.format(_battery))
 
     app = web.Application()
 

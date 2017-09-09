@@ -2,7 +2,7 @@ HOSTNAME = ''
 
 PLATAFORMS = {
     'telegram': {
-        'ENGINE': 'batteries.plataform.telegram',
+        'ENGINE': 'battery.plataform.telegram',
         'OPTIONS': {
             'token': '',
         }

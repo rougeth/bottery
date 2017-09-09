@@ -4,10 +4,10 @@ import os
 
 from aiohttp import web
 
-from batteries.conf import settings
+from battery.conf import settings
 
 
-logger = logging.getLogger('batteries.plataforms')
+logger = logging.getLogger('battery.plataforms')
 
 
 def discover_view(message):

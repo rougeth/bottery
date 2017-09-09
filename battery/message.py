@@ -3,7 +3,7 @@ from datetime import datetime
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from batteries.conf import settings
+from battery.conf import settings
 
 
 class Message:
