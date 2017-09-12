@@ -3,7 +3,7 @@ from datetime import datetime
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from battery.conf import settings
+from bottery.conf import settings
 
 
 class Message:

@@ -19,18 +19,18 @@ DEFAULT_LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
             'level': 'DEBUG',
-            'formatter': 'batteries.server',
+            'formatter': 'bottery.server',
         }
     },
     'formatters': {
-        'batteries.server': {
-            'class': 'batteries.log.ColoredFormatter',
+        'bottery.server': {
+            'class': 'bottery.log.ColoredFormatter',
             'format': '%(asctime)s %(message)s',
             'datefmt': '%H:%M:%S',
         }
     },
     'loggers': {
-        'batteries': {
+        'bottery': {
             'handlers': ['console'],
             'level': 'INFO',
             'propagate': False,

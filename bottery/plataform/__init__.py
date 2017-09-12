@@ -4,10 +4,10 @@ import os
 
 from aiohttp import web
 
-from battery.conf import settings
+from bottery.conf import settings
 
 
-logger = logging.getLogger('battery.plataforms')
+logger = logging.getLogger('bottery.plataforms')
 
 
 def discover_view(message):

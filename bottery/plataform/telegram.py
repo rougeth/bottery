@@ -1,15 +1,15 @@
 import logging
 from datetime import datetime
 
-from battery import plataform
-from battery.conf import settings
-from battery.message import Message
-from battery.user import User
+from bottery import plataform
+from bottery.conf import settings
+from bottery.message import Message
+from bottery.user import User
 
 import requests
 
 
-logger = logging.getLogger('battery.telegram')
+logger = logging.getLogger('bottery.telegram')
 
 
 def mixed_case(string):
