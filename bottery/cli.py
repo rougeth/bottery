@@ -1,3 +1,12 @@
+'''
+██████╗  ██████╗ ████████╗████████╗███████╗██████╗ ██╗   ██╗
+██╔══██╗██╔═══██╗╚══██╔══╝╚══██╔══╝██╔════╝██╔══██╗╚██╗ ██╔╝
+██████╔╝██║   ██║   ██║      ██║   █████╗  ██████╔╝ ╚████╔╝
+██╔══██╗██║   ██║   ██║      ██║   ██╔══╝  ██╔══██╗  ╚██╔╝
+██████╔╝╚██████╔╝   ██║      ██║   ███████╗██║  ██║   ██║
+╚═════╝  ╚═════╝    ╚═╝      ╚═╝   ╚══════╝╚═╝  ╚═╝   ╚═╝
+'''
+
 import importlib
 import logging.config
 import os
@@ -14,12 +23,6 @@ logging.config.dictConfig(DEFAULT_LOGGING)
 logger = logging.getLogger('bottery')
 
 
-'''
-╔═══════╗
-╠bottery╠
-╚═══════╝
-'''
-
 def debug_option(f):
     @click.option('--debug/--no-debug', default=False)
     def wrapper(*args, **kwargs):
@@ -32,7 +35,7 @@ def debug_option(f):
 
 @click.group()
 def cli():
-    """bottery"""
+    """Bottery"""
 
 
 @cli.command('startproject')
@@ -56,10 +59,11 @@ def startproject(name):
 @click.option('--port', default=8000, type=int)
 @debug_option
 def run(port, debug):
-    '''
+    """
     Run a web server to handle webhooks requests from all plataforms
     configured on the project settings.
-    '''
+    """
+
     # .py vs init config file
     # Check how Lektor discover settings files
     # https://github.com/lektor/lektor/blob/master/lektor/project.py#L67-L79
