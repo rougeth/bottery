@@ -54,9 +54,9 @@ class TelegramUser(User):
         return cls(
             id=sender['id'],
             first_name=sender['first_name'],
-            last_name=sender['last_name'],
-            username=sender['username'],
-            language=sender['language_code'])
+            last_name=sender.get('last_name'),
+            username=sender.get('username'),
+            language=sender.get('language_code'))
 
     def __str__(self):
         s = '({u.id}) {u.first_name}'
