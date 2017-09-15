@@ -23,8 +23,8 @@ class Message:
 def render(message, template_name, context={}):
     base_dir = os.path.join(os.getcwd(), 'templates')
     paths = [base_dir]
-    if settings.TEMPLATE_DIRS:
-        paths.extends(settings.TEMPLATE_DIRS)
+    #if settings.TEMPLATES:
+    #    paths.extend(settings.TEMPLATES)
 
     env = Environment(
         loader=FileSystemLoader(paths),
