@@ -3,7 +3,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='bottery',
-    version='0.0.1',
+    version='0.0.1-alpha.1',
     author='Marco Rougeth',
     author_email='marco@rougeth.com',
     packages=find_packages(),
