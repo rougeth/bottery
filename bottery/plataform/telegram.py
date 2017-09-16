@@ -59,9 +59,11 @@ class TelegramUser(User):
             language=sender.get('language_code'))
 
     def __str__(self):
-        s = '({u.id}) {u.first_name}'
+        s = '{u.first_name}'
         if self.last_name:
             s += ' {u.last_name}'
+
+        s += ' ({u.id})'
 
         return s.format(u=self)
 
