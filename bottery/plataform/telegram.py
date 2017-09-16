@@ -1,11 +1,10 @@
 import logging
 
+import requests
+
 from bottery import plataform
 from bottery.message import Message
 from bottery.user import User
-
-import requests
-
 
 logger = logging.getLogger('bottery.telegram')
 

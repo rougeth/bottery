@@ -17,7 +17,6 @@ import click
 import bottery
 from bottery.log import DEFAULT_LOGGING
 
-
 logging.config.dictConfig(DEFAULT_LOGGING)
 logger = logging.getLogger('bottery')
 

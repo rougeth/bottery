@@ -2,7 +2,6 @@ import logging
 
 import click
 
-
 DEFAULT_COLORS = {
     logging.DEBUG: lambda msg: msg,
     logging.INFO: lambda msg: click.style(msg, fg='blue'),
