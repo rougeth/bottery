@@ -1,4 +1,4 @@
-from .settings import import_settings
+from bottery.conf.settings import Settings
 
 
-settings = import_settings()
+settings = Settings()

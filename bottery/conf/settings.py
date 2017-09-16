@@ -2,12 +2,23 @@ import importlib
 import os
 import sys
 
+from bottery.conf import global_settings
 
-def import_settings():
-    base = os.getcwd()
-    settings_path = os.path.join(base, 'settings.py')
-    if not os.path.isfile(settings_path):
-        raise Exception('Could not find settings module')
-    sys.path.insert(0, base)
 
-    return importlib.import_module('settings')
+class Settings:
+    def __init__(self):
+        for setting in dir(global_settings):
+            if setting.isupper():
+                setattr(self, setting, getattr(global_settings, setting))
+
+        base = os.getcwd()
+        settings_path = os.path.join(base, 'settings.py')
+        if not os.path.isfile(settings_path):
+            raise Exception('Could not find settings module')
+        sys.path.insert(0, base)
+
+        mod = importlib.import_module('settings')
+
+        for setting in dir(mod):
+            if setting.isupper():
+                setattr(self, setting, getattr(mod, setting))
