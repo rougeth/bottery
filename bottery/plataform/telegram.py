@@ -1,8 +1,6 @@
 import logging
-from datetime import datetime
 
 from bottery import plataform
-from bottery.conf import settings
 from bottery.message import Message
 from bottery.user import User
 
@@ -36,6 +34,7 @@ class TelegramAPI:
             raise AttributeError
 
         url = self.make_url(attr)
+
         def request(data={}):
             return requests.post(url, json=data)
 
@@ -109,5 +108,6 @@ class TelegramEngine(plataform.BasePlataform):
         }
 
         return self.api.send_message(data=data)
+
 
 engine = TelegramEngine

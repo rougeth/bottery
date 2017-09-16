@@ -12,7 +12,7 @@ DEFAULT_COLORS = {
 }
 
 # See how Django change its logging confs with settings specifics.
-#https://github.com/django/django/blob/master/django/utils/log.py#L64
+# https://github.com/django/django/blob/master/django/utils/log.py#L64
 DEFAULT_LOGGING = {
     'version': 1,
     'handlers': {
