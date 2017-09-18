@@ -3,5 +3,5 @@ from bottery.views import ping
 
 
 patterns = [
-    Pattern('ping', ping)
+    Pattern('ping', ping),
 ]
