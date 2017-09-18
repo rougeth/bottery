@@ -28,8 +28,35 @@ librarybot/
 - **librarybot/patterns.py**: The Pattern declarations for this Bottery project;
 - **library/settings.py**: Settings/configuration for this Bottery project.
 
+### Configuring Telegram
+We can get new messages from two different ways: defining a webhook with SSL implemented on Telegram or through polling. For now, Bottery implements the first way and because of that you need to define a valid and accessible externally hostname on settings.py:
+
+```python
+# settings.py
+HOSTNAME = 'mybot.example.com'
+```
+
+If you're developing or testing your bot, you can use a tunnel to expose Bottery. Services like [ngrok](https://ngrok.com/) helps a lot to do that.
+
+Bottery register the telegram webhook url (that uses the `HOSTNAME` variable on settings) and Telegram uses that url send the new messages that your bot receives.
+
+The Bottery setup with ngrok is simple. Once it is [installed](https://ngrok.com/download), run `$ ngrok http 8000` (if you need help running ngrok, check [its documentation](https://ngrok.com/docs). This command will give you two urls (`http` and `https`) of the created tunnel. Get the hostname (full url without `https://` part) and fill `HOSTNAME` on `settings.py`.
+
+Now, you just need to get your bot token the fill on `settings.py`:
+
+```python
+# settings.py
+PLATAFORMS = {
+    'telegram': {
+        'ENGINE': 'bottery.plataform.telegram',
+        'OPTIONS': {
+            'token': 'your-token-here',
+        }
+    },
+}
+```
 
 ### Running
 ```bash
-$ bottery run
+$ bottery run --debug
 ```
