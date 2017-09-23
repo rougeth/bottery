@@ -33,11 +33,7 @@ class TelegramAPI:
             raise AttributeError
 
         url = self.make_url(attr)
-
-        def request(data={}):
-            return requests.post(url, json=data)
-
-        return request
+        return lambda data={}: requests.post(url, json=data)
 
 
 class TelegramUser(User):
