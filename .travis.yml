@@ -4,10 +4,12 @@ python:
 
 install:
   - pip install flake8 isort pytest pytest-cov codecov
-  - python setup.py install
+  - pip install --editable .
 
 script:
-  - flake8 .
-  - isort -c
+  - flake8 bottery
+  - isort bottery --recursive --check-only
   - pytest --cov bottery
+
+after_script:
   - codecov
