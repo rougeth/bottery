@@ -41,20 +41,16 @@ class TelegramAPI:
 
 
 class TelegramUser(User):
-
-    @classmethod
-    def from_telegram(cls, sender):
-        '''
-        Returns a TelegramUser instance based on the data received from
-        Telegram API.
-        https://core.telegram.org/bots/api#user
-        '''
-        return cls(
-            id=sender['id'],
-            first_name=sender['first_name'],
-            last_name=sender.get('last_name'),
-            username=sender.get('username'),
-            language=sender.get('language_code'))
+    '''
+    Telegram User reference
+    https://core.telegram.org/bots/api#user
+    '''
+    def __init__(self, sender):
+        self.id = sender['id']
+        self.first_name = sender['first_name']
+        self.last_name = sender.get('last_name')
+        self.username = sender.get('username')
+        self.language = sender.get('language_code')
 
     def __str__(self):
         s = '{u.first_name}'
@@ -95,7 +91,7 @@ class TelegramEngine(plataform.BasePlataform):
             id=data['message']['message_id'],
             plataform=self.plataform,
             text=data['message']['text'],
-            user=TelegramUser.from_telegram(data['message']['from']),
+            user=TelegramUser(data['message']['from']),
             timestamp=data['message']['date'],
             raw=data,
         )
