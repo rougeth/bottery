@@ -22,3 +22,15 @@ class Settings:
         for setting in dir(mod):
             if setting.isupper():
                 setattr(self, setting, getattr(mod, setting))
+
+
+class LazySettings:
+    _wrapped = None
+
+    def _setup(self):
+        self._wrapped = Settings()
+
+    def __getattr__(self, name):
+        if not self._wrapped:
+            self._setup()
+        return getattr(self._wrapped, name)

@@ -1,4 +1,4 @@
-from bottery.conf.settings import Settings
+from bottery.conf.settings import LazySettings
 
 
-settings = Settings()
+settings = LazySettings()
