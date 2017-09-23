@@ -1,3 +1,5 @@
+from unittest import mock
+
 import pytest
 
 from bottery.plataform.telegram import TelegramAPI, TelegramUser, mixed_case
@@ -44,3 +46,18 @@ def test_telegram_api_method_not_defined():
     api = TelegramAPI('token')
     with pytest.raises(AttributeError):
         api.get_chat_member()
+
+
+@mock.patch('bottery.plataform.telegram.requests')
+def test_telegram_api_request(mocked_requests):
+    '''Make sure requests.post is being called with the right args'''
+
+    api = TelegramAPI('token')
+    url = api.make_url('send_message')
+    data = {
+        'chat_id': 1,
+        'text': 'Hello World',
+    }
+    api.send_message(data=data)
+
+    mocked_requests.post.assert_called_once_with(url, json=data)
