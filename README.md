@@ -1,6 +1,8 @@
 # bottery
 :battery: A framework for building bots
 
+[![Build Status](https://travis-ci.org/rougeth/bottery.svg?branch=master)](https://travis-ci.org/rougeth/bottery)
+[![PyPI](https://img.shields.io/pypi/v/bottery.svg)](https://pypi.python.org/pypi/bottery)
 
 ## Usage
 
