@@ -18,4 +18,13 @@ setup(
         'jinja2',
         'requests',
     ],
+    extras_require={
+        'dev': [
+            'coverage',
+            'flake8',
+            'isort',
+            'pytest',
+            'sphinx',
+        ],
+    },
 )
