@@ -3,29 +3,20 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Bottery's documentation!
-===================================
-
 Welcome to Bottery!
+===================
 
-Bottery is a framework made for building bots on multiple platforms (such as 
-Telegram, Facebook Messenger, etc...).
+Welcome to Bottery's documentation! Bottery is a framework made for building bots on multiple platforms, out of the box integrations with Natural Language Processing APIs, "take over" interface, i18n and much more.
 
-We are still under construction, so any feedback is welcome.
+Bottery aims to be the Django of bot development. But it is a very young project and it is in heavy development, every feedback is really appreciated.
 
-To install use::
-    $ pip install bottery
 
+User's guide
+------------
+
+This part of the documentation, which is mostly prose, begins with some background information about Bottery, then focuses on step-by-step instructions for bot development with Bottery.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   installation
