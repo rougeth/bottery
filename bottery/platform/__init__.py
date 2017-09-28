@@ -7,7 +7,7 @@ from aiohttp import web
 from bottery.conf import settings
 
 
-logger = logging.getLogger('bottery.plataforms')
+logger = logging.getLogger('bottery.platforms')
 
 
 def discover_view(message):
@@ -19,7 +19,7 @@ def discover_view(message):
     patterns = importlib.import_module('patterns').patterns
     for pattern in patterns:
         if pattern.check(message):
-            logger.debug('[%s] Pattern found', message.plataform)
+            logger.debug('[%s] Pattern found', message.platform)
             if isinstance(pattern.view, str):
                 return importlib.import_module(pattern.view)
             return pattern.view
@@ -36,7 +36,7 @@ class BasePlataform:
 
     @property
     def webhook_endpoint(self):
-        return '/hook/{}'.format(self.plataform)
+        return '/hook/{}'.format(self.platform)
 
     @property
     def webhook_url(self):
@@ -48,17 +48,17 @@ class BasePlataform:
     @property
     def handler(self):
         async def handler(request):
-            logger.debug('[%s] New message', self.plataform)
+            logger.debug('[%s] New message', self.platform)
             data = await request.json()
-            logger.debug('[%s] Building message', self.plataform)
+            logger.debug('[%s] Building message', self.platform)
             message = self.build_message(data)
             view = discover_view(message)
             if not view:
                 logger.warn('[%s] Pattern not found for message from %s',
-                            message.plataform, message.user)
+                            message.platform, message.user)
                 return web.Response()
 
-            logger.info('[%s] Message from %s', self.plataform, message.user)
+            logger.info('[%s] Message from %s', self.platform, message.user)
             response = view(message)
             if isinstance(response, str):
                 attrs = {
@@ -69,11 +69,11 @@ class BasePlataform:
                 response = self.handler_response(response).json()
 
                 if response['ok']:
-                    logger.info('[%s] Response sent to %s', self.plataform,
+                    logger.info('[%s] Response sent to %s', self.platform,
                                 message.user)
                 else:
                     logger.warn('[%s] Response could not be sent to %s',
-                                self.plataform, message.user)
+                                self.platform, message.user)
 
             return web.Response()
 

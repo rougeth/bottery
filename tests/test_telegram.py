@@ -2,7 +2,7 @@ from unittest import mock
 
 import pytest
 
-from bottery.plataform.telegram import TelegramAPI, TelegramUser, mixed_case
+from bottery.platform.telegram import TelegramAPI, TelegramUser, mixed_case
 
 
 # TelegramUser
@@ -48,7 +48,7 @@ def test_telegram_api_method_not_defined():
         api.get_chat_member()
 
 
-@mock.patch('bottery.plataform.telegram.requests')
+@mock.patch('bottery.platform.telegram.requests')
 def test_telegram_api_request(mocked_requests):
     '''Make sure requests.post is being called with the right args'''
 

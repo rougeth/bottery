@@ -7,9 +7,9 @@ from bottery.conf import settings
 
 
 class Message:
-    def __init__(self, id, plataform, user, text, timestamp, raw):
+    def __init__(self, id, platform, user, text, timestamp, raw):
         self.id = id
-        self.plataform = plataform
+        self.platform = platform
         self.user = user
         self.text = text
         self.timestamp = timestamp

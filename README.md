@@ -48,9 +48,9 @@ Now, you just need to get your bot token the fill on `settings.py`:
 
 ```python
 # settings.py
-PLATAFORMS = {
+PLATFORMS = {
     'telegram': {
-        'ENGINE': 'bottery.plataform.telegram',
+        'ENGINE': 'bottery.platform.telegram',
         'OPTIONS': {
             'token': 'your-token-here',
         }
