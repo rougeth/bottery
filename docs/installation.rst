@@ -29,7 +29,7 @@ Once a virtual environment has been created, it can be “activated” using a s
 
    $ source <venv>/bin/activate
 
-For more details on how virtualenv works or how to use it on Windows, that a look at the :py:mod:`oficial documentation <venv>` and at the :pep:`405`.
+For more details on how virtualenv works or how to use it on Windows, take a look at the :py:mod:`oficial documentation <venv>` and at the :pep:`405`.
 
 
 System-Wide installation
@@ -44,7 +44,7 @@ This is possible as well, though we do not recommend it. Just run pip with root 
 Living on the Edge
 ------------------
 
-Bottery is actively developed on GitHub, where the code is always available.
+Bottery is actively developed on GitHub, where the code is (and always will be) available under the MIT license.
 
 You can either clone the public repository:
 

@@ -6,7 +6,7 @@
 Welcome to Bottery!
 ===================
 
-Welcome to Bottery's documentation! Bottery is a framework made for building bots on multiple platforms, out of the box integrations with Natural Language Processing APIs, "take over" interface, i18n and much more.
+Welcome to Bottery's documentation! Bottery is a framework made for building bots on multiple platforms, along with out of the box integrations with Natural Language Processing APIs, "take over" interface, i18n and much more.
 
 Bottery aims to be the Django of bot development. But it is a very young project and it is in heavy development, every feedback is really appreciated.
 
