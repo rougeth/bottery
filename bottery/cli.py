@@ -58,7 +58,7 @@ def startproject(name):
 @debug_option
 def run(port, debug):
     """
-    Run a web server to handle webhooks requests from all plataforms
+    Run a web server to handle webhooks requests from all platforms
     configured on the project settings.
     """
 
@@ -74,21 +74,21 @@ def run(port, debug):
 
     app = web.Application()
 
-    plataforms = settings.PLATAFORMS.values()
-    if not plataforms:
-        # Raise an expcetion if no plataform is configured at settings.py
-        raise Exception('No plataforms configured')
+    platforms = settings.PLATFORMS.values()
+    if not platforms:
+        # Raise an expcetion if no platform is configured at settings.py
+        raise Exception('No platforms configured')
 
-    for plataform in plataforms:
-        # For each plataform found on settings.py, create an instance
+    for platform in platforms:
+        # For each platform found on settings.py, create an instance
         # and run its `configure` method. Once it's configured, create
         # a route for its handler.
-        logger.debug('Importing engine %s', plataform['ENGINE'])
-        mod = importlib.import_module(plataform['ENGINE'])
-        engine = mod.engine(**plataform['OPTIONS'])
-        logger.debug('[%s] Configuring', engine.plataform)
+        logger.debug('Importing engine %s', platform['ENGINE'])
+        mod = importlib.import_module(platform['ENGINE'])
+        engine = mod.engine(**platform['OPTIONS'])
+        logger.debug('[%s] Configuring', engine.platform)
         engine.configure()
-        logger.debug('[%s] Ready', engine.plataform)
+        logger.debug('[%s] Ready', engine.platform)
         app.router.add_route('POST', engine.webhook_endpoint, engine.handler)
 
     logger.debug('Running server')

@@ -1,8 +1,8 @@
 HOSTNAME = ''
 
-PLATAFORMS = {
+PLATFORMS = {
     'telegram': {
-        'ENGINE': 'bottery.plataform.telegram',
+        'ENGINE': 'bottery.platform.telegram',
         'OPTIONS': {
             'token': '',
         }

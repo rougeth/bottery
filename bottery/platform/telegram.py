@@ -2,7 +2,7 @@ import logging
 
 import requests
 
-from bottery import plataform
+from bottery import platform
 from bottery.message import Message
 from bottery.user import User
 
@@ -58,8 +58,8 @@ class TelegramUser(User):
         return s.format(u=self)
 
 
-class TelegramEngine(plataform.BasePlataform):
-    plataform = 'telegram'
+class TelegramEngine(platform.BasePlataform):
+    platform = 'telegram'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -70,10 +70,10 @@ class TelegramEngine(plataform.BasePlataform):
 
         response = self.api.set_webhook({'url': self.webhook_url})
         if response.status_code == 200:
-            logger.debug('[%s] Webhook configured', self.plataform)
+            logger.debug('[%s] Webhook configured', self.platform)
         else:
             logger.warn("[%s] Could not configure webhook url (%s): %s",
-                        self.plataform,
+                        self.platform,
                         response.status_code,
                         response.json())
 
@@ -85,7 +85,7 @@ class TelegramEngine(plataform.BasePlataform):
         '''
         return Message(
             id=data['message']['message_id'],
-            plataform=self.plataform,
+            platform=self.platform,
             text=data['message']['text'],
             user=TelegramUser(data['message']['from']),
             timestamp=data['message']['date'],
