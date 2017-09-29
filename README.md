@@ -66,6 +66,11 @@ PLATFORMS = {
 }
 ```
 
+`ENGINE`: For now, only Telegram is available.
+
+`token`: A token provided by [@BotFather](https://t.me/BotFather). Do not share it!
+
+
 ### Running
 ```bash
 $ bottery run --debug
