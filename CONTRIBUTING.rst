@@ -1,5 +1,3 @@
-.. _contributing:
-
 Contributing
 ============
 
@@ -27,4 +25,11 @@ If you want to run a specific test in a specific environment, you can also execu
 
     $ tox -e py36 -- tests/test_cli.py
 
+
+Documentation
+-------------
+
+Documentation updates or fixes are welcome. To generate docs locally, execute::
+
+    $ tox -e docs
 
