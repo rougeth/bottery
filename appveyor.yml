@@ -1,0 +1,14 @@
+build: false  # Not C# project
+environment:
+  matrix:
+  - TOXENV: "py35"
+  - TOXENV: "py36"
+  - TOXENV: "check"
+  - TOXENV: "docs"
+
+install:
+  - C:\Python36\python -m pip install --upgrade tox
+
+test_script:
+  - C:\Python36\python -m tox
+
