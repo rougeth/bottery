@@ -1,15 +1,21 @@
 language: python
-python:
-  - "3.6"
+
+matrix:
+  include:
+    - python: '3.5'
+      env: TOXENV=py35
+    - python: '3.6'
+      env: TOXENV=py36
+    - python: '3.6'
+      env: TOXENV=check
+    - python: '3.6'
+      env: TOXENV=docs
 
 install:
-  - pip install flake8 isort pytest pytest-cov codecov
-  - pip install --editable .
+  - pip install tox
 
 script:
-  - flake8 bottery
-  - isort bottery --recursive --check-only
-  - pytest --cov bottery
+  - tox
 
 after_script:
   - codecov

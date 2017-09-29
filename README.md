@@ -62,3 +62,11 @@ PLATFORMS = {
 ```bash
 $ bottery run --debug
 ```
+
+## Development
+
+Please see [our contribution guide](CONTRIBUTING.rst).
+
+
+
+
