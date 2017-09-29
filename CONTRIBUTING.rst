@@ -12,7 +12,7 @@ Development
 
 Use PEP-8 for code style and `isort <https://pypi.python.org/pypi/isort>`_ to sort your imports.
 
-Bottle uses `tox <http://tox.readthedocs.io>`_ for testing and general development.
+Bottery uses `tox <http://tox.readthedocs.io>`_ for testing and general development.
 
 After ``tox`` is installed, just execute::
 
