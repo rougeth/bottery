@@ -5,6 +5,13 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/we3h64nj98vvxcre/branch/master?svg=true)](https://ci.appveyor.com/project/rougeth/bottery/branch/master)
 [![PyPI](https://img.shields.io/pypi/v/bottery.svg)](https://pypi.python.org/pypi/bottery)
 
+* [Usage](#usage)
+  * [Installing](#installing)
+  * [Creating a project](#creating-a-project)
+  * [Configuring Telegram](#configuring-telegram)
+  * [Running](#running)
+* [Development](#development)
+
 ## Usage
 
 ### Installing
