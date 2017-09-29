@@ -20,3 +20,4 @@ This part of the documentation, which is mostly prose, begins with some backgrou
    :maxdepth: 2
 
    installation
+   contributing

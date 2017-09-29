@@ -65,19 +65,7 @@ $ bottery run --debug
 
 ## Development
 
-Tests are run using [tox](http://tox.readthedocs.io). After `tox` is installed, just execute:
-
-```
-$ tox
-```
-
-To run all tests in Python 3.5, 3.6 and lint checks.
-
-If you want to run a specific test in an specific environment, you can do:
-
-```
-$ tox -e py36 -- tests/test_cli.py
-```
+Please see [our contribution guide](CONTRIBUTING.rst).
 
 
 
