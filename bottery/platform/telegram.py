@@ -83,14 +83,19 @@ class TelegramEngine(platform.BasePlataform):
         Telegram API.
         https://core.telegram.org/bots/api#update
         '''
-        return Message(
-            id=data['message']['message_id'],
-            platform=self.platform,
-            text=data['message']['text'],
-            user=TelegramUser(data['message']['from']),
-            timestamp=data['message']['date'],
-            raw=data,
-        )
+        message_data = data.get('message')
+
+        if message_data:
+            return Message(
+                id=message_data['message_id'],
+                platform=self.platform,
+                text=message_data['text'],
+                user=TelegramUser(message_data['from']),
+                timestamp=message_data['date'],
+                raw=data,
+            )
+        else:
+            return None
 
     def handler_response(self, response):
         data = {

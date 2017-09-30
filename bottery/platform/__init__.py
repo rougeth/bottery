@@ -52,10 +52,16 @@ class BasePlataform:
             data = await request.json()
             logger.debug('[%s] Building message', self.platform)
             message = self.build_message(data)
-            view = discover_view(message)
-            if not view:
-                logger.warn('[%s] Pattern not found for message from %s',
-                            message.platform, message.user)
+
+            if message:
+                view = discover_view(message)
+                if not view:
+                    logger.warn('[%s] Pattern not found for message from %s',
+                                message.platform, message.user)
+                    return web.Response()
+            else:
+                logger.warn('Not a message data received, only message data'
+                            ' is supported at the moment')
                 return web.Response()
 
             logger.info('[%s] Message from %s', self.platform, message.user)

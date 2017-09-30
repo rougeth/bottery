@@ -1,8 +1,9 @@
 from unittest import mock
 
 import pytest
-
-from bottery.platform.telegram import TelegramAPI, TelegramUser, mixed_case
+from bottery.message import Message
+from bottery.platform.telegram import (TelegramAPI, TelegramEngine,
+                                       TelegramUser, mixed_case)
 
 
 # TelegramUser
@@ -61,3 +62,50 @@ def test_telegram_api_request(mocked_requests):
     api.send_message(data=data)
 
     mocked_requests.post.assert_called_once_with(url, json=data)
+
+
+# Telegram Engine
+
+def test_build_message():
+    engine = TelegramEngine(token='')
+    data = {
+        'update_id': 123456,
+        'message': {
+            'message_id': 1,
+            'from': {
+                'id': 321,
+                'is_bot': False,
+                'first_name': 'Andrew',
+                'last_name': 'Martin',
+                'username': 'amartin',
+                'language_code': 'en-US'
+            },
+            'chat': {
+                'id': 42,
+                'first_name': 'Andrew',
+                'last_name': 'Martin',
+                'username': 'amartin',
+                'type': 'private'
+            },
+            'date': 1506805222,
+            'text': 'ping'
+        }
+    }
+
+    message = engine.build_message(data)
+
+    assert type(message) == Message
+    assert message.text == 'ping'
+
+
+def test_build_message_with_non_message_data():
+    engine = TelegramEngine(token='')
+    data = {
+        'update_id': 123456,
+        'message_updated': {
+        }
+    }
+
+    message = engine.build_message(data)
+
+    assert message is None
