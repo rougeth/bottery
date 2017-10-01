@@ -45,6 +45,9 @@ class BasePlataform:
     def build_message(self):
         raise NotImplementedError('create_message not implemented')
 
+    def tasks(self):
+        return None
+
     @property
     def handler(self):
         async def handler(request):

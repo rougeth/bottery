@@ -15,6 +15,7 @@ import shutil
 import click
 
 import bottery
+from bottery.app import App
 from bottery.log import DEFAULT_LOGGING
 
 logging.config.dictConfig(DEFAULT_LOGGING)
@@ -57,39 +58,5 @@ def startproject(name):
 @click.option('--port', default=8000, type=int)
 @debug_option
 def run(port, debug):
-    """
-    Run a web server to handle webhooks requests from all platforms
-    configured on the project settings.
-    """
-
-    # .py vs init config file
-    # Check how Lektor discover settings files
-    # https://github.com/lektor/lektor/blob/master/lektor/project.py#L67-L79
-    from aiohttp import web
-
-    from bottery.conf import settings
-
-    _bottery = click.style('bottery', fg='green')
-    logger.debug('Running {} \o/'.format(_bottery))
-
-    app = web.Application()
-
-    platforms = settings.PLATFORMS.values()
-    if not platforms:
-        # Raise an expcetion if no platform is configured at settings.py
-        raise Exception('No platforms configured')
-
-    for platform in platforms:
-        # For each platform found on settings.py, create an instance
-        # and run its `configure` method. Once it's configured, create
-        # a route for its handler.
-        logger.debug('Importing engine %s', platform['ENGINE'])
-        mod = importlib.import_module(platform['ENGINE'])
-        engine = mod.engine(**platform['OPTIONS'])
-        logger.debug('[%s] Configuring', engine.platform)
-        engine.configure()
-        logger.debug('[%s] Ready', engine.platform)
-        app.router.add_route('POST', engine.webhook_endpoint, engine.handler)
-
-    logger.debug('Running server')
-    web.run_app(app, port=port, print=lambda x: None)
+    app = App()
+    app.run()
