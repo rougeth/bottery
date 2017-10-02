@@ -109,6 +109,9 @@ html_theme = 'alabaster'
 # This is required for the alabaster theme
 # refs: http://alabaster.readthedocs.io/en/latest/installation.html#sidebars
 html_sidebars = {
+    'index': [
+        'sidebar.html',
+    ],
     '**': [
         'about.html',
         'navigation.html',
