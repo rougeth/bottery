@@ -77,7 +77,7 @@ def run(port, debug):
     platforms = settings.PLATFORMS.values()
     if not platforms:
         # Raise an expcetion if no platform is configured at settings.py
-        raise Exception('No platforms configured')
+        raise ValueError('No platforms configured')
 
     for platform in platforms:
         # For each platform found on settings.py, create an instance
