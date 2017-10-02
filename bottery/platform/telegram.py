@@ -39,7 +39,7 @@ class TelegramAPI:
 
     def __getattr__(self, attr):
         if attr not in self.methods:
-            raise AttributeError('FUCK')
+            raise AttributeError()
 
         url = self.make_url(attr)
         return lambda data={}: self.http_client.post(url, json=data)
@@ -82,27 +82,11 @@ class TelegramEngine(platform.BasePlataform):
     def tasks(self):
         return [self.polling]
 
-    def configure_webhook(self):
-        response = self.api.set_webhook({'url': self.webhook_url})
-        if response.status_code == 200:
-            logger.debug('[%s] Webhook mode set', self.platform)
-        else:
-            logger.warn("[%s] Could not configure webhook url (%s): %s",
-                        self.platform,
-                        response.status_code,
-                        response.json())
-
-    def configure_polling(self):
+    def configure(self):
         response = self.api.delete_webhook()
         response = response.json()
         if response['ok']:
             logger.debug('[%s] Polling mode set', self.platform)
-
-    def configure(self):
-        if self.mode == 'webhook':
-            self.configure_webhook()
-        else:
-            self.configure_polling()
 
         self.api.session = self.session
 
@@ -119,7 +103,7 @@ class TelegramEngine(platform.BasePlataform):
 
         # If polling request returned at least one update, use its ID
         # to define the offset.
-        if len(updates['result']):
+        if len(updates.get('result', [])):
             last_update = updates['result'][-1]['update_id']
 
         # Handle each new message, send its responses and then request
