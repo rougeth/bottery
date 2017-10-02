@@ -12,7 +12,7 @@ def discover_view(message):
     base = os.getcwd()
     patterns_path = os.path.join(base, 'patterns.py')
     if not os.path.isfile(patterns_path):
-        raise Exception('Could not find patterns module')
+        raise IOError('Could not find patterns module')
 
     patterns = importlib.import_module('patterns').patterns
     for pattern in patterns:
