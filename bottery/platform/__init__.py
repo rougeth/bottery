@@ -2,8 +2,6 @@ import importlib
 import logging
 import os
 
-from aiohttp import web
-
 from bottery.conf import settings
 
 
@@ -47,43 +45,3 @@ class BasePlataform:
 
     def tasks(self):
         return None
-
-    @property
-    def handler(self):
-        async def handler(request):
-            logger.debug('[%s] New message', self.platform)
-            data = await request.json()
-            logger.debug('[%s] Building message', self.platform)
-            message = self.build_message(data)
-
-            if message:
-                view = discover_view(message)
-                if not view:
-                    logger.warn('[%s] Pattern not found for message from %s',
-                                message.platform, message.user)
-                    return web.Response()
-            else:
-                logger.warn('Not a message data received, only message data'
-                            ' is supported at the moment')
-                return web.Response()
-
-            logger.info('[%s] Message from %s', self.platform, message.user)
-            response = view(message)
-            if isinstance(response, str):
-                attrs = {
-                    'chat_id': message.user.id,
-                    'text': response,
-                }
-                response = type('Response', (object,), attrs)
-                response = self.handler_response(response).json()
-
-                if response['ok']:
-                    logger.info('[%s] Response sent to %s', self.platform,
-                                message.user)
-                else:
-                    logger.warn('[%s] Response could not be sent to %s',
-                                self.platform, message.user)
-
-            return web.Response()
-
-        return handler

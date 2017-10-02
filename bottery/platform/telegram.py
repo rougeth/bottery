@@ -5,6 +5,7 @@ import requests
 
 from bottery import platform
 from bottery.message import Message
+from bottery.platform import discover_view
 from bottery.user import User
 
 logger = logging.getLogger('bottery.telegram')
@@ -78,11 +79,8 @@ class TelegramEngine(platform.BasePlataform):
         if not hasattr(self, 'mode'):
             self.mode = 'polling'
 
-    def configure_polling(self):
-        response = self.api.delete_webhook()
-        response = response.json()
-        if response['ok']:
-            logger.debug('[%s] Polling mode set', self.platform)
+    def tasks(self):
+        return [self.polling]
 
     def configure_webhook(self):
         response = self.api.set_webhook({'url': self.webhook_url})
@@ -94,6 +92,12 @@ class TelegramEngine(platform.BasePlataform):
                         response.status_code,
                         response.json())
 
+    def configure_polling(self):
+        response = self.api.delete_webhook()
+        response = response.json()
+        if response['ok']:
+            logger.debug('[%s] Polling mode set', self.platform)
+
     def configure(self):
         if self.mode == 'webhook':
             self.configure_webhook()
@@ -101,6 +105,28 @@ class TelegramEngine(platform.BasePlataform):
             self.configure_polling()
 
         self.api.session = self.session
+
+    async def polling(self, session, last_update=None):
+        payload = {}
+        if last_update:
+            # `offset` param prevets from getting duplicates updates
+            # from Telegram API:
+            # https://core.telegram.org/bots/api#getupdates
+            payload['offset'] = last_update + 1
+
+        response = await self.api.get_updates(payload)
+        updates = await response.json()
+
+        # If polling request returned at least one update, use its ID
+        # to define the offset.
+        if len(updates['result']):
+            last_update = updates['result'][-1]['update_id']
+
+        # Handle each new message, send its responses and then request
+        # updates again.
+        tasks = [self.message_handler(msg) for msg in updates['result']]
+        await asyncio.gather(*tasks)
+        await self.polling(session, last_update)
 
     def build_message(self, data):
         '''
@@ -122,37 +148,22 @@ class TelegramEngine(platform.BasePlataform):
         else:
             return None
 
-    def handler_response(self, response):
+    async def message_handler(self, data):
+        message = self.build_message(data)
+
+        # Try to find a view (best name?) to response the message
+        view = discover_view(message)
+        if not view:
+            return
+
+        response = view(message)
+
         data = {
-            'chat_id': response.chat_id,
-            'text': response.text,
+            'chat_id': message.user.id,
+            'text': response,
         }
-
-        return self.api.send_message(data=data)
-
-    def tasks(self):
-        return [self.polling]
-
-    async def polling(self, session, last_update=None):
-        payload = {}
-        if last_update:
-            # `offset` param prevets from getting duplicates updates
-            # from Telegram API:
-            # https://core.telegram.org/bots/api#getupdates
-            payload['offset'] = last_update + 1
-
-
-        response = await self.api.get_updates(payload)
-        updates = await response.json()
-
-        for update in updates['result']:
-            logger.debug('[%s] New message', self.platform)
-
-        if len(updates['result']):
-            last_update = updates['result'][-1]['update_id']
-
-        await asyncio.sleep(1)
-        await self.polling(session, last_update)
+        # TODO: Verify response status
+        await self.api.send_message(data=data)
 
 
 engine = TelegramEngine
