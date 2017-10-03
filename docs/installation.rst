@@ -5,6 +5,16 @@ Installation
 
 Bottery depends on the awesome Python :py:mod:`asyncio` module and its :pep:`async and await<492>` syntax. So you will need to have Python 3.5 or newer installed to get started. If you need help to install Python on your computer, I strongly recommend the :ref:`Python Guide <pythonguide:installation>`.
 
+tl;dr
+-----
+
+All right, nothing magic here, just use `pip` like you do to install any other Python package:
+
+.. code-block:: bash
+
+   $ pip install bottery
+
+But if you are not using virtualenv, we strongly recommend you to continue reading the sections below.
 
 Virtualenv
 ----------
