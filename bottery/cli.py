@@ -68,6 +68,7 @@ def run(port, debug):
     from aiohttp import web
 
     from bottery.conf import settings
+    from bottery.exceptions import ImproperlyConfigured
 
     _bottery = click.style('bottery', fg='green')
     logger.debug('Running {} \o/'.format(_bottery))
@@ -77,7 +78,7 @@ def run(port, debug):
     platforms = settings.PLATFORMS.values()
     if not platforms:
         # Raise an expcetion if no platform is configured at settings.py
-        raise ValueError('No platforms configured')
+        raise ImproperlyConfigured('No platforms configured')
 
     for platform in platforms:
         # For each platform found on settings.py, create an instance
