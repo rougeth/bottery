@@ -1,8 +1,21 @@
+import ast
+import re
 from setuptools import find_packages, setup
+
+
+_version_re = re.compile(r'__version__\s+=\s+(.*)')
+
+with open('bottery/__init__.py', encoding='utf8') as f:
+    # Search for `__version__` on bottery/__init__.py and get its values
+    version = ast.literal_eval(_version_re.search(f.read()).group(1))
+
 
 setup(
     name='bottery',
-    version='0.0.1a2',
+    description='A bot framework with batteries included',
+    version=version,
+    url='https://github.com/rougeth/bottery',
+    license='MIT',
     author='Marco Rougeth',
     author_email='marco@rougeth.com',
     packages=find_packages(),
