@@ -3,6 +3,7 @@ import os
 import sys
 
 from bottery.conf import global_settings
+from bottery.exceptions import ImproperlyConfigured
 
 
 class Settings:
@@ -14,7 +15,7 @@ class Settings:
         base = os.getcwd()
         settings_path = os.path.join(base, 'settings.py')
         if not os.path.isfile(settings_path):
-            raise Exception('Could not find settings module')
+            raise ImproperlyConfigured('Could not find settings module')
         sys.path.insert(0, base)
 
         mod = importlib.import_module('settings')
