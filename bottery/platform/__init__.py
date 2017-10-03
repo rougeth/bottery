@@ -3,6 +3,7 @@ import logging
 import os
 
 from bottery.conf import settings
+from bottery.exceptions import ImproperlyConfigured
 
 
 logger = logging.getLogger('bottery.platforms')
@@ -12,7 +13,7 @@ def discover_view(message):
     base = os.getcwd()
     patterns_path = os.path.join(base, 'patterns.py')
     if not os.path.isfile(patterns_path):
-        raise Exception('Could not find patterns module')
+        raise ImproperlyConfigured('Could not find patterns module')
 
     patterns = importlib.import_module('patterns').patterns
     for pattern in patterns:
