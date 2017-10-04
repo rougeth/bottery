@@ -1,4 +1,5 @@
-import logging, logging.config
+import logging
+import logging.config
 import os
 
 import click
@@ -6,7 +7,7 @@ from click.testing import CliRunner
 from testfixtures import LogCapture
 
 from bottery.cli import cli, debug_option
-from bottery.log import ColoredFormatter,DEFAULT_LOGGING
+from bottery.log import ColoredFormatter, DEFAULT_LOGGING
 
 
 def test_debug_flag_enabled():
@@ -51,15 +52,16 @@ def test_startproject():
         assert os.listdir() == [project_name]
         assert os.listdir(project_name) == project_files
 
-		
+
 def test_ColoredFormatter():
     c = ColoredFormatter()
-    expected = ['DEBUG',
-                '\x1b[34mINFO\x1b[0m',
-                '\x1b[33mWARN\x1b[0m',
-                '\x1b[31mERROR\x1b[0m',
-                '\x1b[30m\x1b[41mCRITICAL\x1b[0m'
-               ]
+    expected = [
+        'DEBUG',
+        '\x1b[34mINFO\x1b[0m',
+        '\x1b[33mWARN\x1b[0m',
+        '\x1b[31mERROR\x1b[0m',
+        '\x1b[30m\x1b[41mCRITICAL\x1b[0m'
+    ]
     logging.config.dictConfig(DEFAULT_LOGGING)
     with LogCapture(names='bottery') as l:
         logger = logging.getLogger('bottery')
