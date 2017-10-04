@@ -60,7 +60,7 @@ You can either clone the public repository:
 
 .. code-block:: bash
 
-    $ git clone http://github.com/rougeth/bottery.git
+    $ git clone https://github.com/rougeth/bottery.git
 
 Or, download the tarball:
 
