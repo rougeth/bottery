@@ -47,4 +47,4 @@ def test_startproject():
 
         assert result.exit_code == 0
         assert os.listdir() == [project_name]
-        assert os.listdir(project_name) == project_files
+        assert sorted(os.listdir(project_name)) == sorted(project_files)
