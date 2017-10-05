@@ -35,7 +35,7 @@ extensions = [
     'sphinx.ext.intersphinx',
 ]
 
-intersphinx_mapping =  {
+intersphinx_mapping = {
     'python': ('http://docs.python.org/3', None),
     'pythonguide': ('http://docs.python-guide.org/en/latest/', None),
 }
@@ -183,6 +183,3 @@ texinfo_documents = [
      author, 'Bottery', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
