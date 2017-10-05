@@ -1,5 +1,6 @@
 import logging.config
 import os
+import re
 import shutil
 
 import click
@@ -30,7 +31,10 @@ def cli():
 @cli.command('startproject')
 @click.argument('name')
 def startproject(name):
-    # Must validate projects name before creating its folder
+    if not re.match("^[a-z_]*$", name):
+    	errmsg = 'Name must have lowercase letters and underscores'
+    	raise click.BadParameter(errmsg)
+    	
     project_dir = os.path.join(os.getcwd(), name)
     os.mkdir(project_dir)
 
