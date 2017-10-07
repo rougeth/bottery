@@ -142,9 +142,11 @@ class TelegramEngine(platform.BasePlataform):
 
         response = view(message)
 
+        # TODO: Choose between Markdown and HTML
         data = {
             'chat_id': message.user.id,
             'text': response,
+            'parse_mode': 'Markdown',
         }
         # TODO: Verify response status
         await self.api.send_message(data=data)
