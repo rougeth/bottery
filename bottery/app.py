@@ -50,6 +50,7 @@ class App:
             engine = mod.engine(**platform['OPTIONS'])
             engine.configure()
             tasks = engine.tasks()
+
             if tasks:
                 self.tasks.append(*tasks)
 
