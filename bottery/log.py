@@ -3,11 +3,9 @@ import logging
 import click
 
 DEFAULT_COLORS = {
-    logging.DEBUG: lambda msg: msg,
-    logging.INFO: lambda msg: click.style(msg, fg='blue'),
-    logging.WARN: lambda msg: click.style(msg, fg='yellow'),
-    logging.ERROR: lambda msg: click.style(msg, fg='red'),
-    logging.CRITICAL: lambda msg: click.style(msg, fg='black', bg='red'),
+    logging.WARN: {'fg': 'yellow'},
+    logging.ERROR: {'fg': 'red'},
+    logging.CRITICAL: {'fg': 'black', 'bg': 'red'},
 }
 
 # See how Django change its logging confs with settings specifics.
@@ -40,6 +38,9 @@ DEFAULT_LOGGING = {
 
 class ColoredFormatter(logging.Formatter):
     def format(self, record):
-        style = DEFAULT_COLORS[record.levelno]
-        record.msg = style(record.msg)
+        options = DEFAULT_COLORS.get(record.levelno, {})
+
+        if options:
+            record.msg = click.style(record.msg, **options)
+
         return super().format(record)
