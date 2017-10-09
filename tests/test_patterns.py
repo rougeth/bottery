@@ -33,7 +33,7 @@ def test_pattern_check_wrong_message():
 
 def test_default_pattern_instance():
     def view(): return 'Hello world'
-    pattern = DefaultPattern('ping', view)
+    pattern = DefaultPattern(view)
     assert not pattern.pattern
     assert pattern.view == view
 
