@@ -7,7 +7,7 @@ from click.testing import CliRunner
 from testfixtures import LogCapture
 
 from bottery.cli import cli, debug_option
-from bottery.log import ColoredFormatter, DEFAULT_LOGGING
+from bottery.log import DEFAULT_LOGGING, ColoredFormatter
 
 
 def test_debug_flag_enabled():
