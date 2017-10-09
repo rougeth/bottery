@@ -1,12 +1,13 @@
 from unittest import mock
 
 import pytest
+
 from bottery.message import Message
 from bottery.platform.telegram import (TelegramAPI, TelegramEngine,
                                        TelegramUser, mixed_case)
 
-
 # TelegramUser
+
 
 def test_telegram_user_with_last_name():
     sender = {
