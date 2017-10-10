@@ -4,7 +4,7 @@ Quickstart
 ==========
 
 
-Hello World Bot
+PingPong Bot
 ---------------
 
 Starting project
