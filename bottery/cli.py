@@ -32,10 +32,8 @@ def cli():
 def startproject(name):
     # Must validate projects name before creating its folder
     if not name.isidentifier():
-        message = """
-            '{name}' is not a valid project name. Please make sure the
-            name is a valid identifier
-            """
+        message = ('"{name}" is not a valid project name. Please make sure '
+                   'the name is a valid identifier.')
         raise click.BadParameter(message.format(name=name))
 
     project_dir = os.path.join(os.getcwd(), name)
