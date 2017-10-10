@@ -4,7 +4,7 @@ Quickstart
 ==========
 
 
-Hello World Bot
+PingPong Bot
 ---------------
 
 Starting project
@@ -58,3 +58,8 @@ To run your bot just type:
     $ bottery run
 
 That's it, there's nothing else to do. Your bot should be working know. Go to Telegram and type `ping` to your bot, it should respond with `pong`.
+
+Project Examples
+^^^^^^^^^^^^^^^^
+
+A small example of how bottery can work can be seen [here](https://github.com/leportella/bottery-examples)
