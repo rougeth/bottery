@@ -14,4 +14,6 @@ class DefaultPattern:
         self.view = view
 
     def check(self, message):
+        # regarless the message, this pattern should return
+        # the view, so, there is no checks to be made here
         return self.view
