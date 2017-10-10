@@ -1,6 +1,6 @@
+import datetime
 import os
 import tempfile
-import datetime
 from unittest import mock
 
 from bottery.message import Message, render
@@ -30,4 +30,3 @@ def test_render(mocked_settings):
 
 def test_datetime():
     assert message.datetime == datetime.datetime(2017, 9, 23, 18, 35, 45)
-

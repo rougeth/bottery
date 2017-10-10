@@ -1,13 +1,19 @@
 import logging
 import logging.config
 import os
+from unittest import mock
 
 import click
 from click.testing import CliRunner
-from testfixtures import LogCapture
 
-from bottery.cli import cli, debug_option
-from bottery.log import ColoredFormatter, DEFAULT_LOGGING
+from bottery.cli import cli, debug_option, run
+
+
+@mock.patch('bottery.cli.App.run')
+def test_app_run_is_called(mocked_run):
+    runner = CliRunner()
+    runner.invoke(run)
+    assert mocked_run.called
 
 
 def test_debug_flag_enabled():
@@ -51,25 +57,3 @@ def test_startproject():
         assert result.exit_code == 0
         assert os.listdir() == [project_name]
         assert sorted(os.listdir(project_name)) == sorted(project_files)
-
-
-def test_ColoredFormatter():
-    c = ColoredFormatter()
-    expected = [
-        'DEBUG',
-        '\x1b[34mINFO\x1b[0m',
-        '\x1b[33mWARN\x1b[0m',
-        '\x1b[31mERROR\x1b[0m',
-        '\x1b[30m\x1b[41mCRITICAL\x1b[0m'
-    ]
-    logging.config.dictConfig(DEFAULT_LOGGING)
-    with LogCapture(names='bottery') as l:
-        logger = logging.getLogger('bottery')
-        logger.debug('DEBUG')
-        logger.info('INFO')
-        logger.warning('WARN')
-        logger.error('ERROR')
-        logger.critical('CRITICAL')
-        records = [x for x in l.records]
-        for i in range(len(records)):
-            assert c.format(records[i]) == expected[i]
