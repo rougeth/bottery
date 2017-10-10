@@ -63,7 +63,6 @@ def test_startproject_invalid_project_name():
     runner = CliRunner()
     with runner.isolated_filesystem():
         project_name = 'library-bot'
-        project_files = ['patterns.py', 'settings.py']
 
         result = runner.invoke(cli, ['startproject', project_name])
 
