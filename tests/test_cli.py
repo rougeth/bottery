@@ -1,11 +1,19 @@
 import logging
 import logging.config
 import os
+from unittest import mock
 
 import click
 from click.testing import CliRunner
 
-from bottery.cli import cli, debug_option
+from bottery.cli import cli, debug_option, run
+
+
+@mock.patch('bottery.cli.App.run')
+def test_app_run_is_called(mocked_run):
+    runner = CliRunner()
+    runner.invoke(run)
+    assert mocked_run.called
 
 
 def test_debug_flag_enabled():
