@@ -1,7 +1,7 @@
-from bottery.views import ping
+from bottery.views import pong
 
 
-def test_ping():
-    assert ping('any_string') == 'pong'
-    assert ping(1) == 'pong'
-    assert ping(None) == 'pong'
+def test_pong():
+    assert pong('any_string') == 'pong'
+    assert pong(1) == 'pong'
+    assert pong(None) == 'pong'
