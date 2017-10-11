@@ -65,6 +65,16 @@ def test_app_configure_without_platforms(mocked_settings):
         app.configure_platforms()
 
 
+def test_app_configure_with_tasks(mocked_engine):
+    """App should have empty tasks if not defined  on engine"""
+
+    mocked_engine['instance'].tasks.return_value = []
+    app = App()
+    app.configure_platforms()
+
+    assert not app.tasks
+
+
 def test_app_configure_with_platforms(mocked_engine):
     """Should call the platform interface methods"""
 
