@@ -1,2 +1,2 @@
-def ping(message):
+def pong(message):
     return 'pong'
