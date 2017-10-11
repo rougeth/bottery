@@ -6,6 +6,24 @@
 [![PyPI](https://img.shields.io/pypi/v/bottery.svg)](https://pypi.python.org/pypi/bottery)
 [![Versions](https://img.shields.io/pypi/pyversions/bottery.svg)](https://pypi.python.org/pypi/bottery)
 
+```python
+# quick example of a ping-pong bot
+from bottery.conf.patterns import DefaultPattern, Pattern
+
+def ping(message):
+    return "pong!"
+
+def not_found(message):
+    return "Sorry, I didn't understand you :/"
+
+patterns = [
+    Pattern('ping', ping),
+    DefaultPattern(not_found),
+]
+```
+
+The complete example can be seen [here](https://github.com/leportella/bottery-examples).
+
 * [Usage](#usage)
   * [Documentation](http://docs.bottery.io)
   * [Installing](#installing)

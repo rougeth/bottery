@@ -16,7 +16,7 @@ Once Bottery is installed, you will be able to use the Bottery cli (command-line
 
    $ bottery startproject librarybot
 
-This will create a directory named `librarybot` in your current directory with files inside:
+This will create a directory named ``librarybot`` in your current directory with files inside:
 
 .. code-block:: bash
 
@@ -64,4 +64,4 @@ That's it, there's nothing else to do. Your bot should be working know. Go to Te
 Project Examples
 ^^^^^^^^^^^^^^^^
 
-A small example of how bottery can work can be seen [here](https://github.com/leportella/bottery-examples)
+A small example of how bottery can work can be seen [here](https://github.com/leportella/bottery-examples).
