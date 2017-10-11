@@ -17,7 +17,7 @@ class Message:
 
     @property
     def datetime(self):
-        return datetime.fromtimestamp(self.timestamp)
+        return datetime.utcfromtimestamp(self.timestamp)
 
 
 def render(message, template_name, context={}):
