@@ -29,6 +29,8 @@ This will create a directory named `librarybot` in your current directory with f
 * *librarybot/patterns.py*: The Pattern declarations for this Bottery project;
 * *librarybot/settings.py*: Settings/configuration for this Bottery project.
 
+Keep in mind that the name you'll choose for your project must be a valid identifier according to the language definition (`check the documentation for further information on identifiers <https://docs.python.org/3.6/reference/lexical_analysis.html#identifiers>`_).
+
 
 Configuring token
 ^^^^^^^^^^^^^^^^^
