@@ -110,3 +110,42 @@ def test_build_message_with_non_message_data():
     message = engine.build_message(data)
 
     assert message is None
+
+
+def test_telegram_engine_tasks():
+    engine = TelegramEngine(token='')
+    engine.polling = 'something'
+    assert engine.tasks() == ['something']
+
+
+@mock.patch('bottery.platform.telegram.logger.debug')
+def test_telegram_engine_configure(mocked_debug):
+    '''Make sure logger.debug is called if the response from webhook
+       is positive.'''
+
+    def mocked_json(): return {'ok': True}
+
+    def mocked_delete_webhook(): return type('response', (),
+                                             {'json': mocked_json})
+    engine = TelegramEngine(token='')
+    engine.api.delete_webhook = mocked_delete_webhook
+    engine.session = ''
+    engine.configure()
+    assert mocked_debug.called
+
+
+@mock.patch('bottery.platform.telegram.logger.debug')
+def test_telegram_engine_configure_not_ok(mocked_debug):
+    '''Make sure logger.debug is not called if the response from webhook
+       is negative.'''
+
+    engine = TelegramEngine(token='')
+    engine.session = ''
+    engine.configure()
+    assert not mocked_debug.called
+
+
+def test_telegram_engine_define_new_mode():
+    '''Make sure TelegramEngine supports new modes.'''
+    engine = TelegramEngine(token='', mode='else')
+    assert engine.mode == 'else'
