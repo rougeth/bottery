@@ -6,9 +6,7 @@ import logging.config
 import aiohttp
 
 from bottery.conf import settings
-from bottery.log import DEFAULT_LOGGING
 
-logging.config.dictConfig(DEFAULT_LOGGING)
 logger = logging.getLogger('bottery')
 
 

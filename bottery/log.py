@@ -12,6 +12,7 @@ DEFAULT_COLORS = {
 # https://github.com/django/django/blob/master/django/utils/log.py#L64
 DEFAULT_LOGGING = {
     'version': 1,
+    'disable_existing_loggers': False,
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
