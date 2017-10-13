@@ -86,7 +86,6 @@ def test_app_configure_with_platforms(mocked_engine):
         token='should-be-a-valid-token'
     )
     mocked_engine['instance'].configure.assert_called_with()
-    mocked_engine['instance'].tasks.assert_called_with()
 
 
 @pytest.mark.usefixtures('mocked_engine')
@@ -99,5 +98,4 @@ def test_app_run(mocked_asyncio):
     mocked_event_loop = mocked_asyncio.get_event_loop.return_value
 
     mocked_asyncio.get_event_loop.assert_called_with()
-    mocked_event_loop.create_task.assert_called_with('fake')
     mocked_event_loop.run_forever.assert_called_with()

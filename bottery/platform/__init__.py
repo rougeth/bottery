@@ -27,9 +27,11 @@ def discover_view(message):
     return None
 
 
-class BasePlataform:
+class BasePlatform:
 
     def __init__(self, **kw):
+        self.tasks = []
+
         for item, value in kw.items():
             setattr(self, item, value)
 
@@ -43,6 +45,3 @@ class BasePlataform:
 
     def build_message(self):
         raise NotImplementedError('create_message not implemented')
-
-    def tasks(self):
-        return None

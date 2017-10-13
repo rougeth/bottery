@@ -114,8 +114,7 @@ def test_build_message_with_non_message_data():
 
 def test_telegram_engine_tasks():
     engine = TelegramEngine(token='')
-    engine.polling = 'something'
-    assert engine.tasks() == ['something']
+    assert engine.tasks == [engine.polling]
 
 
 @mock.patch('bottery.platform.telegram.logger.debug')

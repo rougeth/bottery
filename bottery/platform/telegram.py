@@ -67,7 +67,7 @@ class TelegramUser(User):
         return s.format(u=self)
 
 
-class TelegramEngine(platform.BasePlataform):
+class TelegramEngine(platform.BasePlatform):
     platform = 'telegram'
 
     def __init__(self, *args, **kwargs):
@@ -79,8 +79,7 @@ class TelegramEngine(platform.BasePlataform):
         if not hasattr(self, 'mode'):
             self.mode = 'polling'
 
-    def tasks(self):
-        return [self.polling]
+        self.tasks = [self.polling]
 
     def configure(self):
         response = self.api.delete_webhook()
