@@ -1,11 +1,11 @@
 import pytest
 
-from bottery.platform import BasePlatform
+from bottery.platform import BaseEngine
 
 
 def test_platform_baseplatform():
     platform = 'TEST_PLATFORM'
-    bp = BasePlatform(platform=platform)
+    bp = BaseEngine(platform=platform)
 
     assert bp.webhook_endpoint == '/hook/{}'.format(platform)
     assert not len(bp.tasks)

@@ -27,7 +27,7 @@ def discover_view(message):
     return None
 
 
-class BasePlatform:
+class BaseEngine:
 
     def __init__(self, **kw):
         self.tasks = []
