@@ -37,7 +37,10 @@ setup(
             'flake8',
             'isort',
             'pytest',
+            'pytest-cov',
+            'pytest-mock',
             'sphinx',
+            'testfixtures',
         ],
     },
     classifiers=[
