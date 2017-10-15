@@ -59,7 +59,7 @@ To run your bot just type:
 
     $ bottery run
 
-That's it, there's nothing else to do. Your bot should be working know. Go to Telegram and type ``ping`` to your bot, it should respond with ``pong``.
+That's it, there's nothing else to do. Your bot should be working now. Go to Telegram and type ``ping`` to your bot, it should respond with ``pong``.
 
 Project Examples
 ^^^^^^^^^^^^^^^^
