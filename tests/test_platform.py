@@ -3,29 +3,18 @@ import pytest
 from bottery.platform import BaseEngine
 
 
-def test_baseengine_platform():
-    """Check if platform attr raise NotImplementedError"""
+@pytest.mark.parametrize('attr', ['platform', 'tasks'])
+def test_baseengine_attrs(attr):
+    """Check if attributes from the public API raise NotImplementedError"""
     engine = BaseEngine()
     with pytest.raises(NotImplementedError):
-        engine.platform
+        getattr(engine, attr)
 
 
-def test_baseengine_tasks():
-    """Check if tasks attr raise NotImplementedError"""
+@pytest.mark.parametrize('method_name', ['build_message', 'configure'])
+def test_baseengine_calls(method_name):
+    """Check if method calls from public API raise NotImplementedError"""
     engine = BaseEngine()
     with pytest.raises(NotImplementedError):
-        engine.tasks
-
-
-def test_baseengine_build_message():
-    """Check if build_message method raise NotImplementedError"""
-    engine = BaseEngine()
-    with pytest.raises(NotImplementedError):
-        engine.build_message()
-
-
-def test_baseengine_configure():
-    """Check if configure method raise NotImplementedError"""
-    engine = BaseEngine()
-    with pytest.raises(NotImplementedError):
-        engine.configure()
+        method = getattr(engine, method_name)
+        method()
