@@ -2,7 +2,6 @@ import importlib
 import logging
 import os
 
-from bottery.conf import settings
 from bottery.exceptions import ImproperlyConfigured
 
 
@@ -27,21 +26,32 @@ def discover_view(message):
     return None
 
 
-class BasePlatform:
+class BaseEngine:
+    # Should we use ABC for required attributes and methods?
 
-    def __init__(self, **kw):
-        self.tasks = []
-
-        for item, value in kw.items():
+    def __init__(self, **kwargs):
+        # For each named parameters received, set it as an instance
+        # attribute
+        for item, value in kwargs.items():
             setattr(self, item, value)
 
     @property
-    def webhook_endpoint(self):
-        return '/hook/{}'.format(self.platform)
+    def platform(self):
+        """Platform name"""
+        raise NotImplementedError('platform attribute not implemented')
 
     @property
-    def webhook_url(self):
-        return 'https://{}{}'.format(settings.HOSTNAME, self.webhook_endpoint)
+    def tasks(self):
+        """List of tasks to be added to the main event loop"""
+        raise NotImplementedError('tasks attribute not implemented')
 
     def build_message(self):
-        raise NotImplementedError('create_message not implemented')
+        """
+        Build Message instance according to the data received from the
+        platform API.
+        """
+        raise NotImplementedError('build_message not implemented')
+
+    def configure(self):
+        """Called by App instance to configure the platform"""
+        raise NotImplementedError('configure not implemented')
