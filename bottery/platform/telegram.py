@@ -92,26 +92,26 @@ class TelegramEngine(platform.BaseEngine):
         self.api.session = self.session
 
     async def polling(self, session, last_update=None):
-        payload = {}
-        if last_update:
-            # `offset` param prevets from getting duplicates updates
-            # from Telegram API:
-            # https://core.telegram.org/bots/api#getupdates
-            payload['offset'] = last_update + 1
+        while True:
+            payload = {}
+            if last_update:
+                # `offset` param prevents getting duplicate updates
+                # from Telegram API:
+                # https://core.telegram.org/bots/api#getupdates
+                payload['offset'] = last_update + 1
 
-        response = await self.api.get_updates(payload)
-        updates = await response.json()
+            response = await self.api.get_updates(payload)
+            updates = await response.json()
 
-        # If polling request returned at least one update, use its ID
-        # to define the offset.
-        if len(updates.get('result', [])):
-            last_update = updates['result'][-1]['update_id']
+            # If polling request returned at least one update, use its ID
+            # to define the offset.
+            if len(updates.get('result', [])):
+                last_update = updates['result'][-1]['update_id']
 
-        # Handle each new message, send its responses and then request
-        # updates again.
-        tasks = [self.message_handler(msg) for msg in updates['result']]
-        await asyncio.gather(*tasks)
-        await self.polling(session, last_update)
+            # Handle each new message, send its responses and then request
+            # updates again.
+            tasks = [self.message_handler(msg) for msg in updates['result']]
+            await asyncio.gather(*tasks)
 
     def build_message(self, data):
         '''
