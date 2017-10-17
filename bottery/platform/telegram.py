@@ -111,7 +111,7 @@ class TelegramEngine(platform.BaseEngine):
         # updates again.
         tasks = [self.message_handler(msg) for msg in updates['result']]
         await asyncio.gather(*tasks)
-        await self.polling(session, last_update)
+        asyncio.ensure_future(self.polling(session, last_update))
 
     def build_message(self, data):
         '''
