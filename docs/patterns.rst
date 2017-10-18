@@ -49,7 +49,7 @@ after it will be ignored.
 
 .. code-block:: py
    
-    from bottery.patterns import DefaultPattern
+    from bottery.conf.patterns import DefaultPattern
 
     def not_found(message):
         return "Sorry, I can't understand what you're saying :("
