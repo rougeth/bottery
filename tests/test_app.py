@@ -76,7 +76,7 @@ def test_app_configure_with_tasks(mocked_engine):
 
 
 def test_app_configure_with_multiple_tasks(mocked_engine):
-    """App should have empty tasks if not defined  on engine"""
+    """App should have multiple tasks if defined  on engine"""
     async def fake_task(session):
         await asyncio.sleep(0)
 
