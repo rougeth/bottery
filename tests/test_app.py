@@ -68,11 +68,26 @@ def test_app_configure_without_platforms(mocked_settings):
 def test_app_configure_with_tasks(mocked_engine):
     """App should have empty tasks if not defined  on engine"""
 
-    mocked_engine['instance'].tasks.return_value = []
+    mocked_engine['instance'].tasks = []
     app = App()
     app.configure_platforms()
 
     assert not app.tasks
+
+
+def test_app_configure_with_multiple_tasks(mocked_engine):
+    """App should have empty tasks if not defined  on engine"""
+    async def fake_task(session):
+        await asyncio.sleep(0)
+
+    first_task = fake_task
+    second_task = fake_task
+
+    mocked_engine['instance'].tasks = [first_task, second_task]
+    app = App()
+    app.configure_platforms()
+
+    assert app.tasks == [first_task, second_task]
 
 
 def test_app_configure_with_platforms(mocked_engine):
