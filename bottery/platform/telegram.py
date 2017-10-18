@@ -5,7 +5,7 @@ import requests
 
 from bottery import platform
 from bottery.message import Message
-from bottery.platform import discover_view
+from bottery.platform import discover_and_run_view
 from bottery.user import User
 
 logger = logging.getLogger('bottery.telegram')
@@ -50,6 +50,7 @@ class TelegramUser(User):
     Telegram User reference
     https://core.telegram.org/bots/api#user
     '''
+
     def __init__(self, sender):
         self.id = sender['id']
         self.first_name = sender['first_name']
@@ -137,11 +138,9 @@ class TelegramEngine(platform.BaseEngine):
         message = self.build_message(data)
 
         # Try to find a view (best name?) to response the message
-        view = discover_view(message)
-        if not view:
+        response = discover_and_run_view(message)
+        if not response:
             return
-
-        response = view(message)
 
         # TODO: Choose between Markdown and HTML
         data = {
