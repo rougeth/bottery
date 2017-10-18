@@ -1,4 +1,5 @@
 import importlib
+import inspect
 import logging
 import os
 
@@ -55,3 +56,14 @@ class BaseEngine:
     def configure(self):
         """Called by App instance to configure the platform"""
         raise NotImplementedError('configure not implemented')
+
+    async def get_response(self, view, message):
+        """
+        Get response running the view with await syntax if it is a
+        coroutine function, otherwise just run it the normal way.
+        """
+
+        if inspect.iscoroutinefunction(view):
+            return await view(message)
+
+        return view(message)

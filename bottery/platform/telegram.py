@@ -1,5 +1,4 @@
 import asyncio
-import inspect
 import logging
 
 import requests
@@ -134,17 +133,6 @@ class TelegramEngine(platform.BaseEngine):
         else:
             return None
 
-    def get_response(self, view, message):
-        """
-        Get response running the view with await syntax if it is a
-        coroutine function, otherwise just run it the normal way.
-        """
-
-        if instance.iscoroutinefunction(view):
-            return await view(message)
-
-        return view(message)
-
     async def message_handler(self, data):
         message = self.build_message(data)
 
@@ -154,7 +142,7 @@ class TelegramEngine(platform.BaseEngine):
             return
 
         # TODO: Test if the view returned something or not
-        response = self.get_response(view, message)
+        response = await self.get_response(view, message)
 
         # TODO: Choose between Markdown and HTML
         data = {
