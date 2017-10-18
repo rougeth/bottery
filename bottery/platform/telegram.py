@@ -6,6 +6,7 @@ import requests
 from bottery import platform
 from bottery.message import Message
 from bottery.platform import discover_view
+from bottery.response import Response
 from bottery.user import User
 
 logger = logging.getLogger('bottery.telegram')
@@ -141,16 +142,24 @@ class TelegramEngine(platform.BaseEngine):
         if not view:
             return
 
-        response = view(message)
+        data = normalize_telegram_response(view, message)
 
-        # TODO: Choose between Markdown and HTML
-        data = {
-            'chat_id': message.user.id,
-            'text': response,
-            'parse_mode': 'Markdown',
-        }
         # TODO: Verify response status
         await self.api.send_message(data=data)
+
+
+def normalize_telegram_response(view, message):
+    response = view(message)
+
+    # TODO: Alert if required field does not exist
+    if isinstance(response, Response):
+        return response.telegram
+
+    return {
+        "chat_id": message.user.id,
+        "text": response,
+        "parse_mode": "Markdown",
+    }
 
 
 engine = TelegramEngine
