@@ -50,7 +50,7 @@ class App:
             tasks = engine.tasks
 
             if len(tasks):
-                self.tasks.append(*tasks)
+                self.tasks.extend(tasks)
 
             logger.debug('[%s] Ready', engine.platform)
 
