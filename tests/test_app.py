@@ -110,7 +110,16 @@ def test_app_run(mocked_asyncio):
 
     app = App()
     app.run()
+
     mocked_event_loop = mocked_asyncio.get_event_loop.return_value
 
     mocked_asyncio.get_event_loop.assert_called_with()
     mocked_event_loop.run_forever.assert_called_with()
+
+
+def test_app_stop():
+    app = App()
+    app.stop()
+
+    assert app.loop.is_closed()
+    assert app.session.closed

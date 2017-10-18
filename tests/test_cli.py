@@ -16,6 +16,17 @@ def test_app_run_is_called(mocked_run):
     assert mocked_run.called
 
 
+@mock.patch('bottery.cli.App.run')
+@mock.patch('bottery.cli.App.stop')
+def test_keyboard_interrupt_correctly_close_app(mocked_stop, mocked_run):
+    runner = CliRunner()
+    mocked_run.side_effect = KeyboardInterrupt()
+    runner.invoke(run)
+
+    assert mocked_run.called
+    assert mocked_stop.called
+
+
 def test_debug_flag_enabled():
     logger = logging.getLogger('bottery')
     logger.setLevel(logging.INFO)

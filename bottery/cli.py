@@ -54,4 +54,8 @@ def startproject(name):
 @debug_option
 def run(port, debug):
     app = App()
-    app.run()
+
+    try:
+        app.run()
+    except KeyboardInterrupt:
+        app.stop()

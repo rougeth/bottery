@@ -63,3 +63,10 @@ class App:
         logger.debug('Tasks created')
 
         self.loop.run_forever()
+
+    def stop(self):
+        self.session.close()
+        # Exit event loop at the next suitable opportunity...
+        self.loop.stop()
+        # ...and now close it.
+        self.loop.close()
