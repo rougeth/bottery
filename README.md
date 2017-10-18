@@ -10,10 +10,10 @@
 # quick example of a ping pong bot
 from bottery.conf.patterns import DefaultPattern, Pattern
 
-def pong(message):
+async def pong(message):
     return "pong!"
 
-def not_found(message):
+async def not_found(message):
     return "Sorry, I didn't understand you :/"
 
 patterns = [
