@@ -42,6 +42,9 @@ setup(
             'sphinx',
             'testfixtures',
         ],
+        'slack': [
+            'slackclient'
+        ]
     },
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',

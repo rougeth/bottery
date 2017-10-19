@@ -45,7 +45,7 @@ class BaseEngine:
         """List of tasks to be added to the main event loop"""
         raise NotImplementedError('tasks attribute not implemented')
 
-    def build_message(self):
+    def build_message(self, data):
         """
         Build Message instance according to the data received from the
         platform API.
