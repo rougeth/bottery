@@ -1,25 +1,22 @@
-Writing Views
-=============
+Views
+=====
 
-When you receive a message on your Bottery bot you should define a pattern that 
-will expect a view as the response parameter. Here we are going to talk a little bit on
-how you can define your view.
+When you receive a message on your bot, Bottery will try to find a view to process and respond that message. Here we are going to talk a little bit on how a view works and how you can create your own.
 
-Defining a new response 
-^^^^^^^^^^^^^^^^^^^^^^^
+Creating a new view
+^^^^^^^^^^^^^^^^^^^
 
-On the `patterns.py` file, you should define the messages you aim to receive and
-functions to return it. You can create a new function called `hello` that will 
-return a string:
+A view on Bottery is nothing more than a function that receives a Message object and returns a string that contains the text (for now, only texts) to be used as response.
+
+On the `patterns.py` file, you should define the messages you aim to receive and functions to return it. You can create a new function called `hello` that will return a string `Hello World`:
 
 
 .. code-block:: py
 
-    def hello(message):
+    async def hello(message):
         return 'Hello world!'
 
-Now, create a new pattern that receives a message, and returns our newly
-created function:
+Now, create a new pattern that receives the message `hello`, and returns our newly created view:
 
 
 .. code-block:: py
@@ -28,8 +25,12 @@ created function:
         Pattern('hello', hello)
     ]
 
-Now your bot is able to return a message when receiving a `hello` message.
+Now your bot is able to respond a `hello` message.
 
+Sync views
+^^^^^^^^^^
+
+In the Bottery documentation, all the views definitions uses the `async` keyword. That doesn't mean that every view on your bot must be defined with `asyncio` syntax. You just need to be careful when creating views as normal functions, since you can accidentally block your bot while executing this view by making a block operation, for example a request to an external API that takes too long.
 
 Working with templates
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -63,7 +64,7 @@ Here is an example using render without needing any extra content:
 
     from bottery.message import render
 
-    def hello(message):
+    async def hello(message):
         return render(message, 'hello.md')
 
 
@@ -75,6 +76,6 @@ the render function:
 
     from bottery.message import render
 
-    def hello(message):
+    async def hello(message):
         return render(message, 'hello.md',
                       {'question': 'interested, yet?'})

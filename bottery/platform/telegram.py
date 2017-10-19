@@ -141,7 +141,8 @@ class TelegramEngine(platform.BaseEngine):
         if not view:
             return
 
-        response = view(message)
+        # TODO: Test if the view returned something or not
+        response = await self.get_response(view, message)
 
         # TODO: Choose between Markdown and HTML
         data = {

@@ -37,6 +37,7 @@ setup(
             'flake8',
             'isort',
             'pytest',
+            'pytest-asyncio',
             'pytest-cov',
             'pytest-mock',
             'sphinx',
