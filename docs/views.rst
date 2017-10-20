@@ -39,7 +39,7 @@ Sometimes, you need complex and big messages to be returned by your patterns.
 Bottery is able to render and respond messages using templates written in
 markdown.
 
-On your project directory, create a `template` folder. Your templates should be
+On your project directory, create a folder named "**templates**". Your templates should be
 kept inside this folder so Bottery can find them. For other configuration,
 please check the `settings`  section.
 
