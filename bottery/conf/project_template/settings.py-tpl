@@ -1,5 +1,3 @@
-HOSTNAME = ''
-
 PLATFORMS = {
     'telegram': {
         'ENGINE': 'bottery.platform.telegram',
