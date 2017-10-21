@@ -6,6 +6,7 @@ from unittest import mock
 import click
 from click.testing import CliRunner
 
+import bottery
 from bottery.cli import cli, debug_option, run
 
 
@@ -78,3 +79,24 @@ def test_startproject_invalid_project_name():
         result = runner.invoke(cli, ['startproject', project_name])
 
         assert result.exit_code == 2
+
+
+def test_version_option():
+    runner = CliRunner()
+    result = runner.invoke(cli, ['--version'])
+
+    assert bottery.__version__ in result.output
+    assert result.exit_code == 0
+
+
+def test_no_options_shows_help_message():
+    """
+    Test if CLI shows the help message when no option or command is
+    given.
+    """
+    runner = CliRunner()
+    result = runner.invoke(cli)
+    ctx = click.Context(cli, info_name='cli')
+
+    assert ctx.get_help() == result.output.strip()
+    assert result.exit_code == 0
