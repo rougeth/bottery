@@ -18,7 +18,6 @@ def discover_view(message):
     patterns = importlib.import_module('patterns').patterns
     for pattern in patterns:
         if pattern.check(message):
-            logger.debug('[%s] Pattern found', message.platform)
             if isinstance(pattern.view, str):
                 return importlib.import_module(pattern.view)
             return pattern.view
@@ -37,9 +36,9 @@ class BaseEngine:
             setattr(self, item, value)
 
     @property
-    def platform(self):
-        """Platform name"""
-        raise NotImplementedError('platform attribute not implemented')
+    def engine(self):
+        """Engine name"""
+        raise NotImplementedError('engine attribute not implemented')
 
     @property
     def tasks(self):

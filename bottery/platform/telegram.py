@@ -68,7 +68,7 @@ class TelegramUser(User):
 
 
 class TelegramEngine(platform.BaseEngine):
-    platform = 'telegram'
+    engine = 'telegram'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -135,6 +135,7 @@ class TelegramEngine(platform.BaseEngine):
 
     async def message_handler(self, data):
         message = self.build_message(data)
+        logger.info('[%s] Message from %s' % (self.platform, message.user))
 
         # Try to find a view (best name?) to response the message
         view = discover_view(message)

@@ -2,9 +2,12 @@ import asyncio
 import importlib
 import logging
 import logging.config
+from datetime import datetime
 
 import aiohttp
+import click
 
+import bottery
 from bottery.conf import settings
 
 logger = logging.getLogger('bottery')
@@ -30,7 +33,7 @@ class App:
         return self._loop
 
     def configure_platforms(self):
-        platforms = settings.PLATFORMS.values()
+        platforms = settings.PLATFORMS.items()
 
         # Raise Exception if no platform was configured.
         if not platforms:
@@ -40,10 +43,11 @@ class App:
         # of its engine, run its `configure` method and add its tasks
         # to the App's tasks list. Once it's configured, create
         # a route for its handler.
-        for platform in platforms:
+        for platform_name, platform in platforms:
             logger.debug('Configuring engine %s', platform['ENGINE'])
 
             mod = importlib.import_module(platform['ENGINE'])
+            platform['OPTIONS']['platform'] = platform_name
             platform['OPTIONS']['session'] = self.session
             engine = mod.engine(**platform['OPTIONS'])
             engine.configure()
@@ -55,13 +59,19 @@ class App:
             logger.debug('[%s] Ready', engine.platform)
 
     def run(self):
+        click.echo('Configuring platforms...\n')
         self.configure_platforms()
 
         # Add Platforms tasks to the App loop.
         for task in self.tasks:
             self.loop.create_task(task(session=self.session))
-        logger.debug('Tasks created')
 
+        now = datetime.now().strftime('%B %d, %Y - %X')
+        msg = ('{now}\n'
+               'Bottery version {version}\n'
+               'Starting development server\n'
+               'Quit the server with CONTROL-C\n')
+        click.echo(msg.format(now=now, version=bottery.__version__))
         self.loop.run_forever()
 
     def stop(self):
