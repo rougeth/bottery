@@ -68,7 +68,7 @@ class TelegramUser(User):
 
 
 class TelegramEngine(platform.BaseEngine):
-    engine = 'telegram'
+    platform = 'telegram'
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -87,7 +87,7 @@ class TelegramEngine(platform.BaseEngine):
         response = self.api.delete_webhook()
         response = response.json()
         if response['ok']:
-            logger.debug('[%s] Polling mode set', self.platform)
+            logger.debug('[%s] Polling mode set', self.engine_name)
 
         self.api.session = self.session
 
@@ -135,7 +135,7 @@ class TelegramEngine(platform.BaseEngine):
 
     async def message_handler(self, data):
         message = self.build_message(data)
-        logger.info('[%s] Message from %s' % (self.platform, message.user))
+        logger.info('[%s] Message from %s' % (self.engine_name, message.user))
 
         # Try to find a view (best name?) to response the message
         view = discover_view(message)

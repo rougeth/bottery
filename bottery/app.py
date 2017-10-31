@@ -43,11 +43,11 @@ class App:
         # of its engine, run its `configure` method and add its tasks
         # to the App's tasks list. Once it's configured, create
         # a route for its handler.
-        for platform_name, platform in platforms:
+        for engine_name, platform in platforms:
             logger.debug('Configuring engine %s', platform['ENGINE'])
 
             mod = importlib.import_module(platform['ENGINE'])
-            platform['OPTIONS']['platform'] = platform_name
+            platform['OPTIONS']['engine_name'] = engine_name
             platform['OPTIONS']['session'] = self.session
             engine = mod.engine(**platform['OPTIONS'])
             engine.configure()

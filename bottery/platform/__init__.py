@@ -30,15 +30,16 @@ class BaseEngine:
     # Should we use ABC for required attributes and methods?
 
     def __init__(self, **kwargs):
+        kwargs['engine_name'] = kwargs.get('engine_name', '')
         # For each named parameters received, set it as an instance
         # attribute
         for item, value in kwargs.items():
             setattr(self, item, value)
 
     @property
-    def engine(self):
-        """Engine name"""
-        raise NotImplementedError('engine attribute not implemented')
+    def platform(self):
+        """Platform name"""
+        raise NotImplementedError('platform attribute not implemented')
 
     @property
     def tasks(self):

@@ -12,7 +12,7 @@ from bottery.app import App
 def mocked_engine(mock):
     mocked_settings = mock.patch('bottery.app.settings')
     mocked_settings.PLATFORMS = {
-        'test': {
+        'test_platform': {
             'ENGINE': 'tests.fake_engine',
             'OPTIONS': {
                 'token': 'should-be-a-valid-token'
@@ -98,6 +98,7 @@ def test_app_configure_with_platforms(mocked_engine):
 
     mocked_engine['module'].engine.assert_called_with(
         session=app.session,
+        engine_name='test_platform',
         token='should-be-a-valid-token'
     )
     mocked_engine['instance'].configure.assert_called_with()
