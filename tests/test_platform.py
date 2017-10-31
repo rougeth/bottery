@@ -4,7 +4,7 @@ from bottery.platform import BaseEngine
 
 
 @pytest.mark.parametrize('attr', ['platform', 'tasks'])
-def test_baseengine_attrs(attr):
+def test_baseengine_not_implemented_attrs(attr):
     """Check if attributes from the public API raise NotImplementedError"""
     engine = BaseEngine()
     with pytest.raises(NotImplementedError):
@@ -12,7 +12,7 @@ def test_baseengine_attrs(attr):
 
 
 @pytest.mark.parametrize('method_name', ['build_message', 'configure'])
-def test_baseengine_calls(method_name):
+def test_baseengine_not_implemented_calls(method_name):
     """Check if method calls from public API raise NotImplementedError"""
     engine = BaseEngine()
     with pytest.raises(NotImplementedError):
