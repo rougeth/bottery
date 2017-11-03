@@ -6,6 +6,7 @@ from datetime import datetime
 
 import aiohttp
 import click
+from halo import Halo
 
 import bottery
 from bottery.conf import settings
@@ -44,22 +45,23 @@ class App:
         # to the App's tasks list. Once it's configured, create
         # a route for its handler.
         for engine_name, platform in platforms:
-            logger.debug('Configuring engine %s', platform['ENGINE'])
+            spinner_msg = 'Configuring %s' % engine_name
+            with Halo(text=spinner_msg, spinner='dots') as spinner:
+                mod = importlib.import_module(platform['ENGINE'])
+                platform['OPTIONS']['engine_name'] = engine_name
+                platform['OPTIONS']['session'] = self.session
+                engine = mod.engine(**platform['OPTIONS'])
+                engine.configure()
+                tasks = engine.tasks
 
-            mod = importlib.import_module(platform['ENGINE'])
-            platform['OPTIONS']['engine_name'] = engine_name
-            platform['OPTIONS']['session'] = self.session
-            engine = mod.engine(**platform['OPTIONS'])
-            engine.configure()
-            tasks = engine.tasks
+                if len(tasks):
+                    self.tasks.extend(tasks)
+                spinner_msg = '{} configured'.format(engine_name).capitalize()
+                spinner.succeed(spinner_msg)
 
-            if len(tasks):
-                self.tasks.extend(tasks)
-
-            logger.debug('[%s] Ready', engine.platform)
+        click.echo()  # Just print an empty line
 
     def run(self):
-        click.echo('Configuring platforms...\n')
         self.configure_platforms()
 
         # Add Platforms tasks to the App loop.

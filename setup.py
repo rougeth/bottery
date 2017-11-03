@@ -28,6 +28,7 @@ setup(
     install_requires=[
         'aiohttp',
         'click',
+        'halo',
         'jinja2',
         'requests',
     ],
