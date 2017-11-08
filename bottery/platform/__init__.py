@@ -53,7 +53,7 @@ class BaseEngine:
         """
         raise NotImplementedError('build_message not implemented')
 
-    def configure(self):
+    async def configure(self):
         """Called by App instance to configure the platform"""
         raise NotImplementedError('configure not implemented')
 

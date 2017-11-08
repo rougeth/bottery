@@ -72,10 +72,11 @@ class TelegramEngine(platform.BaseEngine):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.api = TelegramAPI(self.token)
+        self.api = TelegramAPI(self.token, session=self.session)
 
         # If no `mode` was defined at settings.py, use by default
-        # polling mode.
+        # polling mode. We need to test if `mode` is either `polling`
+        # or `webhook`, if not, raise ImproperlyConfigured.
         if not hasattr(self, 'mode'):
             self.mode = 'polling'
 
@@ -83,13 +84,11 @@ class TelegramEngine(platform.BaseEngine):
     def tasks(self):
         return [self.polling]
 
-    def configure(self):
-        response = self.api.delete_webhook()
-        response = response.json()
+    async def configure(self):
+        response = await self.api.delete_webhook()
+        response = await response.json()
         if response['ok']:
             logger.debug('[%s] Polling mode set', self.engine_name)
-
-        self.api.session = self.session
 
     async def polling(self, session, last_update=None):
         payload = {}
@@ -121,17 +120,17 @@ class TelegramEngine(platform.BaseEngine):
         '''
         message_data = data.get('message')
 
-        if message_data:
-            return Message(
-                id=message_data['message_id'],
-                platform=self.platform,
-                text=message_data['text'],
-                user=TelegramUser(message_data['from']),
-                timestamp=message_data['date'],
-                raw=data,
-            )
-        else:
+        if not message_data:
             return None
+
+        return Message(
+            id=message_data['message_id'],
+            platform=self.platform,
+            text=message_data['text'],
+            user=TelegramUser(message_data['from']),
+            timestamp=message_data['date'],
+            raw=data,
+        )
 
     async def message_handler(self, data):
         message = self.build_message(data)
