@@ -2,8 +2,11 @@ import asyncio
 import logging
 
 import requests
+from aiohttp import web
 
 from bottery import platform
+from bottery.conf import settings
+from bottery.exceptions import ImproperlyConfigured
 from bottery.message import Message
 from bottery.platform import discover_view
 from bottery.user import User
@@ -82,9 +85,13 @@ class TelegramEngine(platform.BaseEngine):
 
     @property
     def tasks(self):
-        return [self.polling]
+        if self.mode == 'polling':
+            return [self.polling]
 
-    async def configure(self):
+        # Webhook mode doesn't need to add any task to the event loop.
+        return []
+
+    async def configure_polling(self):
         response = await self.api.delete_webhook()
         response = await response.json()
         if response['ok']:
@@ -111,6 +118,32 @@ class TelegramEngine(platform.BaseEngine):
         tasks = [self.message_handler(msg) for msg in updates['result']]
         await asyncio.gather(*tasks)
         asyncio.ensure_future(self.polling(session, last_update))
+
+    async def configure_webhook(self):
+        hostname = getattr(settings, 'HOSTNAME')
+        if not hostname:
+            raise ImproperlyConfigured('Missing HOSTNAME setting')
+
+        response = await self.api.set_webhook({'url': hostname})
+        response = await response.json()
+        if response['ok']:
+            logger.debug('[%s] Webhook mode set', self.engine_name)
+
+        self.server.router.add_post('/', self.webhook)
+
+    async def webhook(self, request):
+        update = await request.json()
+        await asyncio.gather(self.message_handler(update))
+        return web.Response()
+
+    async def configure(self):
+        method_name = 'configure_{}'.format(self.mode)
+        configure_mode = getattr(self, method_name, None)
+        if not configure_mode:
+            msg = "There's no method to configure %s mode" % self.mode
+            raise ImproperlyConfigured(msg)
+
+        await configure_mode()
 
     def build_message(self, data):
         '''
