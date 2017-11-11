@@ -5,12 +5,11 @@ import pytest
 from bottery.platform import BaseEngine
 
 
-@pytest.mark.parametrize('attr', ['platform', 'tasks'])
-def test_baseengine_not_implemented_attrs(attr):
+def test_baseengine_platform_name_not_implemented():
     """Check if attributes from the public API raise NotImplementedError"""
     engine = BaseEngine()
     with pytest.raises(NotImplementedError):
-        getattr(engine, attr)
+        getattr(engine, 'platform')
 
 
 @pytest.mark.asyncio

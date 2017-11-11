@@ -83,21 +83,15 @@ class TelegramEngine(platform.BaseEngine):
         if not hasattr(self, 'mode'):
             self.mode = 'polling'
 
-    @property
-    def tasks(self):
-        if self.mode == 'polling':
-            return [self.polling]
-
-        # Webhook mode doesn't need to add any task to the event loop.
-        return []
-
     async def configure_polling(self):
         response = await self.api.delete_webhook()
         response = await response.json()
         if response['ok']:
             logger.debug('[%s] Polling mode set', self.engine_name)
 
-    async def polling(self, session, last_update=None):
+        self.tasks.append(self.polling)
+
+    async def polling(self, last_update=None):
         payload = {}
         if last_update:
             # `offset` param prevets from getting duplicates updates
@@ -117,7 +111,7 @@ class TelegramEngine(platform.BaseEngine):
         # updates again.
         tasks = [self.message_handler(msg) for msg in updates['result']]
         await asyncio.gather(*tasks)
-        asyncio.ensure_future(self.polling(session, last_update))
+        asyncio.ensure_future(self.polling(last_update))
 
     async def configure_webhook(self):
         hostname = getattr(settings, 'HOSTNAME')

@@ -77,7 +77,7 @@ class App:
 
         # Add Platforms tasks to the App loop.
         for task in self.tasks:
-            self.loop.create_task(task(session=self.session))
+            self.loop.create_task(task())
 
         # If the webserver was created, run its configurations tasks
         if self._server is not None:
