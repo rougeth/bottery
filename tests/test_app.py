@@ -10,6 +10,11 @@ from bottery.app import App
 
 @pytest.fixture
 def mocked_engine(mock):
+    async def configure(*args, **kwargs):
+        pass
+    mocked_configure = mock.MagicMock()
+    mocked_configure.return_value = configure()
+
     mocked_settings = mock.patch('bottery.app.settings')
     mocked_settings.PLATFORMS = {
         'test_platform': {
@@ -23,6 +28,7 @@ def mocked_engine(mock):
     mocked_engine_module = mock.MagicMock()
     mocked_engine_instance = mocked_engine_module.engine.return_value
     mocked_engine_instance.tasks.return_value = [lambda session: 'fake']
+    mocked_engine_instance.configure.return_value = mocked_configure
     sys.modules['tests.fake_engine'] = mocked_engine_module
 
     yield {
@@ -56,13 +62,14 @@ def test_app_already_configured_loop():
 
 
 @mock.patch('bottery.app.settings')
-def test_app_configure_without_platforms(mocked_settings):
+@pytest.mark.asyncio
+async def test_app_configure_without_platforms(mocked_settings):
     """Should raise Exception if no platform was found at settings"""
 
     mocked_settings.PLATFORMS = {}
     app = App()
     with pytest.raises(Exception):
-        app.configure_platforms()
+        await app.configure_platforms()
 
 
 def test_app_configure_with_tasks(mocked_engine):
@@ -75,7 +82,8 @@ def test_app_configure_with_tasks(mocked_engine):
     assert not app.tasks
 
 
-def test_app_configure_with_multiple_tasks(mocked_engine):
+@pytest.mark.asyncio
+async def test_app_configure_with_multiple_tasks(mocked_engine):
     """App should have multiple tasks if defined on engine"""
     async def fake_task(session):
         await asyncio.sleep(0)
@@ -85,7 +93,7 @@ def test_app_configure_with_multiple_tasks(mocked_engine):
 
     mocked_engine['instance'].tasks = [first_task, second_task]
     app = App()
-    app.configure_platforms()
+    await app.configure_platforms()
 
     assert app.tasks == [first_task, second_task]
 

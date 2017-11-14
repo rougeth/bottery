@@ -33,7 +33,7 @@ class App:
             self._loop = asyncio.get_event_loop()
         return self._loop
 
-    def configure_platforms(self):
+    async def configure_platforms(self):
         platforms = settings.PLATFORMS.items()
 
         # Raise Exception if no platform was configured.
@@ -51,7 +51,7 @@ class App:
                 platform['OPTIONS']['engine_name'] = engine_name
                 platform['OPTIONS']['session'] = self.session
                 engine = mod.engine(**platform['OPTIONS'])
-                engine.configure()
+                await engine.configure()
                 tasks = engine.tasks
 
                 if len(tasks):
@@ -62,7 +62,7 @@ class App:
         click.echo()  # Just print an empty line
 
     def run(self):
-        self.configure_platforms()
+        self.loop.run_until_complete(self.configure_platforms())
 
         # Add Platforms tasks to the App loop.
         for task in self.tasks:
