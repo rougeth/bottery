@@ -6,6 +6,7 @@ from datetime import datetime
 
 import aiohttp
 import click
+from aiohttp import web
 from halo import Halo
 
 import bottery
@@ -18,22 +19,28 @@ class App:
 
     _loop = None
     _session = None
-    _configure = None
+    _server = None
     tasks = []
 
     @property
     def session(self):
-        if not self._session:
+        if self._session is None:
             self._session = aiohttp.ClientSession(loop=self.loop)
         return self._session
 
     @property
     def loop(self):
-        if not self._loop:
+        if self._loop is None:
             self._loop = asyncio.get_event_loop()
         return self._loop
 
-    def configure_platforms(self):
+    @property
+    def server(self):
+        if self._server is None:
+            self._server = web.Application()
+        return self._server
+
+    async def configure_platforms(self):
         platforms = settings.PLATFORMS.items()
 
         # Raise Exception if no platform was configured.
@@ -47,11 +54,15 @@ class App:
         for engine_name, platform in platforms:
             spinner_msg = 'Configuring %s' % engine_name
             with Halo(text=spinner_msg, spinner='dots') as spinner:
-                mod = importlib.import_module(platform['ENGINE'])
+
                 platform['OPTIONS']['engine_name'] = engine_name
                 platform['OPTIONS']['session'] = self.session
+                if platform['OPTIONS'].get('mode') == 'webhook':
+                    platform['OPTIONS']['server'] = self.server
+
+                mod = importlib.import_module(platform['ENGINE'])
                 engine = mod.engine(**platform['OPTIONS'])
-                engine.configure()
+                await engine.configure()
                 tasks = engine.tasks
 
                 if len(tasks):
@@ -62,11 +73,17 @@ class App:
         click.echo()  # Just print an empty line
 
     def run(self):
-        self.configure_platforms()
+        self.loop.run_until_complete(self.configure_platforms())
 
         # Add Platforms tasks to the App loop.
         for task in self.tasks:
-            self.loop.create_task(task(session=self.session))
+            self.loop.create_task(task())
+
+        # If the webserver was created, run its configurations tasks
+        if self._server is not None:
+            handler = self.server.make_handler()
+            setup_server = self.loop.create_server(handler, '0.0.0.0', 8000)
+            self.loop.run_until_complete(setup_server)
 
         now = datetime.now().strftime('%B %d, %Y - %X')
         msg = ('{now}\n'
@@ -74,6 +91,7 @@ class App:
                'Starting development server\n'
                'Quit the server with CONTROL-C\n')
         click.echo(msg.format(now=now, version=bottery.__version__))
+
         self.loop.run_forever()
 
     def stop(self):

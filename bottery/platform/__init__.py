@@ -30,6 +30,8 @@ class BaseEngine:
     # Should we use ABC for required attributes and methods?
 
     def __init__(self, **kwargs):
+        self.tasks = []
+
         kwargs['engine_name'] = kwargs.get('engine_name', '')
         # For each named parameters received, set it as an instance
         # attribute
@@ -41,11 +43,6 @@ class BaseEngine:
         """Platform name"""
         raise NotImplementedError('platform attribute not implemented')
 
-    @property
-    def tasks(self):
-        """List of tasks to be added to the main event loop"""
-        raise NotImplementedError('tasks attribute not implemented')
-
     def build_message(self):
         """
         Build Message instance according to the data received from the
@@ -53,7 +50,7 @@ class BaseEngine:
         """
         raise NotImplementedError('build_message not implemented')
 
-    def configure(self):
+    async def configure(self):
         """Called by App instance to configure the platform"""
         raise NotImplementedError('configure not implemented')
 

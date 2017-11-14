@@ -2,8 +2,11 @@ import asyncio
 import logging
 
 import requests
+from aiohttp import web
 
 from bottery import platform
+from bottery.conf import settings
+from bottery.exceptions import ImproperlyConfigured
 from bottery.message import Message
 from bottery.platform import discover_view
 from bottery.user import User
@@ -72,26 +75,23 @@ class TelegramEngine(platform.BaseEngine):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.api = TelegramAPI(self.token)
+        self.api = TelegramAPI(self.token, session=self.session)
 
         # If no `mode` was defined at settings.py, use by default
-        # polling mode.
+        # polling mode. We need to test if `mode` is either `polling`
+        # or `webhook`, if not, raise ImproperlyConfigured.
         if not hasattr(self, 'mode'):
             self.mode = 'polling'
 
-    @property
-    def tasks(self):
-        return [self.polling]
-
-    def configure(self):
-        response = self.api.delete_webhook()
-        response = response.json()
+    async def configure_polling(self):
+        response = await self.api.delete_webhook()
+        response = await response.json()
         if response['ok']:
             logger.debug('[%s] Polling mode set', self.engine_name)
 
-        self.api.session = self.session
+        self.tasks.append(self.polling)
 
-    async def polling(self, session, last_update=None):
+    async def polling(self, last_update=None):
         payload = {}
         if last_update:
             # `offset` param prevets from getting duplicates updates
@@ -111,7 +111,33 @@ class TelegramEngine(platform.BaseEngine):
         # updates again.
         tasks = [self.message_handler(msg) for msg in updates['result']]
         await asyncio.gather(*tasks)
-        asyncio.ensure_future(self.polling(session, last_update))
+        asyncio.ensure_future(self.polling(last_update))
+
+    async def configure_webhook(self):
+        hostname = getattr(settings, 'HOSTNAME')
+        if not hostname:
+            raise ImproperlyConfigured('Missing HOSTNAME setting')
+
+        response = await self.api.set_webhook({'url': hostname})
+        response = await response.json()
+        if response['ok']:
+            logger.debug('[%s] Webhook mode set', self.engine_name)
+
+        self.server.router.add_post('/', self.webhook)
+
+    async def webhook(self, request):
+        update = await request.json()
+        await asyncio.gather(self.message_handler(update))
+        return web.Response()
+
+    async def configure(self):
+        method_name = 'configure_{}'.format(self.mode)
+        configure_mode = getattr(self, method_name, None)
+        if not configure_mode:
+            msg = "There's no method to configure %s mode" % self.mode
+            raise ImproperlyConfigured(msg)
+
+        await configure_mode()
 
     def build_message(self, data):
         '''
@@ -121,17 +147,17 @@ class TelegramEngine(platform.BaseEngine):
         '''
         message_data = data.get('message')
 
-        if message_data:
-            return Message(
-                id=message_data['message_id'],
-                platform=self.platform,
-                text=message_data['text'],
-                user=TelegramUser(message_data['from']),
-                timestamp=message_data['date'],
-                raw=data,
-            )
-        else:
+        if not message_data:
             return None
+
+        return Message(
+            id=message_data['message_id'],
+            platform=self.platform,
+            text=message_data['text'],
+            user=TelegramUser(message_data['from']),
+            timestamp=message_data['date'],
+            raw=data,
+        )
 
     async def message_handler(self, data):
         message = self.build_message(data)
