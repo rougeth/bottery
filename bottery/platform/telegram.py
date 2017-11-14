@@ -2,7 +2,6 @@ import asyncio
 import logging
 
 import aiohttp
-import requests
 
 from bottery import platform
 from bottery.message import Message
@@ -33,7 +32,6 @@ class TelegramAPI:
     def make_url(self, method_name):
         method_name = mixed_case(method_name)
         return '{}/bot{}/{}'.format(self.api_url, self.token, method_name)
-
 
     def __getattr__(self, attr):
         if attr not in self.methods:

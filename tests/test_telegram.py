@@ -6,6 +6,21 @@ from bottery.message import Message
 from bottery.platform.telegram import (TelegramAPI, TelegramEngine,
                                        TelegramUser, mixed_case)
 
+
+@pytest.fixture
+def session():
+    class Response:
+        async def json(self):
+            return {'ok': True}
+
+    async def mocked_post(*args, **kwargs):
+        return Response()
+
+    with mock.MagicMock() as session:
+        session.post.return_value = mocked_post()
+        yield session
+
+
 # TelegramUser
 
 
@@ -50,19 +65,25 @@ def test_telegram_api_method_not_defined():
         api.get_chat_member()
 
 
-@mock.patch('bottery.platform.telegram.requests')
-def test_telegram_api_request(mocked_requests):
+@pytest.mark.asyncio
+async def test_telegram_api_request():
     '''Make sure requests.post is being called with the right args'''
 
-    api = TelegramAPI('token')
+    async def mocked_post(*args, **kwargs):
+        pass
+
+    session = mock.MagicMock()
+    session.post.return_value = mocked_post()
+
+    api = TelegramAPI('token', session=session)
     url = api.make_url('send_message')
     data = {
         'chat_id': 1,
         'text': 'Hello World',
     }
-    api.send_message(data=data)
+    await api.send_message(**data)
 
-    mocked_requests.post.assert_called_once_with(url, json=data)
+    session.post.assert_called_once_with(url, json=data)
 
 
 # Telegram Engine
@@ -117,30 +138,27 @@ def test_telegram_engine_tasks():
     assert engine.tasks == [engine.polling]
 
 
-@mock.patch('bottery.platform.telegram.logger.debug')
-def test_telegram_engine_configure(mocked_debug):
+@pytest.mark.asyncio
+async def test_telegram_engine_configure(session):
     '''Make sure logger.debug is called if the response from webhook
        is positive.'''
 
-    def mocked_json(): return {'ok': True}
-
-    def mocked_delete_webhook(): return type('response', (),
-                                             {'json': mocked_json})
-    engine = TelegramEngine(token='')
-    engine.api.delete_webhook = mocked_delete_webhook
-    engine.session = ''
-    engine.configure()
-    assert mocked_debug.called
+    engine = TelegramEngine(token='', session=session)
+    await engine.configure()
+    session.post.assert_called_once_with(
+        'https://api.telegram.org/bot/deleteWebhook',
+        json={})
 
 
 @mock.patch('bottery.platform.telegram.logger.debug')
-def test_telegram_engine_configure_not_ok(mocked_debug):
+@pytest.mark.asyncio
+async def test_telegram_engine_configure_not_ok(mocked_debug):
     '''Make sure logger.debug is not called if the response from webhook
        is negative.'''
 
     engine = TelegramEngine(token='')
     engine.session = ''
-    engine.configure()
+    await engine.configure()
     assert not mocked_debug.called
 
 

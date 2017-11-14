@@ -10,10 +10,8 @@ from bottery.app import App
 
 @pytest.fixture
 def mocked_engine(mock):
-    async def configure(*args, **kwargs):
+    async def mocked_configure(*args, **kwargs):
         pass
-    mocked_configure = mock.MagicMock()
-    mocked_configure.return_value = configure()
 
     mocked_settings = mock.patch('bottery.app.settings')
     mocked_settings.PLATFORMS = {
@@ -28,7 +26,7 @@ def mocked_engine(mock):
     mocked_engine_module = mock.MagicMock()
     mocked_engine_instance = mocked_engine_module.engine.return_value
     mocked_engine_instance.tasks.return_value = [lambda session: 'fake']
-    mocked_engine_instance.configure.return_value = mocked_configure
+    mocked_engine_instance.configure.return_value = mocked_configure()
     sys.modules['tests.fake_engine'] = mocked_engine_module
 
     yield {
@@ -72,12 +70,13 @@ async def test_app_configure_without_platforms(mocked_settings):
         await app.configure_platforms()
 
 
-def test_app_configure_with_tasks(mocked_engine):
+@pytest.mark.asyncio
+async def test_app_configure_with_tasks(mocked_engine):
     """App should have empty tasks if not defined on engine"""
 
     mocked_engine['instance'].tasks = []
     app = App()
-    app.configure_platforms()
+    await app.configure_platforms()
 
     assert not app.tasks
 
@@ -98,11 +97,12 @@ async def test_app_configure_with_multiple_tasks(mocked_engine):
     assert app.tasks == [first_task, second_task]
 
 
-def test_app_configure_with_platforms(mocked_engine):
+@pytest.mark.asyncio
+async def test_app_configure_with_platforms(mocked_engine):
     """Should call the platform interface methods"""
 
     app = App()
-    app.configure_platforms()
+    await app.configure_platforms()
 
     mocked_engine['module'].engine.assert_called_with(
         session=app.session,
