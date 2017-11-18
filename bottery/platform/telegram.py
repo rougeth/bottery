@@ -1,7 +1,6 @@
 import asyncio
 import logging
 
-import requests
 from aiohttp import web
 
 from bottery import platform
@@ -28,7 +27,7 @@ class TelegramAPI:
         'get_updates',
     ]
 
-    def __init__(self, token, session=None):
+    def __init__(self, token, session):
         self.token = token
         self.session = session
 
@@ -36,16 +35,12 @@ class TelegramAPI:
         method_name = mixed_case(method_name)
         return '{}/bot{}/{}'.format(self.api_url, self.token, method_name)
 
-    @property
-    def http_client(self):
-        return self.session or requests
-
     def __getattr__(self, attr):
         if attr not in self.methods:
             raise AttributeError()
 
         url = self.make_url(attr)
-        return lambda data={}: self.http_client.post(url, json=data)
+        return lambda **kwargs: self.session.post(url, json=kwargs)
 
 
 class TelegramUser(User):
@@ -99,7 +94,7 @@ class TelegramEngine(platform.BaseEngine):
             # https://core.telegram.org/bots/api#getupdates
             payload['offset'] = last_update + 1
 
-        response = await self.api.get_updates(payload)
+        response = await self.api.get_updates(**payload)
         updates = await response.json()
 
         # If polling request returned at least one update, use its ID
@@ -118,7 +113,7 @@ class TelegramEngine(platform.BaseEngine):
         if not hostname:
             raise ImproperlyConfigured('Missing HOSTNAME setting')
 
-        response = await self.api.set_webhook({'url': hostname})
+        response = await self.api.set_webhook(url=hostname)
         response = await response.json()
         if response['ok']:
             logger.debug('[%s] Webhook mode set', self.engine_name)
@@ -172,13 +167,9 @@ class TelegramEngine(platform.BaseEngine):
         response = await self.get_response(view, message)
 
         # TODO: Choose between Markdown and HTML
-        data = {
-            'chat_id': message.user.id,
-            'text': response,
-            'parse_mode': 'Markdown',
-        }
         # TODO: Verify response status
-        await self.api.send_message(data=data)
+        await self.api.send_message(chat_id=message.user.id, text=response,
+                                    parser_mode='markdown')
 
 
 engine = TelegramEngine
