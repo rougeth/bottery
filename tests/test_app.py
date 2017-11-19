@@ -10,6 +10,9 @@ from bottery.app import App
 
 @pytest.fixture
 def mocked_engine(mock):
+    async def fake_configure():
+        return True
+
     mocked_settings = mock.patch('bottery.app.settings')
     mocked_settings.PLATFORMS = {
         'test_platform': {
@@ -23,6 +26,7 @@ def mocked_engine(mock):
     mocked_engine_module = mock.MagicMock()
     mocked_engine_instance = mocked_engine_module.engine.return_value
     mocked_engine_instance.tasks.return_value = [lambda session: 'fake']
+    mocked_engine_instance.configure = fake_configure
     sys.modules['tests.fake_engine'] = mocked_engine_module
 
     yield {
@@ -66,12 +70,13 @@ async def test_app_configure_without_platforms(mocked_settings):
         await app.configure_platforms()
 
 
-def test_app_configure_with_tasks(mocked_engine):
+@pytest.mark.asyncio
+async def test_app_configure_with_tasks(mocked_engine):
     """App should have empty tasks if not defined on engine"""
 
     mocked_engine['instance'].tasks = []
     app = App()
-    app.configure_platforms()
+    await app.configure_platforms()
 
     assert not app.tasks
 
