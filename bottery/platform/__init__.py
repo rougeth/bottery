@@ -64,3 +64,14 @@ class BaseEngine:
             return await view(message)
 
         return view(message)
+
+    def handle_message(self, message):
+        """
+        Use the new message to search for a registered view according
+        to its pattern.
+        """
+        for handler, view in self.registered_patterns:
+            if handler.check(message):
+                return view
+
+        return None

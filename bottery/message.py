@@ -3,8 +3,6 @@ from datetime import datetime
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from bottery.conf import settings
-
 
 class Message:
     def __init__(self, id, platform, user, text, timestamp, raw):
@@ -23,7 +21,8 @@ class Message:
 def render(message, template_name, context={}):
     base_dir = os.path.join(os.getcwd(), 'templates')
     paths = [base_dir]
-    paths.extend(settings.TEMPLATES)
+    # Include paths on settings
+    # paths.extend(settings.TEMPLATES)
 
     env = Environment(
         loader=FileSystemLoader(paths),
