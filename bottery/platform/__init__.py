@@ -1,29 +1,8 @@
-import importlib
 import inspect
 import logging
-import os
-
-from bottery.exceptions import ImproperlyConfigured
 
 
 logger = logging.getLogger('bottery.platforms')
-
-
-def discover_view(message):
-    base = os.getcwd()
-    patterns_path = os.path.join(base, 'patterns.py')
-    if not os.path.isfile(patterns_path):
-        raise ImproperlyConfigured('Could not find patterns module')
-
-    patterns = importlib.import_module('patterns').patterns
-    for pattern in patterns:
-        if pattern.check(message):
-            if isinstance(pattern.view, str):
-                return importlib.import_module(pattern.view)
-            return pattern.view
-
-    # raise Exception('No Pattern found!')
-    return None
 
 
 class BaseEngine:

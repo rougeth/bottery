@@ -1,17 +1,18 @@
 import os
 from datetime import datetime
 
+import attr
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
+@attr.s
 class Message:
-    def __init__(self, id, platform, user, text, timestamp, raw):
-        self.id = id
-        self.platform = platform
-        self.user = user
-        self.text = text
-        self.timestamp = timestamp
-        self.raw = raw
+    id = attr.ib()
+    platform = attr.ib()
+    user = attr.ib()
+    text = attr.ib()
+    timestamp = attr.ib()
+    raw = attr.ib()
 
     @property
     def datetime(self):

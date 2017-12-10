@@ -29,7 +29,6 @@ class Bottery:
     def loop(self):
         if self._loop is None:
             self._loop = asyncio.get_event_loop()
-            self._loop.set_debug(True)
         return self._loop
 
     async def configure_engine(self, engine):
@@ -56,6 +55,7 @@ class Bottery:
             try:
                 mod = importlib.import_module(platform['ENGINE'])
             except ModuleNotFoundError:
+                # TODO: log
                 continue
 
             engine = mod.engine(**platform['OPTIONS'])
