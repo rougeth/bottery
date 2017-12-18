@@ -7,7 +7,7 @@
 ╚═════╝  ╚═════╝    ╚═╝      ╚═╝   ╚══════╝╚═╝  ╚═╝   ╚═╝
 '''
 
-from bottery.bottery import Bottery
+from bottery.bottery import Bottery  # noqa
 
 
 __version__ = '0.0.1a8'

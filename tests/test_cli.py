@@ -34,4 +34,3 @@ def test_version_option():
 
     assert bottery.__version__ in result.output
     assert result.exit_code == 0
-

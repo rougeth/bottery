@@ -54,7 +54,7 @@ class Bottery:
 
             try:
                 mod = importlib.import_module(platform['ENGINE'])
-            except ModuleNotFoundError:
+            except ImportError:
                 # TODO: log
                 continue
 

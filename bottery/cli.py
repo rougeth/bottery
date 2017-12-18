@@ -12,16 +12,6 @@ logging.config.dictConfig(DEFAULT_LOGGING)
 logger = logging.getLogger('bottery')
 
 
-def debug_option(f):
-    @click.option('--debug/--no-debug', default=False)
-    def wrapper(*args, **kwargs):
-        if kwargs.get('debug', False):
-            logger.setLevel(logging.DEBUG)
-        return f(*args, **kwargs)
-
-    return wrapper
-
-
 @click.group(invoke_without_command=True)
 @click.option('--version', '-v', is_flag=True, default=False)
 @click.pass_context

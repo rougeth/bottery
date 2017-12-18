@@ -7,7 +7,6 @@ from bottery import platform
 from bottery.message import Message
 from bottery.platform.telegram import TelegramAPI
 
-
 logger = logging.getLogger('bottery.telegram')
 
 
@@ -48,7 +47,7 @@ class TelegramEngine(platform.BaseEngine):
 
     async def configure_polling(self):
         # TODO: Check API response
-        response = await self.api.delete_webhook()
+        await self.api.delete_webhook()
         self.tasks.append(self.polling)
 
     async def polling(self, last_update=None):
@@ -75,10 +74,10 @@ class TelegramEngine(platform.BaseEngine):
     async def configure_webhook(self):
         hostname = getattr(self.settings, 'HOSTNAME')
         if not hostname:
-            raise ImproperlyConfigured('Missing HOSTNAME setting')
+            raise Exception('Missing HOSTNAME setting')
 
         # TODO: Check API response
-        response = await self.api.set_webhook(url=hostname)
+        await self.api.set_webhook(url=hostname)
 
         self.server.router.add_post('/', self.webhook)
 
@@ -92,7 +91,7 @@ class TelegramEngine(platform.BaseEngine):
         configure_mode = getattr(self, method_name, None)
         if not configure_mode:
             msg = "There's no method to configure %s mode" % self.mode
-            raise ImproperlyConfigured(msg)
+            raise Exception(msg)
 
         await configure_mode()
 
@@ -121,7 +120,7 @@ class TelegramEngine(platform.BaseEngine):
         print('[%s] Message from %s' % (self.engine_name, message.user))
 
         # Try to find a view (best name?) to response the message
-        view = self.handle_message(message)
+        view = self.discovery_view(message)
         if not view:
             return
 

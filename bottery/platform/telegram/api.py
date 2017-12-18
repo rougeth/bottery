@@ -25,6 +25,7 @@ class TelegramAPI:
             raise AttributeError()
 
         url = self.make_url(attr)
+
         async def request(**kwargs):
             response = await self.session.post(url, json=kwargs)
             return await response.json()

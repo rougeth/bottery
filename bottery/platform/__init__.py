@@ -44,7 +44,7 @@ class BaseEngine:
 
         return view(message)
 
-    def handle_message(self, message):
+    def discovery_view(self, message):
         """
         Use the new message to search for a registered view according
         to its pattern.
