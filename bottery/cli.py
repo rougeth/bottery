@@ -1,6 +1,7 @@
 import logging.config
 import os
 import shutil
+import sys
 from importlib import import_module
 
 import click
@@ -59,7 +60,14 @@ def import_string(import_name):
         module_name = import_name
         obj_name = 'bot'
 
-    module = import_module(module_name)
+    base = os.getcwd()
+    sys.path.insert(0, base)
+
+    try:
+        module = import_module(module_name)
+    except Exception as e:
+        raise e
+
     try:
         return getattr(module, obj_name)
     except AttributeError as e:
