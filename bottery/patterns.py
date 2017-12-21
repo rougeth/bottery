@@ -2,9 +2,14 @@ from collections import OrderedDict
 
 
 class BaseHandler:
-    def __init__(self, pattern):
+    def __init__(self, pattern=None):
         self.pattern = pattern
 
+    def check(self, message):
+        raise Exception('check method not implemented')
+
+
+class MessageHandler(BaseHandler):
     def check(self, message):
         if message.text == self.pattern:
             return True
@@ -27,27 +32,29 @@ class PatternsHandler:
     def __init__(self):
         self.registered = OrderedDict()
 
-    def register(self, handler, pattern, view):
-        if not self.registered.get(handler.__name__):
-            self.registered[handler.__name__] = (handler(pattern), view)
+    def register(self, handler, view, *args, **kwargs):
+        if handler.__name__ in self.registered:
+            return
 
-    def __call__(self, pattern):
+        self.registered[handler.__name__] = (handler(*args, **kwargs), view)
+
+    def message(self, pattern):
         def decorator(view):
-            self.register(BaseHandler, pattern, view)
+            self.register(MessageHandler, view, pattern)
             return view
 
         return decorator
 
     def startswith(self, pattern):
         def decorator(view):
-            self.register(StartswithHandler, pattern, view)
+            self.register(StartswithHandler, view, pattern)
             return view
 
         return decorator
 
     def default(self):
         def decorator(view):
-            self.register(DefaultHandler, None, view)
+            self.register(DefaultHandler, view)
             return view
 
         return decorator

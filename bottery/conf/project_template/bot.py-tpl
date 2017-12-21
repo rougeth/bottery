@@ -3,6 +3,6 @@ from bottery import Bottery
 
 bot = Bottery()
 
-@bot.patterns('ping')
+@bot.patterns.message('ping')
 def pong(message):
-    return 'pong'j
+    return 'pong'
