@@ -1,10 +1,15 @@
 import asyncio
 import importlib
+import sys
+from datetime import datetime
 
 import aiohttp
+import click
 
+import bottery
 from bottery.cli import cli
 from bottery.conf import Settings
+from bottery.log import Spinner
 from bottery.patterns import PatternsHandler
 
 
@@ -31,10 +36,6 @@ class Bottery:
             self._loop = asyncio.get_event_loop()
         return self._loop
 
-    async def configure_engine(self, engine):
-        await engine.configure()
-        self.tasks.extend(engine.tasks)
-
     async def configure(self):
         platforms = self.settings.PLATFORMS.items()
         if not platforms:
@@ -46,11 +47,11 @@ class Bottery:
             'registered_patterns': self.patterns.registered,
         }
 
-        config_tasks = []
         for engine_name, platform in platforms:
             if not platform.get('OPTIONS'):
                 platform['OPTIONS'] = {}
             platform['OPTIONS'].update(global_options)
+            platform['OPTIONS']['engine_name'] = engine_name
 
             try:
                 mod = importlib.import_module(platform['ENGINE'])
@@ -58,16 +59,29 @@ class Bottery:
                 # TODO: log
                 continue
 
-            engine = mod.engine(**platform['OPTIONS'])
-            config_tasks.append(self.configure_engine(engine))
-
-        await asyncio.gather(*config_tasks)
+            with Spinner('Configuring %s' % engine_name.title()):
+                engine = mod.engine(**platform['OPTIONS'])
+                await engine.configure()
+                self.tasks.extend(engine.tasks)
 
     def run(self):
+        startup_msg = (
+            '{now}\n'
+            '{bottery} version {version}\n'
+            'Quit the bot with CONTROL-C'
+        )
+        click.echo(startup_msg.format(
+            now=datetime.now().strftime('%B %m, %Y -  %H:%M:%S'),
+            bottery=click.style('Bottery', fg='green'),
+            version=bottery.__version__
+        ))
+
         self.loop.run_until_complete(self.configure())
 
         if not self.tasks:
-            return
+            click.secho('No tasks found.', fg='red')
+            self.stop()
+            sys.exit(1)
 
         for task in self.tasks:
             self.loop.create_task(task())

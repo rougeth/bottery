@@ -49,12 +49,6 @@ def test_already_defined_properties(settings, attribute):
 
 
 @pytest.mark.asyncio
-async def test_configure_engine(bot, engine):
-    await bot.configure_engine(engine)
-    assert bot.tasks[0] == engine.tasks[0]
-
-
-@pytest.mark.asyncio
 async def test_configure_no_platforms_found(engine):
     with pytest.raises(Exception):
         await bot.configure()
