@@ -3,7 +3,7 @@ import importlib
 import sys
 from datetime import datetime
 
-import aiohttp
+import aiohttp.web
 import click
 
 import bottery
@@ -36,6 +36,12 @@ class Bottery:
             self._loop = asyncio.get_event_loop()
         return self._loop
 
+    @property
+    def server(self):
+        if self._server is None:
+            self._server = aiohttp.web.Application()
+        return self._server
+
     async def configure(self):
         platforms = self.settings.PLATFORMS.items()
         if not platforms:
@@ -44,7 +50,9 @@ class Bottery:
         global_options = {
             'loop': self.loop,
             'session': self.session,
+            'server': self.server,
             'registered_patterns': self.patterns.registered,
+            'settings': self.settings,
         }
 
         for engine_name, platform in platforms:
@@ -65,18 +73,19 @@ class Bottery:
                 self.tasks.extend(engine.tasks)
 
     def run(self):
-        startup_msg = (
-            '{now}\n'
-            '{bottery} version {version}\n'
-            'Quit the bot with CONTROL-C'
-        )
-        click.echo(startup_msg.format(
+        click.echo('{now}\n{bottery} version {version}'.format(
             now=datetime.now().strftime('%B %m, %Y -  %H:%M:%S'),
             bottery=click.style('Bottery', fg='green'),
             version=bottery.__version__
         ))
 
         self.loop.run_until_complete(self.configure())
+
+        if self._server is not None:
+            handler = self.server.make_handler()
+            setup_server = self.loop.create_server(handler, '0.0.0.0', 7000)
+            self.loop.run_until_complete(setup_server)
+            click.echo('Server running at http://localhost:7000')
 
         if not self.tasks:
             click.secho('No tasks found.', fg='red')
@@ -86,6 +95,7 @@ class Bottery:
         for task in self.tasks:
             self.loop.create_task(task())
 
+        click.echo('Quit the bot with CONTROL-C')
         self.loop.run_forever()
 
     def stop(self):
