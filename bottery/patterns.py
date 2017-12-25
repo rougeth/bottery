@@ -1,6 +1,3 @@
-from collections import OrderedDict
-
-
 class BaseHandler:
     def __init__(self, pattern=None):
         self.pattern = pattern
@@ -30,13 +27,10 @@ class DefaultHandler:
 
 class PatternsHandler:
     def __init__(self):
-        self.registered = OrderedDict()
+        self.registered = []
 
-    def register(self, handler, view, *args, **kwargs):
-        if handler.__name__ in self.registered:
-            return
-
-        self.registered[handler.__name__] = (handler(*args, **kwargs), view)
+    def register(self, handler, view, pattern=None, *args, **kwargs):
+        self.registered.append((handler(pattern, *args, **kwargs), view))
 
     def message(self, pattern):
         def decorator(view):

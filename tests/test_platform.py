@@ -48,8 +48,9 @@ async def test_get_response_from_views(view):
 def test_baseengine_handling_message():
     fake_handler = type('Handler', (object,), {'check': lambda msg: True})
 
+    view = True
     engine = BaseEngine()
-    engine.registered_patterns = {'fake_handler': (fake_handler, True)}
+    engine.registered_patterns = [(fake_handler, view)]
     returned_view = engine.discovery_view('new message')
     assert returned_view
 
@@ -57,7 +58,8 @@ def test_baseengine_handling_message():
 def test_baseengine_handler_not_found():
     fake_handler = type('Handler', (object,), {'check': lambda msg: False})
 
+    view = True
     engine = BaseEngine()
-    engine.registered_patterns = {'fake_handler': (fake_handler, True)}
+    engine.registered_patterns = [(fake_handler, view)]
     returned_view = engine.discovery_view('new message')
     assert not returned_view
