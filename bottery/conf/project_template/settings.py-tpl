@@ -1,3 +1,7 @@
+HOSTNAME = 'localhost'
+
+TOKEN = ''
+
 PLATFORMS = {
     'telegram': {
         'ENGINE': 'bottery.platform.telegram',
