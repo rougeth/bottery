@@ -79,7 +79,7 @@ class TelegramEngine(platform.BaseEngine):
         # TODO: Check API response
         await self.api.set_webhook(url=hostname)
 
-        self.server.router.add_post('/', self.webhook)
+        self.server.router.add_post('/%s' % self.engine_name, self.webhook)
 
     async def webhook(self, request):
         update = await request.json()
