@@ -1,60 +1,49 @@
-Patterns
+Bot patterns
 ========
 
-When you create a new Bottery project, it will contain a file called `patterns.py`.
+When you create a new Bottery project, it will contain a file called `bot.py`.
 This file is were you will define what kind of messages your bot can receive and
-what kind of responses you should return. Just remeber that Bottery will check the patterns list
-in order, so any generic message should be listed last, while more specific messages should have
-the patterns listed first.
+what kind of responses you should return. 
 
-On your `pattern.py` file you should have a list named **patterns** containing different
-kind of pattern classes. By default, Bottery will import the `Pattern` class, which is the most
-simple type of pattern you can have: it should have a message that will "trigger" this pattern
-and a function that will tell Bottery what it should return. However, our plan is that
-Bottery should allow you to have different kind of pattern classes that will allow you to have
-regex, natural language processing tools, among others.
-
-Pattern
-^^^^^^^
-
-*Pattern(pattern, view)*
-
-Pattern is a pattern class that will receive a pattern message and a view. If the
-message text is equal to the Pattern's pattern, it will return the view.
-
-Here is an example of how you use a Pattern class on your `patterns.py`:
+First we need to an instance of the Bottery main class. This is how we can access patterns of messages we are able to receive. We should define it such as:
 
 .. code-block:: py
 
-    async def hello(message):
-        return 'Hello, world!'
+    from bottery import Bottery
 
-    patterns = [
-        Pattern('hello', hello),
-    ]
+    bot = Bottery()
 
+Then all the patterns available in **bottery** will be available for use. You should define the pattern type you wante was a decorator for a function. The function will be the return for that specific pattern when the pattern has a match. 
 
-Default Pattern
-^^^^^^^^^^^^^^^
+bot.patterns.message
+^^^^^^^^^^^^^^^^^^^^
 
-*DefaultPattern(view)*
+The pattern message allows your bot to check if a message was received. This way, **bottery** 
+will check if that exact message was sent by the user. 
+If the message was send exactly like you defined it, then the function is called to return a message. 
 
-DefaultPattern is a pattern class that will only receive a view. Regardless the
-message it receives, it will always return the view. It can be used for a
-NotFound response, for instance.
+You should remember that this pattern is case-sensitive!
 
-As it will always return the view, you should add it on the patterns list as the
-last element, otherwise it will always return the view and any other pattern listed
-after it will be ignored.
+The default case is the one that comes when you first created your project:
 
 .. code-block:: py
 
-    from bottery.conf.patterns import DefaultPattern
+    @bot.patterns.message('ping')
+    def pong(message):
+        return 'pong'
 
-    async def not_found(message):
-        return "Sorry, I can't understand what you're saying :("
+bot.patterns.startswith
+^^^^^^^^^^^^^^^^^^^^^^^
 
-    patterns = [
-        Pattern('hello', hello),
-        DefaultPattern(not_found),
-    ]
+The *startswith* pattern allows you to receive a message that only starts with a certain text, 
+but not necessarily matches all message received. 
+
+.. code-block:: py
+
+    @bot.patterns.startwith('hello')
+    def how_are_you(message):
+        return 'Hello! How are you?'
+
+With this pattern, if you receive a message such as `hello, my bot!` it will call our function and 
+return an answer.
+
