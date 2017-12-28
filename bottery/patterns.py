@@ -1,6 +1,7 @@
 class BaseHandler:
-    def __init__(self, pattern=None):
+    def __init__(self, pattern=None, sensitive=True):
         self.pattern = pattern
+        self.sensitive = sensitive
 
     def check(self, message):
         raise Exception('check method not implemented')
@@ -8,14 +9,25 @@ class BaseHandler:
 
 class MessageHandler(BaseHandler):
     def check(self, message):
-        if message.text == self.pattern:
+        filters = [
+            message.text == self.pattern,
+            not self.sensitive and message.text.lower() == self.pattern,
+        ]
+
+        if any(filters):
             return True
         return False
 
 
 class StartswithHandler(BaseHandler):
     def check(self, message):
-        if message.text.startswith(self.pattern):
+        filters = [
+            message.text.startswith(self.pattern),
+            not self.sensitive and \
+              message.text.lower().startswith(self.pattern),
+        ]
+
+        if any(filters):
             return True
         return False
 
@@ -32,16 +44,16 @@ class PatternsHandler:
     def register(self, handler, view, pattern=None, *args, **kwargs):
         self.registered.append((handler(pattern, *args, **kwargs), view))
 
-    def message(self, pattern):
+    def message(self, pattern, sensitive=True):
         def decorator(view):
-            self.register(MessageHandler, view, pattern)
+            self.register(MessageHandler, view, pattern, sensitive)
             return view
 
         return decorator
 
-    def startswith(self, pattern):
+    def startswith(self, pattern, sensitive=True):
         def decorator(view):
-            self.register(StartswithHandler, view, pattern)
+            self.register(StartswithHandler, view, pattern, sensitive)
             return view
 
         return decorator
