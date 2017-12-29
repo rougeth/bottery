@@ -23,8 +23,8 @@ class StartswithHandler(BaseHandler):
     def check(self, message):
         filters = [
             message.text.startswith(self.pattern),
-            not self.sensitive and \
-              message.text.lower().startswith(self.pattern),
+            not self.sensitive and
+            message.text.lower().startswith(self.pattern),
         ]
 
         if any(filters):
