@@ -1,5 +1,5 @@
 Bot patterns
-========
+============
 
 When you create a new Bottery project, it will contain a file called `bot.py`.
 This file is were you will define what kind of messages your bot can receive and
