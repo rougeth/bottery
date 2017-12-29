@@ -1,7 +1,7 @@
 class BaseHandler:
-    def __init__(self, pattern=None, sensitive=True):
+    def __init__(self, pattern=None, case_sensitive=True):
         self.pattern = pattern
-        self.sensitive = sensitive
+        self.case_sensitive = case_sensitive
 
     def check(self, message):
         raise Exception('check method not implemented')
@@ -11,7 +11,7 @@ class MessageHandler(BaseHandler):
     def check(self, message):
         filters = [
             message.text == self.pattern,
-            not self.sensitive and message.text.lower() == self.pattern,
+            not self.case_sensitive and message.text.lower() == self.pattern,
         ]
 
         if any(filters):
@@ -23,7 +23,7 @@ class StartswithHandler(BaseHandler):
     def check(self, message):
         filters = [
             message.text.startswith(self.pattern),
-            not self.sensitive and
+            not self.case_sensitive and
             message.text.lower().startswith(self.pattern),
         ]
 
@@ -44,16 +44,16 @@ class PatternsHandler:
     def register(self, handler, view, pattern=None, *args, **kwargs):
         self.registered.append((handler(pattern, *args, **kwargs), view))
 
-    def message(self, pattern, sensitive=True):
+    def message(self, pattern, case_sensitive=True):
         def decorator(view):
-            self.register(MessageHandler, view, pattern, sensitive)
+            self.register(MessageHandler, view, pattern, case_sensitive)
             return view
 
         return decorator
 
-    def startswith(self, pattern, sensitive=True):
+    def startswith(self, pattern, case_sensitive=True):
         def decorator(view):
-            self.register(StartswithHandler, view, pattern, sensitive)
+            self.register(StartswithHandler, view, pattern, case_sensitive)
             return view
 
         return decorator

@@ -15,13 +15,15 @@ def test_message_handler_check_negative_match():
 
 def test_message_handler_check_positive_match_with_sensitive():
     message = type('Message', (), {'text': 'Ping'})
-    handler = patterns.MessageHandler(pattern='ping', sensitive=False)
+    handler = patterns.MessageHandler(pattern='ping',
+                                      case_sensitive=False)
     assert handler.check(message)
 
 
 def test_message_handler_check_negative_match_with_sensitive():
     message = type('Message', (), {'text': 'pong'})
-    handler = patterns.MessageHandler(pattern='ping', sensitive=False)
+    handler = patterns.MessageHandler(pattern='ping',
+                                      case_sensitive=False)
     assert not handler.check(message)
 
 
@@ -39,13 +41,15 @@ def test_startswith_handler_check_negative_match():
 
 def test_startswith_handler_check_positive_match_with_sensitive():
     message = type('Message', (), {'text': 'Hello my friend'})
-    handler = patterns.StartswithHandler(pattern='hello', sensitive=False)
+    handler = patterns.StartswithHandler(pattern='hello',
+                                         case_sensitive=False)
     assert handler.check(message)
 
 
 def test_startswith_handler_check_negative_match_with_sensitive():
     message = type('Message', (), {'text': 'pong'})
-    handler = patterns.StartswithHandler(pattern='hello', sensitive=False)
+    handler = patterns.StartswithHandler(pattern='hello',
+                                         case_sensitive=False)
     assert not handler.check(message)
 
 
