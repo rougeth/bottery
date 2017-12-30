@@ -1,11 +1,13 @@
 import logging
+from unittest import mock
 
+import pytest
 from testfixtures import LogCapture
 
-from bottery.log import DEFAULT_LOGGING, ColoredFormatter
+from bottery.log import DEFAULT_LOGGING, ColoredFormatter, Spinner
 
 
-def test_ColoredFormatter():
+def test_formatter():
     """Test if logs are being colored"""
 
     logging.config.dictConfig(DEFAULT_LOGGING)
@@ -33,3 +35,20 @@ def test_ColoredFormatter():
     ]
 
     assert formatted_records == expected_records
+
+
+@mock.patch('bottery.log.Halo')
+def test_spinner_instance(mocked_halo):
+    Spinner('message')
+    mocked_halo.assert_called_once_with(text='message', spinner='dot',
+                                        color='green')
+
+
+@pytest.mark.parametrize('attr', ['__enter__', '__exit__'])
+@mock.patch('bottery.log.Halo')
+def test_spinner_context(mocked_halo, attr):
+    spinner = Spinner('message')
+    with spinner:
+        pass
+
+    assert getattr(spinner.halo, attr).call_count == 1
