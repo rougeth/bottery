@@ -31,6 +31,26 @@ class TelegramUser:
 
         return s.format(u=self)
 
+class TelegramChat:
+    '''
+    Telegram Chat reference
+    https://core.telegram.org/bots/api#chat
+    '''
+    def __init__(self, chat):
+        self.id = chat['id']
+        self.type = chat['type']
+        self.title = chat.get('title')
+        self.username = chat.get('username')
+
+    def __str__(self):
+        s = '{u.id}'
+        if self.title:
+            s += ' {u.title}'
+        if self.username:
+            s += ' {u.username}'
+
+        return s.format(u=self)
+
 
 class TelegramEngine(platform.BaseEngine):
     platform = 'telegram'
@@ -111,6 +131,7 @@ class TelegramEngine(platform.BaseEngine):
             platform=self.platform,
             text=message_data['text'],
             user=TelegramUser(message_data['from']),
+            chat=TelegramChat(message_data['chat']),
             timestamp=message_data['date'],
             raw=data,
         )
@@ -127,7 +148,10 @@ class TelegramEngine(platform.BaseEngine):
         # TODO: Test if the view returned something or not
         response = await self.get_response(view, message)
 
+        chat_id = message.user.id
+        if not message.chat.type == 'private':
+            chat_id = message.chat.id
         # TODO: Choose between Markdown and HTML
         # TODO: Verify response status
-        await self.api.send_message(chat_id=message.user.id, text=response,
+        await self.api.send_message(chat_id=chat_id, text=response,
                                     parser_mode='markdown')
