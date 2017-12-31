@@ -8,18 +8,14 @@
 
 ```python
 # quick example of a ping pong bot
-from bottery.conf.patterns import DefaultPattern, Pattern
+from bottery import Bottery
 
-async def pong(message):
-    return "pong!"
 
-async def not_found(message):
-    return "Sorry, I didn't understand you :/"
+bot = Bottery()
 
-patterns = [
-    Pattern('ping', pong),
-    DefaultPattern(not_found),
-]
+@bot.patterns.message('ping')
+def pong(message):
+    return 'pong'
 ```
 
 The complete example can be seen [here](https://github.com/leportella/bottery-examples).
@@ -45,7 +41,7 @@ $ bottery startproject librarybot
 
 ### Running
 ```bash
-$ bottery run --debug
+$ bottery run
 ```
 
 ## Development
