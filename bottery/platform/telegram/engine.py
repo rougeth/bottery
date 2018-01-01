@@ -31,6 +31,7 @@ class TelegramUser:
 
         return s.format(u=self)
 
+
 class TelegramChat:
     '''
     Telegram Chat reference
