@@ -1,3 +1,4 @@
+from copy import deepcopy
 from importlib import import_module
 
 from bottery.conf import global_settings
@@ -7,7 +8,8 @@ class Settings:
     def __init__(self):
         for key in dir(global_settings):
             if key.isupper():
-                setattr(self, key, getattr(global_settings, key))
+                value = getattr(global_settings, key)
+                setattr(self, key, deepcopy(value))
 
     @classmethod
     def from_object(cls, obj='settings'):
