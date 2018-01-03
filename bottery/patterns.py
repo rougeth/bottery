@@ -4,10 +4,10 @@ class BaseHandler:
         self.kwargs = kwargs
 
     def check(self, message):
-        self.message = self.message_filters(message)
-        return self.match(self.message)
+        message = self.clean(message)
+        return self.match(message)
 
-    def message_filters(self, message):
+    def clean(self, message):
         return message
 
     def match(self, message):
@@ -15,7 +15,7 @@ class BaseHandler:
 
 
 class CaseSensitiveMixinHandler:
-    def message_filters(self, message):
+    def clean(self, message):
         if not self.kwargs.get('case_sensitive'):
             message.text = message.text.lower()
         return message
@@ -30,7 +30,7 @@ class MessageHandler(BaseHandler, CaseSensitiveMixinHandler):
 
 class StartswithHandler(BaseHandler, CaseSensitiveMixinHandler):
     def match(self, message):
-        if message.text.lower().startswith(self.pattern):
+        if message.text.startswith(self.pattern):
             return True
         return False
 
