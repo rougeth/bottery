@@ -8,22 +8,22 @@ def test_message_handler_check_positive_match():
 
 
 def test_message_handler_check_negative_match():
-    message = type('Message', (), {'text': 'Ping'})
+    message = type('Message', (), {'text': 'pong'})
     handler = patterns.MessageHandler(pattern='ping')
     assert not handler.check(message)
 
 
-def test_message_handler_check_positive_match_with_sensitive():
+def test_message_handler_check_positive_match_with_case_sensitive():
     message = type('Message', (), {'text': 'Ping'})
-    handler = patterns.MessageHandler(pattern='ping',
-                                      case_sensitive=False)
+    handler = patterns.MessageHandler(pattern='Ping',
+                                      case_sensitive=True)
     assert handler.check(message)
 
 
-def test_message_handler_check_negative_match_with_sensitive():
-    message = type('Message', (), {'text': 'pong'})
+def test_message_handler_check_negative_match_with_case_sensitive():
+    message = type('Message', (), {'text': 'Ping'})
     handler = patterns.MessageHandler(pattern='ping',
-                                      case_sensitive=False)
+                                      case_sensitive=True)
     assert not handler.check(message)
 
 

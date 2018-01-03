@@ -1,33 +1,36 @@
 class BaseHandler:
-    def __init__(self, pattern=None, case_sensitive=True):
+    def __init__(self, pattern=None, *args, **kwargs):
         self.pattern = pattern
-        self.case_sensitive = case_sensitive
+        self.kwargs = kwargs
 
     def check(self, message):
-        raise Exception('check method not implemented')
+        self.message = self.message_filters(message)
+        return self.match(self.message)
+
+    def message_filters(self, message):
+        return message
+
+    def match(self, message):
+        raise Exception('Method Not Implemented')
 
 
-class MessageHandler(BaseHandler):
-    def check(self, message):
-        filters = [
-            message.text == self.pattern,
-            not self.case_sensitive and message.text.lower() == self.pattern,
-        ]
+class CaseSensitiveMixinHandler:
+    def message_filters(self, message):
+        if not self.kwargs.get('case_sensitive'):
+            message.text = message.text.lower()
+        return message
 
-        if any(filters):
+
+class MessageHandler(BaseHandler, CaseSensitiveMixinHandler):
+    def match(self, message):
+        if message.text == self.pattern:
             return True
         return False
 
 
-class StartswithHandler(BaseHandler):
-    def check(self, message):
-        filters = [
-            message.text.startswith(self.pattern),
-            not self.case_sensitive and
-            message.text.lower().startswith(self.pattern),
-        ]
-
-        if any(filters):
+class StartswithHandler(BaseHandler, CaseSensitiveMixinHandler):
+    def match(self, message):
+        if message.text.lower().startswith(self.pattern):
             return True
         return False
 
