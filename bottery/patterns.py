@@ -4,21 +4,24 @@ class BaseHandler:
         self.kwargs = kwargs
 
     def check(self, message):
-        message = self.clean(message)
-        return self.match(message)
+        self.message = message
+        self.full_clean()
+        return self.match(self.message)
 
-    def clean(self, message):
-        return message
+    def full_clean(self):
+        for method_name in dir(self):
+            if method_name.startswith('clean_'):
+                method = getattr(self, method_name)
+                method()
 
     def match(self, message):
         raise Exception('Method Not Implemented')
 
 
 class CaseSensitiveMixinHandler:
-    def clean(self, message):
+    def clean_case_senstive(self):
         if not self.kwargs.get('case_sensitive'):
-            message.text = message.text.lower()
-        return message
+            self.message.text = self.message.text.lower()
 
 
 class MessageHandler(CaseSensitiveMixinHandler, BaseHandler):
