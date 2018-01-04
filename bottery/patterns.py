@@ -1,20 +1,35 @@
 class BaseHandler:
-    def __init__(self, pattern=None):
+    def __init__(self, pattern=None, *args, **kwargs):
         self.pattern = pattern
+        self.kwargs = kwargs
 
     def check(self, message):
-        raise Exception('check method not implemented')
+        message = self.clean(message)
+        return self.match(message)
+
+    def clean(self, message):
+        return message
+
+    def match(self, message):
+        raise Exception('Method Not Implemented')
 
 
-class MessageHandler(BaseHandler):
-    def check(self, message):
+class CaseSensitiveMixinHandler:
+    def clean(self, message):
+        if not self.kwargs.get('case_sensitive'):
+            message.text = message.text.lower()
+        return message
+
+
+class MessageHandler(CaseSensitiveMixinHandler, BaseHandler):
+    def match(self, message):
         if message.text == self.pattern:
             return True
         return False
 
 
-class StartswithHandler(BaseHandler):
-    def check(self, message):
+class StartswithHandler(CaseSensitiveMixinHandler, BaseHandler):
+    def match(self, message):
         if message.text.startswith(self.pattern):
             return True
         return False
@@ -32,16 +47,16 @@ class PatternsHandler:
     def register(self, handler, view, pattern=None, *args, **kwargs):
         self.registered.append((handler(pattern, *args, **kwargs), view))
 
-    def message(self, pattern):
+    def message(self, pattern, case_sensitive=True):
         def decorator(view):
-            self.register(MessageHandler, view, pattern)
+            self.register(MessageHandler, view, pattern, case_sensitive)
             return view
 
         return decorator
 
-    def startswith(self, pattern):
+    def startswith(self, pattern, case_sensitive=True):
         def decorator(view):
-            self.register(StartswithHandler, view, pattern)
+            self.register(StartswithHandler, view, pattern, case_sensitive)
             return view
 
         return decorator
