@@ -21,14 +21,14 @@ class CaseSensitiveMixinHandler:
         return message
 
 
-class MessageHandler(BaseHandler, CaseSensitiveMixinHandler):
+class MessageHandler(CaseSensitiveMixinHandler, BaseHandler):
     def match(self, message):
         if message.text == self.pattern:
             return True
         return False
 
 
-class StartswithHandler(BaseHandler, CaseSensitiveMixinHandler):
+class StartswithHandler(CaseSensitiveMixinHandler, BaseHandler):
     def match(self, message):
         if message.text.startswith(self.pattern):
             return True
