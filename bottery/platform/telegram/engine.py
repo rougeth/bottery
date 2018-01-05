@@ -137,6 +137,16 @@ class TelegramEngine(platform.BaseEngine):
             raw=data,
         )
 
+    def get_chat_id(self, message):
+        '''
+        Telegram chat type can be either "private", "group", "supergroup" or "channel".
+        Return user ID if it is of type "private", chat ID otherwise.
+        '''
+        if message.chat.type == 'private':
+            return message.user.id
+
+        return message.chat.id
+
     async def message_handler(self, data):
         message = self.build_message(data)
         print('[%s] Message from %s' % (self.engine_name, message.user))
@@ -149,10 +159,7 @@ class TelegramEngine(platform.BaseEngine):
         # TODO: Test if the view returned something or not
         response = await self.get_response(view, message)
 
-        chat_id = message.user.id
-        if not message.chat.type == 'private':
-            chat_id = message.chat.id
         # TODO: Choose between Markdown and HTML
         # TODO: Verify response status
-        await self.api.send_message(chat_id=chat_id, text=response,
+        await self.api.send_message(chat_id=self.get_chat_id(message), text=response,
                                     parser_mode='markdown')
