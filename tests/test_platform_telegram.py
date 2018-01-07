@@ -1,5 +1,4 @@
 import aiohttp
-
 import pytest
 
 from bottery.platform.telegram.api import TelegramAPI
