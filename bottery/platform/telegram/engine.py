@@ -139,7 +139,8 @@ class TelegramEngine(platform.BaseEngine):
 
     def get_chat_id(self, message):
         '''
-        Telegram chat type can be either "private", "group", "supergroup" or "channel".
+        Telegram chat type can be either "private", "group", "supergroup" or
+        "channel".
         Return user ID if it is of type "private", chat ID otherwise.
         '''
         if message.chat.type == 'private':
@@ -161,5 +162,5 @@ class TelegramEngine(platform.BaseEngine):
 
         # TODO: Choose between Markdown and HTML
         # TODO: Verify response status
-        await self.api.send_message(chat_id=self.get_chat_id(message), text=response,
-                                    parser_mode='markdown')
+        await self.api.send_message(chat_id=self.get_chat_id(message),
+                                    text=response, parser_mode='markdown')
