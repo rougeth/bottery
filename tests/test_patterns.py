@@ -1,4 +1,30 @@
+import pytest
+
 from bottery import patterns
+
+
+@pytest.fixture
+def test_handler():
+    class TestHandler(patterns.BaseHandler):
+        def clean_test(self):
+            self.var = 0
+
+        def match(self, message):
+            return True
+    return TestHandler()
+
+
+def test_base_handler_full_clean(test_handler):
+    handler = test_handler
+    handler.full_clean()
+    assert handler.var == 0
+
+
+def test_base_handler_check_calls_full_clean(test_handler):
+    message = type('Message', (), {'text': 'pong'})
+    handler = test_handler
+    handler.check(message)
+    assert handler.var == 0
 
 
 def test_message_handler_check():
