@@ -1,18 +1,18 @@
 import pytest
 
 from bottery.platform.messenger import MessengerAPI
-from tests.utils import AsyncMock
+from utils import AsyncMock
 
 
 
 @pytest.fixture
 def api():
     session = AsyncMock()
-    return MessengerAPI(session, 'token')
+    return MessengerAPI('token', session)
 
 
 def test_make_url_default_version():
-    api = MessengerAPI('session', 'token')
+    api = MessengerAPI('token', 'session')
     expected_url = 'https://graph.facebook.com/v2.6/method?access_token=token'
     assert api.make_url('/method') == expected_url
 

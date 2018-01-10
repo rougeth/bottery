@@ -3,12 +3,13 @@ import logging
 
 logger = logging.getLogger('bottery.messenger')
 
+
 class MessengerAPI:
     url = 'https://graph.facebook.com/{0}{1}?access_token={2}'
 
-    def __init__(self, session, token, version='v2.6'):
-        self.session = session
+    def __init__(self, token, session, version='v2.6'):
         self.token = token
+        self.session = session
         self.version = version
 
     def make_url(self, method):

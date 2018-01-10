@@ -1,14 +1,24 @@
 import asyncio
+import logging
 
 import click
 from aiohttp import web
 
 from bottery.message import Message
 from bottery.platform import BaseEngine
+from bottery.platform.messenger import MessengerAPI
+
+
+
+logger = logging.getLogger('bottery.messenger')
 
 
 class MessengerEngine(BaseEngine):
     platform = 'messenger'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.api = MessengerAPI(self.token, session=self.session)
 
     async def configure(self):
         hostname = getattr(self.settings, 'HOSTNAME')
@@ -58,7 +68,7 @@ class MessengerEngine(BaseEngine):
 
     async def message_handler(self, data):
         message = self.build_message(data)
-        click.echo('[%s] Message from %s' % (self.engine_name, message.user))
+        logger.info('[%s] %s', self.engine_name, message.user)
 
         # Try to find a view (best name?) to response the message
         view = self.discovery_view(message)
@@ -70,14 +80,4 @@ class MessengerEngine(BaseEngine):
 
         # TODO: Choose between Markdown and HTML
         # TODO: Verify response status
-        response = {
-            'messaging_type': 'RESPONSE',
-            'recipient': {
-                'id': message.user,
-            },
-            'message': {
-                'text': text,
-            },
-        }
-        url = 'https://graph.facebook.com/v2.6/me/messages?access_token={}'.format(self.token)
-        await self.session.post(url, json=response)
+        await self.api.messages(message.user, text)
