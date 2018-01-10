@@ -1,6 +1,5 @@
 import logging
 
-
 logger = logging.getLogger('bottery.messenger')
 
 

@@ -1,14 +1,11 @@
 import asyncio
 import logging
 
-import click
 from aiohttp import web
 
 from bottery.message import Message
 from bottery.platform import BaseEngine
 from bottery.platform.messenger import MessengerAPI
-
-
 
 logger = logging.getLogger('bottery.messenger')
 
@@ -32,9 +29,10 @@ class MessengerEngine(BaseEngine):
     async def verify_webhook(self, request):
         hub_mode = request.query.get('hub.mode')
         verify_token = request.query.get('hub.verify_token')
+        secret_key = self.settings.SECRET_KEY
 
         if hub_mode and verify_token:
-            if hub_mode == 'subscribe' and verify_token == self.settings.SECRET_KEY:
+            if hub_mode == 'subscribe' and verify_token == secret_key:
                 return web.Response(text=request.query['hub.challenge'])
 
             return web.HTTPForbidden()

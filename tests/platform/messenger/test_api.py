@@ -4,7 +4,6 @@ from bottery.platform.messenger import MessengerAPI
 from utils import AsyncMock
 
 
-
 @pytest.fixture
 def api():
     session = AsyncMock()
@@ -19,6 +18,5 @@ def test_make_url_default_version():
 
 @pytest.mark.asyncio
 async def test_messages(api):
-   await api.messages('id123', 'hello, world!')
-   assert api.session.post.called
-
+    await api.messages('id123', 'hello, world!')
+    assert api.session.post.called
