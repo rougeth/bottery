@@ -64,4 +64,4 @@ That's it, there's nothing else to do. Your bot should be working now. Go to Tel
 Project Examples
 ^^^^^^^^^^^^^^^^
 
-A small example of how bottery can work can be seen `here <https://github.com/leportella/bottery-examples>`_.
+A small example of how bottery works can be seen `here <https://github.com/leportella/bottery-examples>`_.

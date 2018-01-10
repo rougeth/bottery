@@ -1,11 +1,13 @@
 Views
 =====
 
+Views works the same way as the views in MVT (models-views-templates) on Django. They are responsable for describing message that gets responded to the user. It’s not necessarily how the message looks, but which message is presented.
+
 
 Working with templates
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Sometimes, you need complex and big messages to be returned by your patterns.
+Sometimes, you need complex and big messages to be returned by your views.
 Bottery is able to render and respond messages using templates written in
 markdown.
 
@@ -22,9 +24,9 @@ Let's create a template called `hello.md`:
     Welcome to **Bottery**
 
 Good! Now we need our view to return a template instead of a simple string.
-To do this, we should user the method `render`.
+To do this, we should use the method `render`.
 
-Render is a default function that can receive the following parameters:
+Render is a function that can receive the following parameters:
 
 *render(message, template_file, context={})*
 
