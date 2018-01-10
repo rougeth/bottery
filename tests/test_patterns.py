@@ -1,4 +1,31 @@
+from unittest import mock
+
+import pytest
+
 from bottery import patterns
+
+
+@pytest.fixture
+def test_handler():
+    handler = type('TestHandler', (patterns.BaseHandler,), {})
+    handler.clean_test = mock.MagicMock()
+
+    def match(self, message):
+        return True
+
+    handler.match = match
+    return handler()
+
+
+def test_base_handler_full_clean(test_handler):
+    test_handler.full_clean()
+    assert test_handler.clean_test.called
+
+
+def test_base_handler_check_calls_full_clean(test_handler):
+    message = type('Message', (), {'text': 'ping'})
+    test_handler.check(message)
+    assert test_handler.clean_test.called
 
 
 def test_message_handler_check():
