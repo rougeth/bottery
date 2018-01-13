@@ -97,6 +97,7 @@ def test_regex_handler_check():
     handler = handlers.RegexHandler(pattern='\d+')
     assert handler.check(message)
 
+
 def test_regex_handler_check_negative_match():
     message = type('Message', (), {'text': 'pings'})
     handler = handlers.RegexHandler(pattern='\d+')
