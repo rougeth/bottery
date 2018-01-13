@@ -1,3 +1,6 @@
+import re
+
+
 class BaseHandler:
     def __init__(self, pattern=None, *args, **kwargs):
         self.pattern = pattern
@@ -16,6 +19,14 @@ class BaseHandler:
 
     def match(self, message):
         raise Exception('Method Not Implemented')
+
+
+class RegexHandler(BaseHandler):
+    def match(self, message):
+        compile = re.compile(self.pattern)
+        if compile.match(self.message.text):
+            return True
+        return False
 
 
 class CaseSensitiveMixin:
