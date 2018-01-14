@@ -10,14 +10,20 @@ from bottery.platform.messenger import engine as Engine
 
 
 @pytest.fixture
-def server():
-    return web.Application()
-
+def engine():
+    server = web.Application()
+    return Engine(token='token', session='session', server=server,
+                  engine_name='messenger', settings=Settings())
 
 @pytest.fixture
-def engine(server):
-    return Engine(token='token', session='session', server=server,
-                  settings=Settings())
+async def configured_engine(engine):
+    engine.settings.HOSTNAME = 'localhost'
+    await engine.configure()
+    return engine
+
+@pytest.fixture
+def client(loop, test_client, configured_engine):
+    return loop.run_until_complete(test_client(configured_engine.server))
 
 
 @pytest.fixture
@@ -67,3 +73,30 @@ async def test_configure(engine):
     assert len(routes) == 3
     assert methods == {'POST', 'GET', 'HEAD'}
     assert handlers == {engine.verify_webhook, engine.webhook}
+
+
+async def test_webhook_unexpected_request(client):
+    response = await client.post('/messenger', json={'object': 'invalid'})
+    assert response.status == 400
+
+
+async def test_webhook(test_client, configured_engine):
+    async def handler(*args, **kwargs):
+        pass
+
+    configured_engine.message_handler = mock.MagicMock()
+    configured_engine.message_handler.return_value = handler()
+
+    client = await test_client(configured_engine.server)
+
+    request = {
+        'object': 'page',
+        'entry': [{
+            'messaging': 'message'
+        }]
+    }
+    response = await client.post('/messenger', json=request)
+
+    assert response.status == 200
+    assert await response.text() == 'EVENT_RECEIVED'
+    assert configured_engine.message_handler.called
