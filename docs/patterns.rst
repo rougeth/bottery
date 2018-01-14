@@ -64,3 +64,17 @@ make a case-sensitive pattern, add a parameter on the decorator:
     @bot.patterns.startswith('ping', case_sensitive=True)
     def pong(message):
         return 'pong'
+
+
+bot.patterns.regex
+^^^^^^^^^^^^^^^^^^
+
+The *regex* pattern allows you to receive a message and it will check for a regex pattern 
+inside the message text. If there is a positive match, the view will be returned.
+
+.. code-block:: py
+
+    @bot.patterns.regex('\d+')
+    def regex_answer(message):
+        return 'It was a positive match'    
+

@@ -1,4 +1,5 @@
-from .handlers import DefaultHandler, MessageHandler, StartswithHandler
+from .handlers import (DefaultHandler, MessageHandler, RegexHandler,
+                       StartswithHandler)
 
 
 class Patterns:
@@ -25,6 +26,13 @@ class Patterns:
     def default(self):
         def decorator(view):
             self.register(DefaultHandler, view)
+            return view
+
+        return decorator
+
+    def regex(self, pattern):
+        def decorator(view):
+            self.register(RegexHandler, view, pattern)
             return view
 
         return decorator

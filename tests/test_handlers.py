@@ -90,3 +90,26 @@ def test_startswith_handler_check_negative_match_with_case_sensitive():
 def test_default_handler_check():
     message = type('Message', (), {'text': 'pong'})
     assert handlers.DefaultHandler().check(message)
+
+
+def test_regex_handler_check():
+    message = type('Message', (), {'text': '20 pings'})
+    handler = handlers.RegexHandler(pattern='\d+')
+    assert handler.check(message)
+
+
+def test_regex_handler_check_negative_match():
+    message = type('Message', (), {'text': 'pings'})
+    handler = handlers.RegexHandler(pattern='\d+')
+    assert not handler.check(message)
+
+
+@mock.patch('re.compile')
+def test_regex_handler_double_match(mocked_compile):
+    handler = handlers.RegexHandler(pattern='\d+')
+    message = type('Message', (), {'text': 'pings'})
+
+    handler.match(message)
+    handler.match(message)
+    assert handler.regex
+    assert mocked_compile.call_count == 1
