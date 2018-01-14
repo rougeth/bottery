@@ -65,8 +65,15 @@ class MessengerEngine(BaseEngine):
         )
 
     async def message_handler(self, data):
-        message = self.build_message(data)
+        try:
+            message = self.build_message(data)
+        except KeyError:
+            logger.error('[%s] Unable to understand the message',
+                         self.engine_name)
+            return
+
         logger.info('[%s] %s', self.engine_name, message.user)
+
 
         # Try to find a view (best name?) to response the message
         view = self.discovery_view(message)
