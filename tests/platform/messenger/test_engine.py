@@ -1,4 +1,3 @@
-import sys
 from unittest import mock
 
 import pytest
@@ -15,11 +14,13 @@ def engine():
     return Engine(token='token', session='session', server=server,
                   engine_name='messenger', settings=Settings())
 
+
 @pytest.fixture
 async def configured_engine(engine):
     engine.settings.HOSTNAME = 'localhost'
     await engine.configure()
     return engine
+
 
 @pytest.fixture
 def client(loop, test_client, configured_engine):
@@ -50,7 +51,7 @@ def test_build_message_with_invalid_data(engine):
         engine.build_message({'invalid': 'data'})
 
 
-def test_build_message_with_invalid_data(engine, message_data):
+def test_build_message(engine, message_data):
     message = engine.build_message(message_data)
     assert isinstance(message, Message)
 

@@ -74,7 +74,6 @@ class MessengerEngine(BaseEngine):
 
         logger.info('[%s] %s', self.engine_name, message.user)
 
-
         # Try to find a view (best name?) to response the message
         view = self.discovery_view(message)
         if not view:
