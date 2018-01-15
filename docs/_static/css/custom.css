@@ -1,0 +1,58 @@
+/* This file intentionally left blank. */
+* {
+  font-family: 'Slabo 27px', serif;
+}
+
+.sphinxsidebarwrapper {
+  margin-top: 3em;
+  opacity: .7;
+  transition: opacity .3s ease;
+  -moz-transition: opacity .3s ease;
+  -webkit-transition: opacity .3s ease;
+  -o-transition: opacity .3s ease;
+}
+
+.sphinxsidebarwrapper:hover {
+  opacity: 1;
+  transition: opacity .5s ease;
+  -moz-transition: opacity .5s ease;
+  -webkit-transition: opacity .5s ease;
+  -o-transition: opacity .5s ease;
+}
+
+div.body h1,
+div.body h2,
+div.body h3,
+div.body h4 {
+  font-family: 'Open Sans', sans-serif;
+}
+
+p {
+  font-size: 18px;
+}
+
+span.pre {
+  font-family: 'Ubuntu Mono', monospace;
+  font-style: italic;
+}
+
+code {
+  background-color: #f3f3f3;
+  padding: 1px 4px;
+}
+
+.sphinxsidebarwrapper .logo a {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: normal;
+  color: black;
+  border: 0;
+}
+
+.sphinxsidebarwrapper .logo a:hover {
+  border-bottom: 1px dotted #999;
+  text-decoration: none;
+}
+
+div.sphinxsidebarwrapper h3 {
+  font-family: 'Open Sans', sans-serif;
+}
