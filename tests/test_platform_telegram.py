@@ -1,9 +1,8 @@
 import pytest
 
 from bottery.message import Message
-from bottery.platform.telegram.engine import TelegramChat
-from bottery.platform.telegram.engine import TelegramEngine
-from bottery.platform.telegram.engine import TelegramUser
+from bottery.platform.telegram.engine import (TelegramChat, TelegramEngine,
+                                              TelegramUser)
 
 
 @pytest.fixture
