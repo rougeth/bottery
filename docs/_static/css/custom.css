@@ -1,6 +1,6 @@
 /* This file intentionally left blank. */
 * {
-  font-family: 'Slabo 27px', serif;
+  font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
 }
 
 .sphinxsidebarwrapper {
@@ -34,6 +34,7 @@ p {
 span.pre {
   font-family: 'Ubuntu Mono', monospace;
   font-style: italic;
+  font-weight: 300;
 }
 
 code {
