@@ -1,35 +1,46 @@
-import aiohttp
 import pytest
 
-from bottery.platform.telegram.api import TelegramAPI
+from bottery.message import Message
+from bottery.platform.telegram.engine import TelegramChat
 from bottery.platform.telegram.engine import TelegramEngine
+from bottery.platform.telegram.engine import TelegramUser
 
 
-def test_platform_telegram_api_non_existent_method():
-    api = TelegramAPI('token', aiohttp.ClientSession)
-    with pytest.raises(AttributeError):
-        api.non_existent_method()
+@pytest.fixture
+def engine():
+    return TelegramEngine
 
 
-@pytest.mark.asyncio
-async def test_platform_telegram_api_get_updates():
-    api = TelegramAPI('token', aiohttp.ClientSession)
-    with pytest.raises(TypeError):
-        await api.get_updates()
+@pytest.fixture
+def user():
+    return TelegramUser
 
 
-def test_platform_telegram_engine_get_chat_id_private():
-    user = type('TelegramUser', (), {'id': '123'})
-    chat = type('TelegramChat', (), {'type': 'private'})
-    message = type('Message', (), {'user': user, 'chat': chat})
-    engine = TelegramEngine
-
-    assert engine.get_chat_id(engine, message) == '123'
+@pytest.fixture
+def chat():
+    return TelegramChat
 
 
-def test_platform_telegram_engine_get_chat_id_group():
-    chat = type('TelegramChat', (), {'id': '456', 'type': 'group'})
-    message = type('Message', (), {'chat': chat})
-    engine = TelegramEngine
+@pytest.fixture()
+def message():
+    return Message(
+        id='',
+        platform='',
+        text='',
+        user=user,
+        chat=chat,
+        timestamp='',
+        raw='',
+    )
 
-    assert engine.get_chat_id(engine, message) == '456'
+
+@pytest.mark.parametrize('chat_type,id_expected', [
+    ('group', 456),
+    ('private', 123),
+])
+def test_platform_telegram_engine_get_chat_id(chat_type,
+                                              id_expected, engine, message):
+    setattr(message.chat, 'id', id_expected)
+    setattr(message.chat, 'type', chat_type)
+    setattr(message.user, 'id', id_expected)
+    assert engine.get_chat_id(engine, message) == id_expected
