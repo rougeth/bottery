@@ -92,7 +92,7 @@ todo_include_todos = False
 #
 html_theme = 'alabaster'
 html_theme_options = {
-    "pre_bg": "#49483e",
+    "pre_bg": "#444444",
     "github_user": "rougeth",
     "github_repo": "bottery",
     "github_banner": True,
