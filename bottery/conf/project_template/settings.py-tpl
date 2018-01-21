@@ -1,6 +1,6 @@
 HOSTNAME = 'localhost'
 
-TOKEN = ''
+SECRET_KEY = ''
 
 PLATFORMS = {
     'telegram': {

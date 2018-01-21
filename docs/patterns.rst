@@ -20,9 +20,8 @@ bot.patterns.message
 
 The pattern message allows your bot to check if a message was received. This way, **bottery** 
 will check if that exact message was sent by the user. 
-If the message was send exactly like you defined it, then the function is called to return a message. 
-
-You should remember that this pattern is case-sensitive!
+If the message was send exactly like you defined it, 
+then the function is called to return a message. 
 
 The default case is the one that comes when you first created your project:
 
@@ -31,6 +30,16 @@ The default case is the one that comes when you first created your project:
     @bot.patterns.message('ping')
     def pong(message):
         return 'pong'
+
+You should remember that this pattern is not case-sensitive! If you wish to 
+make a case-sensitive pattern, add a parameter on the decorator:
+
+.. code-block:: py
+
+    @bot.patterns.message('ping', case_sensitive=True)
+    def pong(message):
+        return 'pong'
+
 
 bot.patterns.startswith
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -46,4 +55,26 @@ but not necessarily matches all message received.
 
 With this pattern, if you receive a message such as `hello, my bot!` it will call our function and 
 return an answer.
+
+You should remember that this pattern is not case-sensitive! If you wish to 
+make a case-sensitive pattern, add a parameter on the decorator:
+
+.. code-block:: py
+
+    @bot.patterns.startswith('ping', case_sensitive=True)
+    def pong(message):
+        return 'pong'
+
+
+bot.patterns.regex
+^^^^^^^^^^^^^^^^^^
+
+The *regex* pattern allows you to receive a message and it will check for a regex pattern 
+inside the message text. If there is a positive match, the view will be returned.
+
+.. code-block:: py
+
+    @bot.patterns.regex('\d+')
+    def regex_answer(message):
+        return 'It was a positive match'    
 

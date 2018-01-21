@@ -33,7 +33,8 @@ def render(message, template_name, context={}):
     template = env.get_template(template_name)
 
     default_context = {
-        'user': message.user
+        'user': message.user,
+        'platform': message.platform,
     }
     default_context.update(context)
     return template.render(**default_context)

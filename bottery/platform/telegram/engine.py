@@ -100,7 +100,7 @@ class TelegramEngine(platform.BaseEngine):
         # TODO: Check API response
         await self.api.set_webhook(url=hostname)
 
-        self.server.router.add_post('/', self.webhook)
+        self.server.router.add_post('/%s' % self.engine_name, self.webhook)
 
     async def webhook(self, request):
         update = await request.json()
@@ -150,7 +150,7 @@ class TelegramEngine(platform.BaseEngine):
 
     async def message_handler(self, data):
         message = self.build_message(data)
-        print('[%s] Message from %s' % (self.engine_name, message.user))
+        logger.info('[%s] %s', self.engine_name, message.user)
 
         # Try to find a view (best name?) to response the message
         view = self.discovery_view(message)
@@ -163,4 +163,4 @@ class TelegramEngine(platform.BaseEngine):
         # TODO: Choose between Markdown and HTML
         # TODO: Verify response status
         await self.api.send_message(chat_id=self.get_chat_id(message),
-                                    text=response, parser_mode='markdown')
+                                    text=response, parse_mode='markdown')

@@ -10,14 +10,14 @@ import bottery
 from bottery.cli import cli
 from bottery.conf import Settings
 from bottery.log import Spinner
-from bottery.patterns import PatternsHandler
+from bottery.patterns import Patterns
 
 
 class Bottery:
     _loop = None
     _session = None
     _server = None
-    patterns = PatternsHandler()
+    patterns = Patterns()
     cli = cli
 
     def __init__(self, settings_module='settings'):

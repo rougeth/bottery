@@ -1,46 +1,8 @@
-class BaseHandler:
-    def __init__(self, pattern=None, *args, **kwargs):
-        self.pattern = pattern
-        self.kwargs = kwargs
-
-    def check(self, message):
-        message = self.clean(message)
-        return self.match(message)
-
-    def clean(self, message):
-        return message
-
-    def match(self, message):
-        raise Exception('Method Not Implemented')
+from .handlers import (DefaultHandler, MessageHandler, RegexHandler,
+                       StartswithHandler)
 
 
-class CaseSensitiveMixinHandler:
-    def clean(self, message):
-        if not self.kwargs.get('case_sensitive'):
-            message.text = message.text.lower()
-        return message
-
-
-class MessageHandler(CaseSensitiveMixinHandler, BaseHandler):
-    def match(self, message):
-        if message.text == self.pattern:
-            return True
-        return False
-
-
-class StartswithHandler(CaseSensitiveMixinHandler, BaseHandler):
-    def match(self, message):
-        if message.text.startswith(self.pattern):
-            return True
-        return False
-
-
-class DefaultHandler:
-    def check(self, message):
-        return True
-
-
-class PatternsHandler:
+class Patterns:
     def __init__(self):
         self.registered = []
 
@@ -64,6 +26,13 @@ class PatternsHandler:
     def default(self):
         def decorator(view):
             self.register(DefaultHandler, view)
+            return view
+
+        return decorator
+
+    def regex(self, pattern):
+        def decorator(view):
+            self.register(RegexHandler, view, pattern)
             return view
 
         return decorator
