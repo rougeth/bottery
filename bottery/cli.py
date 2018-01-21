@@ -76,10 +76,11 @@ def import_string(import_name):
 
 @cli.command('run')
 @click.option('--bot-module', default='bot', type=str)
-def run(bot_module):
+@click.option('--port', default=7000, type=int)
+def run(bot_module, port):
     bot = import_string(bot_module)
 
     try:
-        bot.run()
+        bot.run(server_port=port)
     except KeyboardInterrupt:
         bot.stop()

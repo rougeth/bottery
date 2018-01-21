@@ -72,7 +72,7 @@ class Bottery:
                 await engine.configure()
                 self.tasks.extend(engine.tasks)
 
-    def run(self):
+    def run(self, server_port):
         click.echo('{now}\n{bottery} version {version}'.format(
             now=datetime.now().strftime('%B %m, %Y -  %H:%M:%S'),
             bottery=click.style('Bottery', fg='green'),
@@ -83,9 +83,12 @@ class Bottery:
 
         if self._server is not None:
             handler = self.server.make_handler()
-            setup_server = self.loop.create_server(handler, '0.0.0.0', 7000)
+            setup_server = self.loop.create_server(handler, '0.0.0.0',
+                                                   server_port)
             self.loop.run_until_complete(setup_server)
-            click.echo('Server running at http://localhost:7000')
+            click.echo('Server running at http://localhost:{port}'.format(
+                port=server_port
+            ))
 
         if not self.tasks:
             click.secho('No tasks found.', fg='red')
