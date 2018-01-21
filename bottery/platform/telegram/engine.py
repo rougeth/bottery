@@ -32,6 +32,27 @@ class TelegramUser:
         return s.format(u=self)
 
 
+class TelegramChat:
+    '''
+    Telegram Chat reference
+    https://core.telegram.org/bots/api#chat
+    '''
+    def __init__(self, chat):
+        self.id = chat['id']
+        self.type = chat['type']
+        self.title = chat.get('title')
+        self.username = chat.get('username')
+
+    def __str__(self):
+        s = '{u.id}'
+        if self.title:
+            s += ' {u.title}'
+        if self.username:
+            s += ' {u.username}'
+
+        return s.format(u=self)
+
+
 class TelegramEngine(platform.BaseEngine):
     platform = 'telegram'
 
@@ -111,9 +132,21 @@ class TelegramEngine(platform.BaseEngine):
             platform=self.platform,
             text=message_data['text'],
             user=TelegramUser(message_data['from']),
+            chat=TelegramChat(message_data['chat']),
             timestamp=message_data['date'],
             raw=data,
         )
+
+    def get_chat_id(self, message):
+        '''
+        Telegram chat type can be either "private", "group", "supergroup" or
+        "channel".
+        Return user ID if it is of type "private", chat ID otherwise.
+        '''
+        if message.chat.type == 'private':
+            return message.user.id
+
+        return message.chat.id
 
     async def message_handler(self, data):
         message = self.build_message(data)
@@ -129,5 +162,5 @@ class TelegramEngine(platform.BaseEngine):
 
         # TODO: Choose between Markdown and HTML
         # TODO: Verify response status
-        await self.api.send_message(chat_id=message.user.id, text=response,
-                                    parse_mode='markdown')
+        await self.api.send_message(chat_id=self.get_chat_id(message),
+                                    text=response, parse_mode='markdown')

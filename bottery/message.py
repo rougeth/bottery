@@ -10,6 +10,7 @@ class Message:
     id = attr.ib()
     platform = attr.ib()
     user = attr.ib()
+    chat = attr.ib()
     text = attr.ib()
     timestamp = attr.ib()
     raw = attr.ib()
