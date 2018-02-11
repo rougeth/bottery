@@ -1,19 +1,19 @@
 import os
 from datetime import datetime
 
+import attr
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from bottery.conf import settings
 
-
+@attr.s
 class Message:
-    def __init__(self, id, platform, user, text, timestamp, raw):
-        self.id = id
-        self.platform = platform
-        self.user = user
-        self.text = text
-        self.timestamp = timestamp
-        self.raw = raw
+    id = attr.ib()
+    platform = attr.ib()
+    user = attr.ib()
+    chat = attr.ib()
+    text = attr.ib()
+    timestamp = attr.ib()
+    raw = attr.ib()
 
     @property
     def datetime(self):
@@ -23,7 +23,8 @@ class Message:
 def render(message, template_name, context={}):
     base_dir = os.path.join(os.getcwd(), 'templates')
     paths = [base_dir]
-    paths.extend(settings.TEMPLATES)
+    # Include paths on settings
+    # paths.extend(settings.TEMPLATES)
 
     env = Environment(
         loader=FileSystemLoader(paths),
@@ -32,7 +33,8 @@ def render(message, template_name, context={}):
     template = env.get_template(template_name)
 
     default_context = {
-        'user': message.user
+        'user': message.user,
+        'platform': message.platform,
     }
     default_context.update(context)
     return template.render(**default_context)

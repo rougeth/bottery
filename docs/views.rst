@@ -1,34 +1,5 @@
-Writing Views
-=============
-
-When you receive a message on your Bottery bot you should define a pattern that 
-will expect a view as the response parameter. Here we are going to talk a little bit on
-how you can define your view.
-
-Defining a new response 
-^^^^^^^^^^^^^^^^^^^^^^^
-
-On the `patterns.py` file, you should define the messages you aim to receive and
-functions to return it. You can create a new function called `hello` that will 
-return a string:
-
-
-.. code-block:: py
-
-    def hello(message):
-        return 'Hello world!'
-
-Now, create a new pattern that receives a message, and returns our newly
-created function:
-
-
-.. code-block:: py
-
-    patterns = [
-        Pattern('hello', hello)
-    ]
-
-Now your bot is able to return a message when receiving a `hello` message.
+Views
+=====
 
 
 Working with templates
@@ -38,7 +9,7 @@ Sometimes, you need complex and big messages to be returned by your patterns.
 Bottery is able to render and respond messages using templates written in
 markdown.
 
-On your project directory, create a `template` folder. Your templates should be
+On your project directory, create a folder named "**templates**". Your templates should be
 kept inside this folder so Bottery can find them. For other configuration,
 please check the `settings`  section.
 
@@ -61,8 +32,12 @@ Here is an example using render without needing any extra content:
 
 .. code-block:: py
 
+    from bottery import Bottery
     from bottery.message import render
 
+    bot = Bottery()
+
+    @bot.patterns.message('hello')
     def hello(message):
         return render(message, 'hello.md')
 
@@ -73,8 +48,13 @@ the render function:
 
 .. code-block:: py
 
+    from bottery import Bottery
     from bottery.message import render
 
+    bot = Bottery()
+
+
+    @bot.patterns.message('hello')
     def hello(message):
         return render(message, 'hello.md',
                       {'question': 'interested, yet?'})

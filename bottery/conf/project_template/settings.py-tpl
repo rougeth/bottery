@@ -1,4 +1,6 @@
-HOSTNAME = ''
+HOSTNAME = 'localhost'
+
+SECRET_KEY = ''
 
 PLATFORMS = {
     'telegram': {

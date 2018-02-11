@@ -1,6 +1,7 @@
 import logging
 
 import click
+from halo import Halo
 
 DEFAULT_COLORS = {
     logging.WARN: {'fg': 'yellow'},
@@ -45,3 +46,14 @@ class ColoredFormatter(logging.Formatter):
             record.msg = click.style(record.msg, **options)
 
         return super().format(record)
+
+
+class Spinner:
+    def __init__(self, message):
+        self.halo = Halo(text=message, spinner='dot', color='green')
+
+    def __enter__(self):
+        self.halo.__enter__()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.halo.__exit__(exc_tb, exc_val, exc_tb)

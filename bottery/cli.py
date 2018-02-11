@@ -1,30 +1,34 @@
 import logging.config
 import os
 import shutil
+import sys
+from importlib import import_module
 
 import click
 
 import bottery
-from bottery.app import App
 from bottery.log import DEFAULT_LOGGING
 
 logging.config.dictConfig(DEFAULT_LOGGING)
 logger = logging.getLogger('bottery')
 
 
-def debug_option(f):
-    @click.option('--debug/--no-debug', default=False)
-    def wrapper(*args, **kwargs):
-        if kwargs.get('debug', False):
-            logger.setLevel(logging.DEBUG)
-        return f(*args, **kwargs)
-
-    return wrapper
-
-
-@click.group()
-def cli():
+@click.group(invoke_without_command=True)
+@click.option('--version', '-v', is_flag=True, default=False)
+@click.pass_context
+def cli(ctx, version):
     """Bottery"""
+
+    # If no subcommand was given and the version flag is true, shows
+    # Bottery version
+    if not ctx.invoked_subcommand and version:
+        click.echo(bottery.__version__)
+        ctx.exit()
+
+    # If no subcommand but neither the version flag, shows help message
+    elif not ctx.invoked_subcommand:
+        click.echo(ctx.get_help())
+        ctx.exit()
 
 
 @cli.command('startproject')
@@ -49,9 +53,34 @@ def startproject(name):
             shutil.copy(src, dst)
 
 
+def import_string(import_name):
+    try:
+        module_name, obj_name = import_name.rsplit('.', 1)
+    except ValueError:
+        module_name = import_name
+        obj_name = 'bot'
+
+    base = os.getcwd()
+    sys.path.insert(0, base)
+
+    try:
+        module = import_module(module_name)
+    except Exception as e:
+        raise e
+
+    try:
+        return getattr(module, obj_name)
+    except AttributeError as e:
+        raise ImportError(e)
+
+
 @cli.command('run')
-@click.option('--port', default=8000, type=int)
-@debug_option
-def run(port, debug):
-    app = App()
-    app.run()
+@click.option('--bot-module', default='bot', type=str)
+@click.option('--port', default=7000, type=int)
+def run(bot_module, port):
+    bot = import_string(bot_module)
+
+    try:
+        bot.run(server_port=port)
+    except KeyboardInterrupt:
+        bot.stop()

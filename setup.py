@@ -27,7 +27,9 @@ setup(
     },
     install_requires=[
         'aiohttp',
+        'attrs',
         'click',
+        'halo',
         'jinja2',
         'requests',
     ],
@@ -37,6 +39,8 @@ setup(
             'flake8',
             'isort',
             'pytest',
+            'pytest-aiohttp',
+            'pytest-asyncio',
             'pytest-cov',
             'pytest-mock',
             'sphinx',

@@ -1,0 +1,8 @@
+from bottery import Bottery
+
+
+bot = Bottery()
+
+@bot.patterns.message('ping')
+def pong(message):
+    return 'pong'
