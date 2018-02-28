@@ -74,7 +74,7 @@ class Bottery:
 
     def run(self, server_port):
         click.echo('{now}\n{bottery} version {version}'.format(
-            now=datetime.now().strftime('%B %m, %Y -  %H:%M:%S'),
+            now=datetime.now().strftime('%B %d, %Y -  %H:%M:%S'),
             bottery=click.style('Bottery', fg='green'),
             version=bottery.__version__
         ))
