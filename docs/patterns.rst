@@ -2,10 +2,10 @@ Bot patterns
 ============
 
 When you create a new Bottery project, it will contain a file called `bot.py`.
-This file is were you will define what kind of messages your bot can receive and
-what kind of responses you should return. 
+This file is were you'll define what kind of messages your bot can receive and
+what kind of responses it should return. 
 
-First we need to an instance of the Bottery main class. This is how we can access patterns of messages we are able to receive. We should define it such as:
+First we need an instance of the Bottery main class. This is how we can access patterns of messages we are able to receive. We should define it such as:
 
 .. code-block:: py
 
@@ -13,7 +13,7 @@ First we need to an instance of the Bottery main class. This is how we can acces
 
     bot = Bottery()
 
-Then all the patterns available in **bottery** will be available for use. You should define the pattern type you wante was a decorator for a function. The function will be the return for that specific pattern when the pattern has a match. 
+Then all the patterns available in **bottery** will be available for use. You should define the pattern type you want as a decorator for a function. The function will be the return for that specific pattern when the pattern has a match. 
 
 bot.patterns.message
 ^^^^^^^^^^^^^^^^^^^^
@@ -69,7 +69,7 @@ make a case-sensitive pattern, add a parameter on the decorator:
 bot.patterns.regex
 ^^^^^^^^^^^^^^^^^^
 
-The *regex* pattern allows you to receive a message and it will check for a regex pattern 
+The *regex* pattern allows you to receive a message and will check for a regex pattern 
 inside the message text. If there is a positive match, the view will be returned.
 
 .. code-block:: py
