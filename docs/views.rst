@@ -5,7 +5,7 @@ Views
 Working with templates
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Sometimes, you need complex and big messages to be returned by your patterns.
+Sometimes you need complex and big messages to be returned by your patterns.
 Bottery is able to render and respond messages using templates written in
 markdown.
 
@@ -22,7 +22,7 @@ Let's create a template called `hello.md`:
     Welcome to **Bottery**
 
 Good! Now we need our view to return a template instead of a simple string.
-To do this, we should user the method `render`.
+To do this, we should use the method `render`.
 
 Render is a default function that can receive the following parameters:
 
