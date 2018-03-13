@@ -1,4 +1,5 @@
 import re
+from functools import partial
 
 
 class BaseHandler:
@@ -55,6 +56,20 @@ class StartswithHandler(CaseSensitiveMixin, BaseHandler):
         return False
 
 
-class DefaultHandler:
+class DefaultHandler(BaseHandler):
     def check(self, message):
         return True
+
+
+def _handle_msg(pattern, view=None, Handler=None, *args, **kwargs):
+    if not view:
+        # Hello, I'm a hack! Nice to meet up
+        view, pattern = pattern, view
+
+    return (Handler(pattern, **kwargs), view)
+
+
+default = partial(_handle_msg, Handler=DefaultHandler)
+message = partial(_handle_msg, Handler=MessageHandler)
+regex = partial(_handle_msg, Handler=RegexHandler)
+startswith = partial(_handle_msg, Handler=StartswithHandler)

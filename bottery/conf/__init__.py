@@ -1,3 +1,5 @@
+import os
+import sys
 from copy import deepcopy
 from importlib import import_module
 
@@ -11,15 +13,28 @@ class Settings:
                 value = getattr(global_settings, key)
                 setattr(self, key, deepcopy(value))
 
-    @classmethod
-    def from_object(cls, obj='settings'):
-        settings = cls()
+        base = os.getcwd()
+        settings_path = os.path.join(base, 'settings.py')
+        if not os.path.isfile(settings_path):
+            raise ImproperlyConfigured('Could not find settings module')
+        sys.path.insert(0, base)
 
-        if isinstance(obj, str):
-            obj = import_module(obj)
+        mod = import_module('settings')
 
-        for key in dir(obj):
-            if key.isupper():
-                setattr(settings, key, getattr(obj, key))
+        for setting in dir(mod):
+            if setting.isupper():
+                setattr(self, setting, getattr(mod, setting))
 
-        return settings
+class LazySettings:
+    _wrapped = None
+
+    def _setup(self):
+        self._wrapped = Settings()
+
+    def __getattr__(self, name):
+        if not self._wrapped:
+            self._setup()
+        return getattr(self._wrapped, name)
+
+
+settings = LazySettings()

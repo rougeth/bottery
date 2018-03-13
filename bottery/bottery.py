@@ -7,21 +7,16 @@ import aiohttp.web
 import click
 
 import bottery
-from bottery.cli import cli
-from bottery.conf import Settings
+from bottery.conf import settings
 from bottery.log import Spinner
-from bottery.patterns import Patterns
 
 
 class Bottery:
     _loop = None
     _session = None
     _server = None
-    patterns = Patterns()
-    cli = cli
 
     def __init__(self, settings_module='settings'):
-        self.settings = Settings.from_object(settings_module)
         self.tasks = []
 
     @property
@@ -42,8 +37,17 @@ class Bottery:
             self._server = aiohttp.web.Application()
         return self._server
 
+    def get_msghandlers(self):
+        # TODO: module `handlers` should be configurable on settings.py
+        try:
+            return importlib.import_module('handlers').msghandlers
+        except ImportError:
+            raise Exception("'handlers' module not found!")
+        except AttributeError:
+            raise Exception("'msghandlers' not found!")
+
     async def configure(self):
-        platforms = self.settings.PLATFORMS.items()
+        platforms = settings.PLATFORMS.items()
         if not platforms:
             raise Exception('No platforms configured')
 
@@ -51,8 +55,8 @@ class Bottery:
             'loop': self.loop,
             'session': self.session,
             'server': self.server,
-            'registered_patterns': self.patterns.registered,
-            'settings': self.settings,
+            'registered_handlers': self.get_msghandlers(),
+            'settings': settings,
         }
 
         for engine_name, platform in platforms:
