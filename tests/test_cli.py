@@ -10,13 +10,13 @@ def test_startproject():
     runner = CliRunner()
     with runner.isolated_filesystem():
         project_name = 'librarybot'
-        project_files = ['bot.py', 'settings.py']
+        project_files = {'handlers.py', 'views.py', 'settings.py'}
 
         result = runner.invoke(cli, ['startproject', project_name])
 
         assert result.exit_code == 0
         assert os.listdir() == [project_name]
-        assert sorted(os.listdir(project_name)) == sorted(project_files)
+        assert set(os.listdir(project_name)) == project_files
 
 
 def test_startproject_invalid_project_name():
