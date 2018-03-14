@@ -4,6 +4,7 @@ from copy import deepcopy
 from importlib import import_module
 
 from bottery.conf import global_settings
+from bottery.exceptions import ImproperlyConfigured
 
 
 class Settings:
