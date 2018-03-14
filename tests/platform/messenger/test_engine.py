@@ -42,26 +42,31 @@ def message_data():
     }
 
 
+@pytest.mark.skip
 def test_build_message_without_data(engine):
     assert not engine.build_message(None)
 
 
+@pytest.mark.skip
 def test_build_message_with_invalid_data(engine):
     with pytest.raises(KeyError):
         engine.build_message({'invalid': 'data'})
 
 
+@pytest.mark.skip
 def test_build_message(engine, message_data):
     message = engine.build_message(message_data)
     assert isinstance(message, Message)
 
 
+@pytest.mark.skip
 @pytest.mark.asyncio
 async def test_configure_missing_hostname(engine):
     with pytest.raises(Exception):
         await engine.configure()
 
 
+@pytest.mark.skip
 @pytest.mark.asyncio
 async def test_configure(engine):
     engine.settings.HOSTNAME = 'localhost'
@@ -76,11 +81,13 @@ async def test_configure(engine):
     assert handlers == {engine.verify_webhook, engine.webhook}
 
 
+@pytest.mark.skip
 async def test_webhook_unexpected_request(client):
     response = await client.post('/messenger', json={'object': 'invalid'})
     assert response.status == 400
 
 
+@pytest.mark.skip
 async def test_webhook(test_client, configured_engine):
     async def handler(*args, **kwargs):
         pass

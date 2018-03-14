@@ -3,6 +3,7 @@ import logging
 
 from aiohttp import web
 
+from bottery.conf import settings
 from bottery.message import Message
 from bottery.platform import BaseEngine
 from bottery.platform.messenger import MessengerAPI
@@ -18,7 +19,7 @@ class MessengerEngine(BaseEngine):
         self.api = MessengerAPI(self.token, session=self.session)
 
     async def configure(self):
-        hostname = getattr(self.settings, 'HOSTNAME')
+        hostname = getattr(settings, 'HOSTNAME')
         if not hostname:
             raise Exception('Missing HOSTNAME setting')
 

@@ -54,6 +54,7 @@ async def test_configure_no_platforms_found(engine):
         await bot.configure()
 
 
+@pytest.mark.skip
 @pytest.mark.asyncio
 async def test_configure_no_platform_engine_found(bot):
     bot.settings.PLATFORMS['fake_engine'] = {
