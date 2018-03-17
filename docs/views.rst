@@ -32,12 +32,8 @@ Here is an example using render without needing any extra content:
 
 .. code-block:: py
 
-    from bottery import Bottery
     from bottery.message import render
 
-    bot = Bottery()
-
-    @bot.patterns.message('hello')
     def hello(message):
         return render(message, 'hello.md')
 
@@ -48,13 +44,8 @@ the render function:
 
 .. code-block:: py
 
-    from bottery import Bottery
     from bottery.message import render
 
-    bot = Bottery()
-
-
-    @bot.patterns.message('hello')
     def hello(message):
         return render(message, 'hello.md',
                       {'question': 'interested, yet?'})

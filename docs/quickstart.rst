@@ -21,12 +21,14 @@ This will create a directory named ``librarybot`` in your current directory with
 .. code-block:: bash
 
     librarybot/
-        bot.py
+        views.py
+        handlers.py
         settings.py
 
 
 * The outer ``librarybot/`` root directory is just a container for your project. It's name doesn't matter to Bottery, you can rename it to anything you like.
-* ``librarybot/bot.py``: is where we define which messages we are able to receive and how to respond them;
+* ``librarybot/views.py``: is where we define the functions that will handle new messages;
+* ``librarybot/handlers.py``: is where we define which functions link the functions on ``views.py`` and whicwe are able to receive and how to respond them;
 * ``librarybot/settings.py``: Settings/configuration for the Bottery project.
 
 Keep in mind that the name you'll choose for your project must be a valid identifier according to the language definition (`check the documentation for further information on identifiers <https://docs.python.org/3.6/reference/lexical_analysis.html#identifiers>`_).
