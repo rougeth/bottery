@@ -135,6 +135,7 @@ class TelegramEngine(platform.BaseEngine):
             chat=TelegramChat(message_data['chat']),
             timestamp=message_data['date'],
             raw=data,
+            templates_dirs=list(self.settings.TEMPLATES),
         )
 
     def get_chat_id(self, message):
