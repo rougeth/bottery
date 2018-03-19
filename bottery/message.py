@@ -16,6 +16,7 @@ class Message:
     text = attr.ib()
     timestamp = attr.ib()
     raw = attr.ib()
+    _request_payload = attr.ib(default=attr.Factory(dict))
 
     @property
     def datetime(self):

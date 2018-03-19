@@ -162,5 +162,9 @@ class TelegramEngine(platform.BaseEngine):
 
         # TODO: Choose between Markdown and HTML
         # TODO: Verify response status
-        await self.api.send_message(chat_id=self.get_chat_id(message),
-                                    text=response, parse_mode='markdown')
+        await self.api.send_message(
+            chat_id=self.get_chat_id(message),
+            text=response,
+            parse_mode='markdown',
+            **message._request_payload
+        )
