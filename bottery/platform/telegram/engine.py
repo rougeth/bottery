@@ -164,7 +164,7 @@ class TelegramEngine(platform.BaseEngine):
         # TODO: Verify response status
         await self.api.send_message(
             chat_id=self.get_chat_id(message),
-            text=response,
+            text=response.text,
             parse_mode='markdown',
             **message._request_payload
         )

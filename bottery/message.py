@@ -23,6 +23,12 @@ class Message:
         return datetime.utcfromtimestamp(self.timestamp)
 
 
+@attr.s
+class Response:
+    source = attr.ib()
+    text = attr.ib()
+
+
 def render(message, template_name, context=None):
     context = context or {}
     base_dir = os.path.join(os.getcwd(), 'templates')
@@ -40,4 +46,6 @@ def render(message, template_name, context=None):
         'platform': message.platform,
     }
     default_context.update(context)
-    return template.render(**default_context)
+    text = template.render(**default_context)
+
+    return Response(source=message, text=text)

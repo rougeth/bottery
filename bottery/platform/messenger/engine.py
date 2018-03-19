@@ -82,8 +82,8 @@ class MessengerEngine(BaseEngine):
             return
 
         # TODO: Test if the view returned something or not
-        text = await self.get_response(view, message)
+        response = await self.get_response(view, message)
 
         # TODO: Choose between Markdown and HTML
         # TODO: Verify response status
-        await self.api.messages(message.user, text)
+        await self.api.messages(message.user, response.text)
