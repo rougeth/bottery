@@ -39,12 +39,7 @@ class Bottery:
 
     def get_msghandlers(self):
         # TODO: module `handlers` should be configurable on settings.py
-        try:
-            return importlib.import_module('handlers').msghandlers
-        except ImportError:
-            raise Exception("'handlers' module not found!")
-        except AttributeError:
-            raise Exception("'msghandlers' not found!")
+        return importlib.import_module('handlers').msghandlers
 
     async def configure(self):
         platforms = settings.PLATFORMS.items()
