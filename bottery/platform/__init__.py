@@ -51,7 +51,6 @@ class BaseEngine:
 
         return Response(source=message, text=response)
 
-
     def discovery_view(self, message):
         """
         Use the new message to search for a registered view according

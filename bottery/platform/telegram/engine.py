@@ -151,7 +151,6 @@ class TelegramEngine(platform.BaseEngine):
 
         return message.chat.id
 
-
     def activate_conversation(self, response):
         handler = response.source._response_handler
         if handler:
