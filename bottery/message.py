@@ -17,6 +17,7 @@ class Message:
     timestamp = attr.ib()
     raw = attr.ib()
     _request_payload = attr.ib(default=attr.Factory(dict))
+    _response_handler = attr.ib(default=None)
 
     @property
     def datetime(self):
@@ -46,6 +47,4 @@ def render(message, template_name, context=None):
         'platform': message.platform,
     }
     default_context.update(context)
-    text = template.render(**default_context)
-
-    return Response(source=message, text=text)
+    return template.render(**default_context)

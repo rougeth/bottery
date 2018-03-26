@@ -1,6 +1,8 @@
 import inspect
 import logging
 
+from bottery.message import Response
+
 
 logger = logging.getLogger('bottery.platforms')
 
@@ -40,9 +42,15 @@ class BaseEngine:
         """
 
         if inspect.iscoroutinefunction(view):
-            return await view(message)
+            response = await view(message)
+        else:
+            response = view(message)
 
-        return view(message)
+        if isinstance(response, Response):
+            return response
+
+        return Response(source=message, text=response)
+
 
     def discovery_view(self, message):
         """
