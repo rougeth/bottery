@@ -2,8 +2,8 @@ Handlers patterns
 =================
 
 When you create a new Bottery project, it will contain a file called `handlers.py`.
-This file contains the rules that allow the bot to decide the response to a message,
-based on its content.
+This file contains the rules that allow the bot to decide which view will
+respond the messages.
 
 Here is a sample `handlers.py` file:
 
