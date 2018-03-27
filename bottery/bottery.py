@@ -44,7 +44,7 @@ class Bottery:
         # TODO: module `handlers` should be configurable on settings.py
         return importlib.import_module('handlers').msghandlers
 
-    async def configure(self):
+    async def configure_platforms(self):
         platforms = settings.PLATFORMS.items()
         if not platforms:
             raise Exception('No platforms configured')
@@ -75,6 +75,17 @@ class Bottery:
                 await engine.configure()
                 self.tasks.extend(engine.tasks)
 
+        for task in self.tasks:
+            self.loop.create_task(task())
+
+    def configure_server(self, port):
+            handler = self.server.make_handler()
+            setup_server = self.loop.create_server(handler, '0.0.0.0', port)
+            self.loop.run_until_complete(setup_server)
+            click.echo('Server running at http://localhost:{port}'.format(
+                port=port,
+            ))
+
     def run(self, server_port):
         click.echo('{now}\n{bottery} version {version}'.format(
             now=datetime.now().strftime('%B %d, %Y -  %H:%M:%S'),
@@ -82,24 +93,15 @@ class Bottery:
             version=bottery.__version__
         ))
 
-        self.loop.run_until_complete(self.configure())
+        self.loop.run_until_complete(self.configure_platforms())
 
         if self._server is not None:
-            handler = self.server.make_handler()
-            setup_server = self.loop.create_server(handler, '0.0.0.0',
-                                                   server_port)
-            self.loop.run_until_complete(setup_server)
-            click.echo('Server running at http://localhost:{port}'.format(
-                port=server_port
-            ))
+            self.configure_server(port=server_port)
 
         if not self.tasks:
             click.secho('No tasks found.', fg='red')
             self.stop()
             sys.exit(1)
-
-        for task in self.tasks:
-            self.loop.create_task(task())
 
         click.echo('Quit the bot with CONTROL-C')
         self.loop.run_forever()
