@@ -1,9 +1,7 @@
 Handlers patterns
 =================
 
-When you create a new Bottery project, it will contain a file called `handlers.py`.
-This file contains the rules that allow the bot to decide which view will
-respond the messages.
+When you create a new Bottery project, it will contain a file called `handlers.py`. This file contains the rules that allow the bot to decide which view will respond the messages.
 
 Here is a sample `handlers.py` file:
 
@@ -17,19 +15,16 @@ Here is a sample `handlers.py` file:
         handlers.message('ping', pong)
     ]
 
-If the bot receives a message is exactly equal to `ping` the response will be the return value
-of the `pong` function.
+If the bot receives a message that is exactly equal to `ping` the response will be the return value of the `pong` view function.
 
 Bottery has the following handlers available:
 
 handlers.message
 ----------------
 
-The message handler allows your bot to check if a message was received. This way, **bottery**
-will check if that exact message was sent by the user. If the message was send exactly like
-you defined it, then the function is called to return a message.
+The message handler allows your bot to check if a message was received. This way, **bottery** will check if that exact message was sent by the user. If the message was send exactly like you defined it, then the view is used to return a message.
 
-The default case is the one that comes when you first created your project:
+This is the handler that comes on `handlers.py` when you create a project:
 
 .. code-block:: py
 
@@ -37,8 +32,7 @@ The default case is the one that comes when you first created your project:
         handlers.message('ping', pong)
     ]
 
-You should remember that this pattern **is not case-sensitive**! If you wish to
-make a case-sensitive pattern, include the `case_sensitive` parameter:
+You should remember that this pattern **is not case-sensitive**! If you wish to make a case-sensitive pattern, include the `case_sensitive` parameter:
 
 .. code-block:: py
 
@@ -50,8 +44,7 @@ make a case-sensitive pattern, include the `case_sensitive` parameter:
 handlers.startswith
 -------------------
 
-The *startswith* handler allows you to receive a message that only starts with a certain text,
-but not necessarily matches all message received.
+The *startswith* handler allows you to receive a message that only starts with a certain text, but not necessarily matches all message received.
 
 .. code-block:: py
 
@@ -90,16 +83,12 @@ If there is a positive match, the view will be executed.
         handlers.regex('\d+', numbers),
     ]
 
-Processing order
-----------------
+Handling order
+--------------
 
-Note that Bottery will try to match the message content to the handlers following the order
-declared in `msghandlers` list and when it found one
+Note that **Bottery** will follow the order declared in `msghandlers` list to decide which handler will be used. It tries each handler pattern, in order, and stops at the first one that matches.
 
-Bottery runs through each handler pattern, in order, and stops at the first one that matches.
-
-If you want to have a default handler, executed if no message is previously captured, you can use
-the following:
+If you want to have a default handler, executed if no message is previously captured, you can use the following:
 
 .. code-block:: py
 
