@@ -101,7 +101,8 @@ class TelegramEngine(platform.BaseEngine):
             raise Exception('Missing HOSTNAME setting')
 
         # TODO: Check API response
-        await self.api.set_webhook(url=hostname)
+        url = '{}/{}'.format(hostname, self.engine_name)
+        await self.api.set_webhook(url=url)
 
         self.server.router.add_post('/%s' % self.engine_name, self.webhook)
 

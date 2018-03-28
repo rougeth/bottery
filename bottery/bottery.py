@@ -79,12 +79,15 @@ class Bottery:
             self.loop.create_task(task())
 
     def configure_server(self, port):
-            handler = self.server.make_handler()
-            setup_server = self.loop.create_server(handler, '0.0.0.0', port)
-            self.loop.run_until_complete(setup_server)
-            click.echo('Server running at http://localhost:{port}'.format(
-                port=port,
-            ))
+        handler = self.server.make_handler()
+        setup_server = self.loop.create_server(handler, '0.0.0.0', port)
+        self.loop.run_until_complete(setup_server)
+        click.echo('Server running at http://localhost:{port}'.format(
+            port=port,
+        ))
+
+    def configure(self):
+        self.loop.run_until_complete(self.configure_platforms())
 
     def run(self, server_port):
         click.echo('{now}\n{bottery} version {version}'.format(
@@ -93,15 +96,15 @@ class Bottery:
             version=bottery.__version__
         ))
 
-        self.loop.run_until_complete(self.configure_platforms())
+        self.configure()
 
         if self._server is not None:
             self.configure_server(port=server_port)
 
-        if not self.tasks:
-            click.secho('No tasks found.', fg='red')
-            self.stop()
-            sys.exit(1)
+        # if not self.tasks:
+        #     click.secho('No tasks found.', fg='red')
+        #     self.stop()
+        #     sys.exit(1)
 
         click.echo('Quit the bot with CONTROL-C')
         self.loop.run_forever()
