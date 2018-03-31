@@ -1,3 +1,5 @@
+from aiohttp import GunicornWebWorker
+
 from bottery import Bottery
 
 
