@@ -10,7 +10,12 @@ def test_startproject():
     runner = CliRunner()
     with runner.isolated_filesystem():
         project_name = 'librarybot'
-        project_files = {'handlers.py', 'views.py', 'settings.py'}
+        project_files = {
+            'handlers.py',
+            'settings.py',
+            'views.py',
+            'wsgi.py'
+        }
 
         result = runner.invoke(cli, ['startproject', project_name])
 

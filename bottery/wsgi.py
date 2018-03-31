@@ -1,4 +1,4 @@
-from aiohttp import GunicornWebWorker
+from aiohttp import GunicornWebWorker  # noqa
 
 from bottery import Bottery
 

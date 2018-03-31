@@ -1,6 +1,5 @@
 import asyncio
 import importlib
-import sys
 from datetime import datetime
 
 import aiohttp.web
