@@ -16,7 +16,7 @@ class Bottery:
     _server = None
 
     # This is a feature trial, do NOT rely your application on it
-    active_conversations = {}
+    conversations = settings.CONVERSATION_HANDLER()
 
     def __init__(self, settings_module='settings'):
         self.tasks = []
@@ -50,7 +50,7 @@ class Bottery:
 
         global_options = {
             'settings': settings,
-            'active_conversations': self.active_conversations,
+            'conversations': self.conversations,
             'registered_handlers': self.get_msghandlers(),
             'server': self.server,
             'loop': self.loop,

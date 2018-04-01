@@ -31,7 +31,7 @@ DEFAULT_LOGGING = {
     'loggers': {
         'bottery': {
             'handlers': ['console'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': False,
         },
     },

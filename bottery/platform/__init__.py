@@ -49,13 +49,33 @@ class BaseEngine:
         if isinstance(response, Response):
             return response
 
-        return Response(source=message, text=response)
+        response = Response(source=message, text=response)
+        self._activate_conversation(response)
+
+        return response
+
+    def _activate_conversation(self, response):
+        self.conversations.register(response)
+
+    def _check_conversations(self, message):
+        user_id = message.user.id
+        return self.conversations.get_view(user_id)
+
+    def _clear_conversation(self, message):
+        user_id = message.user.id
+        self.conversations.clear(user_id)
 
     def discovery_view(self, message):
         """
-        Use the new message to search for a registered view according
+        Check if user already has a conversation going on, if not,
+        use the new message to search for a registered view according
         to its pattern.
         """
+        view = self._check_conversations(message)
+        if view:
+            self._clear_conversation(message)
+            return view
+
         for handler, view in self.registered_handlers:
             if handler.check(message):
                 return view

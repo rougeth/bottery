@@ -152,38 +152,18 @@ class TelegramEngine(platform.BaseEngine):
 
         return message.chat.id
 
-    def activate_conversation(self, response):
-        handler = response.source._response_handler
-        if handler:
-            self.active_conversations[response.source.user.id] = handler
-
-    def check_active_conversation(self, message):
-        user_id = message.user.id
-
-        view = self.active_conversations.get(user_id)
-        if not view:
-            return False
-
-        del self.active_conversations[user_id]
-        return view
-
     async def message_handler(self, data):
         message = self.build_message(data)
         logger.info('[%s] %s', self.engine_name, message.user)
         print('>>> %s' % message.text)
 
         # Try to find a view (best name?) to response the message
-        view = (
-            self.check_active_conversation(message) or
-            self.discovery_view(message)
-        )
+        view = self.discovery_view(message)
         if not view:
             return
 
         # TODO: Test if the view returned something or not
         response = await self.get_response(view, message)
-
-        self.activate_conversation(response)
 
         # TODO: Choose between Markdown and HTML
         # TODO: Verify response status
