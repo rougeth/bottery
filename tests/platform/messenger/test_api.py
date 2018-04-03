@@ -1,7 +1,7 @@
 import pytest
 
 from bottery.platform.messenger import MessengerAPI
-from utils import AsyncMock
+from tests.utils import AsyncMock
 
 
 @pytest.fixture
