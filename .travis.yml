@@ -12,7 +12,7 @@ matrix:
       env: TOXENV=docs
 
 install:
-  - pip install tox codecov
+  - pip install --upgrade tox codecov pip
 
 script:
   - tox
