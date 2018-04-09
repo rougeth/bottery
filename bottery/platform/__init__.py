@@ -1,6 +1,8 @@
 import inspect
 import logging
 
+from bottery.message import Response
+
 
 logger = logging.getLogger('bottery.platforms')
 
@@ -40,16 +42,21 @@ class BaseEngine:
         """
 
         if inspect.iscoroutinefunction(view):
-            return await view(message)
+            response = await view(message)
+        else:
+            response = view(message)
 
-        return view(message)
+        if isinstance(response, Response):
+            return response
+
+        return Response(source=message, text=response)
 
     def discovery_view(self, message):
         """
         Use the new message to search for a registered view according
         to its pattern.
         """
-        for handler, view in self.registered_patterns:
+        for handler, view in self.registered_handlers:
             if handler.check(message):
                 return view
 

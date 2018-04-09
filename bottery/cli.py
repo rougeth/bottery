@@ -7,6 +7,7 @@ from importlib import import_module
 import click
 
 import bottery
+from bottery import Bottery
 from bottery.log import DEFAULT_LOGGING
 
 logging.config.dictConfig(DEFAULT_LOGGING)
@@ -78,7 +79,7 @@ def import_string(import_name):
 @click.option('--bot-module', default='bot', type=str)
 @click.option('--port', default=7000, type=int)
 def run(bot_module, port):
-    bot = import_string(bot_module)
+    bot = Bottery()
 
     try:
         bot.run(server_port=port)

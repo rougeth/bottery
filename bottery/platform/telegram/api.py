@@ -27,6 +27,7 @@ class TelegramAPI:
         url = self.make_url(attr)
 
         async def request(**kwargs):
+            kwargs.update({'disable_web_page_preview': True})
             response = await self.session.post(url, json=kwargs)
             return await response.json()
 

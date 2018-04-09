@@ -1,15 +1,42 @@
 import re
+from functools import partial
+
+from bottery.exceptions import ValidationError
 
 
-class BaseHandler:
+class CaseSensitiveOptionMixin:
+    def clean_case_senstive(self):
+        if not self.kwargs.get('case_sensitive'):
+            self.message.text = self.message.text.lower()
+
+
+class PlatformsOptionMixin:
+    def clean_platforms(self):
+        platforms = self.kwargs.get('platforms')
+
+        if platforms is None:
+            return
+
+        if not isinstance(platforms, (list, tuple,)):
+            raise Exception('platforms option must be a list or a tuple')
+
+        if self.message.platform not in platforms:
+            raise ValidationError('message not from {}'.format(platforms))
+
+
+class BaseHandler(PlatformsOptionMixin):
     def __init__(self, pattern=None, *args, **kwargs):
         self.pattern = pattern
         self.kwargs = kwargs
 
     def check(self, message):
         self.message = message
-        self.full_clean()
-        return self.match(self.message)
+        try:
+            self.full_clean()
+        except ValidationError:
+            return False
+        else:
+            return self.match(self.message)
 
     def full_clean(self):
         for method_name in dir(self):
@@ -35,26 +62,34 @@ class RegexHandler(BaseHandler):
         return False
 
 
-class CaseSensitiveMixin:
-    def clean_case_senstive(self):
-        if not self.kwargs.get('case_sensitive'):
-            self.message.text = self.message.text.lower()
-
-
-class MessageHandler(CaseSensitiveMixin, BaseHandler):
+class MessageHandler(CaseSensitiveOptionMixin, BaseHandler):
     def match(self, message):
         if message.text == self.pattern:
             return True
         return False
 
 
-class StartswithHandler(CaseSensitiveMixin, BaseHandler):
+class StartswithHandler(CaseSensitiveOptionMixin, BaseHandler):
     def match(self, message):
         if message.text.startswith(self.pattern):
             return True
         return False
 
 
-class DefaultHandler:
+class DefaultHandler(BaseHandler):
     def check(self, message):
         return True
+
+
+def _handle_msg(pattern, view=None, Handler=None, *args, **kwargs):
+    if not view:
+        # Hello, I'm a hack! Nice to meet up
+        view, pattern = pattern, view
+
+    return (Handler(pattern, **kwargs), view)
+
+
+default = partial(_handle_msg, Handler=DefaultHandler)
+message = partial(_handle_msg, Handler=MessageHandler)
+regex = partial(_handle_msg, Handler=RegexHandler)
+startswith = partial(_handle_msg, Handler=StartswithHandler)

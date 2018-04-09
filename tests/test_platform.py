@@ -42,7 +42,7 @@ async def test_get_response_from_views(view):
 
     engine = BaseEngine()
     response = await engine.get_response(view, 'ping')
-    assert response == 'pong'
+    assert response.text == 'pong'
 
 
 def test_baseengine_handling_message():
@@ -50,7 +50,7 @@ def test_baseengine_handling_message():
 
     view = True
     engine = BaseEngine()
-    engine.registered_patterns = [(fake_handler, view)]
+    engine.registered_handlers = [(fake_handler, view)]
     returned_view = engine.discovery_view('new message')
     assert returned_view
 
@@ -60,6 +60,6 @@ def test_baseengine_handler_not_found():
 
     view = True
     engine = BaseEngine()
-    engine.registered_patterns = [(fake_handler, view)]
+    engine.registered_handlers = [(fake_handler, view)]
     returned_view = engine.discovery_view('new message')
     assert not returned_view

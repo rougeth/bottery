@@ -4,6 +4,8 @@ from datetime import datetime
 import attr
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+from bottery.conf import settings
+
 
 @attr.s
 class Message:
@@ -14,17 +16,25 @@ class Message:
     text = attr.ib()
     timestamp = attr.ib()
     raw = attr.ib()
+    _request_payload = attr.ib(default=attr.Factory(dict))
+    _response_handler = attr.ib(default=None)
 
     @property
     def datetime(self):
         return datetime.utcfromtimestamp(self.timestamp)
 
 
-def render(message, template_name, context={}):
+@attr.s
+class Response:
+    source = attr.ib()
+    text = attr.ib()
+
+
+def render(message, template_name, context=None):
+    context = context or {}
     base_dir = os.path.join(os.getcwd(), 'templates')
     paths = [base_dir]
-    # Include paths on settings
-    # paths.extend(settings.TEMPLATES)
+    paths.extend(settings.TEMPLATES)
 
     env = Environment(
         loader=FileSystemLoader(paths),

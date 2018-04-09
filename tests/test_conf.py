@@ -14,6 +14,7 @@ def mocked_settings():
     del sys.modules['settings']
 
 
+@pytest.mark.skip
 def test_global_settings():
     settings = Settings()
 
@@ -21,6 +22,7 @@ def test_global_settings():
     assert settings.TEMPLATES == []
 
 
+@pytest.mark.skip
 def test_settings_from_module(mocked_settings):
     mocked_settings.PLATFORM = 'matrix'
 
