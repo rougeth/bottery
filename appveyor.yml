@@ -7,7 +7,7 @@ environment:
   - TOXENV: "docs"
 
 install:
-  - C:\Python36\python -m pip install --upgrade tox
+  - C:\Python36\python -m pip install --upgrade tox pip
 
 test_script:
   - C:\Python36\python -m tox
