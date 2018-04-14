@@ -33,7 +33,7 @@ def message():
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def message_data():
     return {
         'message': {
@@ -60,6 +60,11 @@ def message_data():
     }
 
 
+@pytest.fixture
+def edited_message_data(message_data):
+    return {'edited_message': message_data['message']}
+
+
 @pytest.mark.parametrize('chat_type,id_expected', [
     ('group', 456),
     ('private', 123),
@@ -72,13 +77,18 @@ def test_platform_telegram_engine_get_chat_id(chat_type,
     assert engine.get_chat_id(engine, message) == id_expected
 
 
-def test_build_message(engine, message_data, user, chat):
-    message = engine.build_message(engine, message_data)
+@pytest.mark.parametrize('message_input,message_key,message_edited', [
+    (pytest.lazy_fixture('message_data'), 'message', False),
+    (pytest.lazy_fixture('edited_message_data'), 'edited_message', True)
+])
+def test_build_message(engine, message_input, message_key, message_edited):
+    message = engine.build_message(engine, message_input)
 
-    assert message.id == message_data['message']['message_id']
-    assert message.text == message_data['message']['text']
-    assert message.timestamp == message_data['message']['date']
-    assert message.raw == message_data
+    assert message.id == message_input[message_key]['message_id']
+    assert message.text == message_input[message_key]['text']
+    assert message.timestamp == message_input[message_key]['date']
+    assert message.raw == message_input
+    assert message.edited == message_edited
 
 
 def test_build_message_without_text(message_data, engine):

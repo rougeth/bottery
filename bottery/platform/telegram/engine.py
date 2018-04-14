@@ -126,11 +126,12 @@ class TelegramEngine(platform.BaseEngine):
         Telegram API.
         https://core.telegram.org/bots/api#update
         '''
-        message_data = data.get('message')
+        message_data = data.get('message') or data.get('edited_message')
 
         if not message_data:
             return None
 
+        edited = 'edited_message' in data
         return Message(
             id=message_data['message_id'],
             platform=self.platform,
@@ -139,6 +140,7 @@ class TelegramEngine(platform.BaseEngine):
             chat=TelegramChat(message_data['chat']),
             timestamp=message_data['date'],
             raw=data,
+            edited=edited,
         )
 
     def get_chat_id(self, message):
@@ -169,6 +171,11 @@ class TelegramEngine(platform.BaseEngine):
 
     async def message_handler(self, data):
         message = self.build_message(data)
+        if not message:
+            logger.info('[%s] Unable to build message: %s', self.engine_name,
+                        data)
+            return
+
         logger.info('[%s] %s', self.engine_name, message.user)
         print('>>> %s' % message.text)
 
