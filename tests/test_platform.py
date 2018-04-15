@@ -5,7 +5,7 @@ import pytest
 from bottery.platform import BaseEngine
 
 
-def test_baseengine_platform_name_not_implemented():
+def test_platform_name_not_implemented():
     """Check if attributes from the public API raise NotImplementedError"""
     engine = BaseEngine()
     with pytest.raises(NotImplementedError):
@@ -14,7 +14,7 @@ def test_baseengine_platform_name_not_implemented():
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize('method_name', ['build_message', 'configure'])
-async def test_baseengine_not_implemented_calls(method_name):
+async def test_not_implemented_calls(method_name):
     """Check if method calls from public API raise NotImplementedError"""
     engine = BaseEngine()
     with pytest.raises(NotImplementedError):

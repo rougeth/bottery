@@ -20,10 +20,6 @@ class Settings:
 
     def _configure_settings_path(self):
         base = os.getcwd()
-        settings_path = os.path.join(base, 'settings.py')
-        if not os.path.isfile(settings_path):
-            raise ImproperlyConfigured('Could not find settings module')
-
         sys.path.insert(0, base)
 
     def _import_settings(self):

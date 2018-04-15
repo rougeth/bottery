@@ -43,12 +43,8 @@ class Bottery:
         # TODO: module `handlers` should be configurable on settings.py
         return importlib.import_module('handlers').msghandlers
 
-    async def configure_platforms(self):
-        platforms = settings.PLATFORMS.items()
-        if not platforms:
-            raise Exception('No platforms configured')
-
-        global_options = {
+    def global_options(self):
+        return {
             'settings': settings,
             'active_conversations': self.active_conversations,
             'registered_handlers': self.get_msghandlers(),
@@ -57,10 +53,15 @@ class Bottery:
             'session': self.session,
         }
 
+    async def configure_platforms(self):
+        platforms = settings.PLATFORMS.items()
+        if not platforms:
+            raise Exception('No platforms configured')
+
         for engine_name, platform in platforms:
             if not platform.get('OPTIONS'):
                 platform['OPTIONS'] = {}
-            platform['OPTIONS'].update(global_options)
+            platform['OPTIONS'].update(self.global_options())
             platform['OPTIONS']['engine_name'] = engine_name
 
             try:
@@ -88,7 +89,7 @@ class Bottery:
     def configure(self):
         self.loop.run_until_complete(self.configure_platforms())
 
-    def run(self, server_port):
+    def run(self, server_port=None):
         click.echo('{now}\n{bottery} version {version}'.format(
             now=datetime.now().strftime('%B %d, %Y -  %H:%M:%S'),
             bottery=click.style('Bottery', fg='green'),
