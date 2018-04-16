@@ -66,24 +66,5 @@ class MessengerEngine(BaseEngine):
             chat=None,  # TODO: Refactor build_messages and Message class
         )
 
-    async def message_handler(self, data):
-        try:
-            message = self.build_message(data)
-        except KeyError:
-            logger.error('[%s] Unable to understand the message',
-                         self.engine_name)
-            return
-
-        logger.info('[%s] %s', self.engine_name, message.user)
-
-        # Try to find a view (best name?) to response the message
-        view = self.discovery_view(message)
-        if not view:
-            return
-
-        # TODO: Test if the view returned something or not
-        response = await self.get_response(view, message)
-
-        # TODO: Choose between Markdown and HTML
-        # TODO: Verify response status
-        await self.api.messages(message.user, response.text)
+    async def send_response(self, response):
+        await self.api.messages(response.source.user, response.text)

@@ -61,3 +61,35 @@ class BaseEngine:
                 return view
 
         return None
+
+    async def message_handler(self, data):
+        """
+        Process each new message:
+        - Build specific platform message object
+        - Find the responsible view
+        - If any view was found, use it the process the response
+        - If the view returned a string or a Response type, use it to
+        send it to the user
+        """
+
+        message = self.build_message(data)
+        if not message:
+            logger.error(
+                '[%s] Unable to build Message with data, data=%s, error',
+                self.engine_name,
+                data
+            )
+            return
+
+        logger.info('[%s] New message from %s: %s', self.engine_name,
+                    message.user, message.text)
+
+        view = self.discovery_view(message)
+        if not view:
+            logger.info('[%s] View not found for %s message', self.engine_name,
+                        message.id)
+            return
+
+        response = await self.get_response(view, message)
+        if response:
+            await self.send_response(response)
