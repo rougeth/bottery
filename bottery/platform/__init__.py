@@ -2,6 +2,7 @@ import inspect
 import logging
 
 from bottery.message import Response
+from bottery.conf import settings
 
 
 logger = logging.getLogger('bottery.platforms')
@@ -35,11 +36,17 @@ class BaseEngine:
         """Called by App instance to configure the platform"""
         raise NotImplementedError('configure not implemented')
 
-    async def get_response(self, view, message):
+    async def _get_response(self, message):
         """
         Get response running the view with await syntax if it is a
         coroutine function, otherwise just run it the normal way.
         """
+
+        view = self.discovery_view(message)
+        if not view:
+            logger.info('[%s] View not found for %s message',
+                        self.engine_name, message.id)
+            return
 
         if inspect.iscoroutinefunction(view):
             response = await view(message)
@@ -50,6 +57,16 @@ class BaseEngine:
             return response
 
         return Response(source=message, text=response)
+
+    async def decorate_get_response(self, message):
+        get_response = self._get_response
+        for middleware in reversed(settings.MIDDLEWARES):
+            get_response = await middleware(get_response)
+
+        return await get_response(message)
+
+    async def get_response(self, message):
+        return await self.decorate_get_response(message)
 
     def discovery_view(self, message):
         """
@@ -64,12 +81,8 @@ class BaseEngine:
 
     async def message_handler(self, data):
         """
-        Process each new message:
-        - Build specific platform message object
-        - Find the responsible view
-        - If any view was found, use it the process the response
-        - If the view returned a string or a Response type, use it to
-        send it to the user
+        For each new message, build its platform specific message
+        object and get a response.
         """
 
         message = self.build_message(data)
@@ -84,12 +97,6 @@ class BaseEngine:
         logger.info('[%s] New message from %s: %s', self.engine_name,
                     message.user, message.text)
 
-        view = self.discovery_view(message)
-        if not view:
-            logger.info('[%s] View not found for %s message', self.engine_name,
-                        message.id)
-            return
-
-        response = await self.get_response(view, message)
+        response = await self.get_response(message)
         if response:
             await self.send_response(response)

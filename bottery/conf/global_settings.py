@@ -1,2 +1,4 @@
 TEMPLATES = []
 PLATFORMS = {}
+
+MIDDLEWARES = []

@@ -1,8 +1,19 @@
 import inspect
+import sys
+from unittest import mock
 
 import pytest
 
 from bottery.platform import BaseEngine
+from utils import AsyncMock
+
+
+@pytest.fixture
+def settings():
+    settings = mock.Mock()
+    sys.modules['settings'] = settings
+    yield settings
+    del sys.modules['settings']
 
 
 def test_baseengine_platform_name_not_implemented():
@@ -35,13 +46,14 @@ async def async_view(message):
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize('view', [sync_view, async_view], ids=['sync', 'async'])  # noqa
-async def test_get_response_from_views(view):
+async def test_get_response_from_views(view, settings):
     """
     Test if get_response can call an async/sync view and get its response.
     """
 
     engine = BaseEngine()
-    response = await engine.get_response(view, 'ping')
+    engine.discovery_view = mock.Mock(return_value=view)
+    response = await engine.get_response('ping')
     assert response.text == 'pong'
 
 
@@ -63,3 +75,16 @@ def test_baseengine_handler_not_found():
     engine.registered_handlers = [(fake_handler, view)]
     returned_view = engine.discovery_view('new message')
     assert not returned_view
+
+
+@pytest.mark.skip
+@pytest.mark.asyncio
+async def test_middlewares(settings):
+    middleware = AsyncMock()
+    settings.MIDDLEWARES = [middleware]
+
+    engine = BaseEngine()
+    engine.discovery_view = mock.Mock(return_value=lambda x: True)
+
+    await engine.get_response('ping')
+    assert middleware.call_count == 1
