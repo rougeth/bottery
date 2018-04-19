@@ -47,6 +47,7 @@ setup(
             'pytest-aiohttp',
             'pytest-asyncio',
             'pytest-cov',
+            'pytest-lazy-fixture',
             'pytest-mock',
             'sphinx',
             'testfixtures',

@@ -16,6 +16,7 @@ class Message:
     text = attr.ib()
     timestamp = attr.ib()
     raw = attr.ib()
+    edited = attr.ib(default=False)
     _request_payload = attr.ib(default=attr.Factory(dict))
     _response_handler = attr.ib(default=None)
 
