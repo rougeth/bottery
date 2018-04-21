@@ -9,6 +9,9 @@ with open('bottery/__init__.py', encoding='utf8') as f:
     # Search for `__version__` on bottery/__init__.py and get its values
     version = ast.literal_eval(_version_re.search(f.read()).group(1))
 
+with open('README.md') as f:
+    long_description = f.read()
+
 
 setup(
     name='bottery',
@@ -18,6 +21,8 @@ setup(
     license='MIT',
     author='Marco Rougeth',
     author_email='marco@rougeth.com',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     packages=find_packages(),
     package_data={
         'bottery': ['conf/project_template/*-tpl'],
@@ -42,6 +47,7 @@ setup(
             'pytest-aiohttp',
             'pytest-asyncio',
             'pytest-cov',
+            'pytest-lazy-fixture',
             'pytest-mock',
             'sphinx',
             'testfixtures',

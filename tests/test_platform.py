@@ -42,7 +42,7 @@ async def test_get_response_from_views(view):
 
     engine = BaseEngine()
     response = await engine.get_response(view, 'ping')
-    assert response == 'pong'
+    assert response.text == 'pong'
 
 
 def test_baseengine_handling_message():

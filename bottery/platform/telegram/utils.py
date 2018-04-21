@@ -1,17 +1,35 @@
+import asyncio
+
+
 class BaseDecorator:
     def __init__(self, *args, **kwargs):
         self.args = args
         self.kwargs = kwargs
 
-    def __call__(self, view):
+    def _add_request_payload(self, message):
+        if message.platform == 'telegram':
+            kwargs = self.prepare(message)
+            message._request_payload.update(kwargs)
+
+        return message
+
+    def _call_async_wrapper(self, view):
+        async def async_wrapper(message):
+            message = self._add_request_payload(message)
+            return await view(message)
+        return async_wrapper
+
+    def _call_sync_wrapper(self, view):
         def wrapper(message):
-            if message.platform == 'telegram':
-                kwargs = self.prepare(message)
-                message._request_payload.update(kwargs)
-
+            message = self._add_request_payload(message)
             return view(message)
-
         return wrapper
+
+    def __call__(self, view):
+        if asyncio.iscoroutinefunction(view):
+            return self._call_async_wrapper(view)
+
+        return self._call_sync_wrapper(view)
 
 
 class Keyboard(BaseDecorator):

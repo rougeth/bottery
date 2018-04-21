@@ -10,4 +10,4 @@
 from bottery.bottery import Bottery  # noqa
 
 
-__version__ = '0.0.1a12'
+__version__ = '0.0.1a16'

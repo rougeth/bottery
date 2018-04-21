@@ -16,11 +16,19 @@ class Message:
     text = attr.ib()
     timestamp = attr.ib()
     raw = attr.ib()
+    edited = attr.ib(default=False)
     _request_payload = attr.ib(default=attr.Factory(dict))
+    _response_handler = attr.ib(default=None)
 
     @property
     def datetime(self):
         return datetime.utcfromtimestamp(self.timestamp)
+
+
+@attr.s
+class Response:
+    source = attr.ib()
+    text = attr.ib()
 
 
 def render(message, template_name, context=None):
