@@ -4,5 +4,5 @@ from views import pong
 
 
 msghandlers = [
-    handlers.message('ping', pong)
+    handlers.message('ping', pong),
 ]
