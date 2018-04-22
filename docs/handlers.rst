@@ -19,8 +19,8 @@ If the bot receives a message that is exactly equal to `ping` the response will 
 
 Bottery has the following handlers available:
 
-handlers.message
-----------------
+``handlers.message``
+--------------------
 
 The message handler allows your bot to check if a message was received. This way, **bottery** will check if that exact message was sent by the user. If the message was send exactly like you defined it, then the view is used to return a message.
 
@@ -41,8 +41,8 @@ You should remember that this pattern **is not case-sensitive**! If you wish to 
     ]
 
 
-handlers.startswith
--------------------
+``handlers.startswith``
+-----------------------
 
 The *startswith* handler allows you to receive a message that only starts with a certain text, but not necessarily matches all message received.
 
@@ -68,8 +68,8 @@ make a case-sensitive pattern, include the `case_sensitive` parameter:
     ]
 
 
-handlers.regex
---------------
+``handlers.regex``
+------------------
 
 The *regex* handler allows you to process a message that matches to a regex pattern.
 If there is a positive match, the view will be executed.

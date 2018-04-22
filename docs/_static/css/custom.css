@@ -64,3 +64,10 @@ pre {
 div.sphinxsidebarwrapper h3 {
   font-family: 'Roboto', sans-serif;
 }
+.section {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+.section:last-child {
+  border-bottom: 0;
+}
