@@ -1,6 +1,7 @@
 import pytest
 
 from bottery.message import Message
+from bottery.platform.telegram import reply
 from bottery.platform.telegram.engine import (TelegramChat, TelegramEngine,
                                               TelegramUser)
 
@@ -23,8 +24,8 @@ def chat():
 @pytest.fixture()
 def message():
     return Message(
-        id='',
-        platform='',
+        id=1,
+        platform='telegram',
         text='',
         user=user,
         chat=chat,
@@ -106,3 +107,17 @@ def test_build_message_without_text(message_data, engine):
     assert message.text == ''
     assert message.timestamp == message_data_without_text['message']['date']
     assert message.raw == message_data
+
+
+def test_reply_decorator(message):
+    '''
+    Telegram can send a message as a reply to other message.
+    This test should verify if the reply option is added to
+    the message _request_payload.
+    '''
+    @reply()
+    def view(message):
+        return ''
+
+    view(message)
+    assert message._request_payload['reply_to_message_id'] == message.id
