@@ -79,7 +79,7 @@ language = None
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'monokai'
+# pygments_style = 'monokai'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
@@ -92,7 +92,6 @@ todo_include_todos = False
 #
 html_theme = 'alabaster'
 html_theme_options = {
-    "pre_bg": "#444444",
     "github_user": "rougeth",
     "github_repo": "bottery",
     "github_banner": True,
