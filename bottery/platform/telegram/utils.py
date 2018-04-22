@@ -48,3 +48,8 @@ class Keyboard(BaseDecorator):
             reply_markup['keyboard'].append(buttons)
 
         return {'reply_markup': reply_markup}
+
+
+class Reply(BaseDecorator):
+    def prepare(self, message):
+        return {'reply_to_message_id': message.id}
