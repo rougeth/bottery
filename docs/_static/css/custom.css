@@ -1,6 +1,6 @@
 /* This file intentionally left blank. */
-* {
-  font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+body {
+  font-family: 'Roboto', sans-serif;
 }
 
 .sphinxsidebarwrapper {
@@ -24,16 +24,16 @@ div.body h1,
 div.body h2,
 div.body h3,
 div.body h4 {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 p {
-  font-size: 18px;
+  font-size: 16px;
+  line-height: 1.5em;
 }
 
 span.pre {
-  font-family: 'Ubuntu Mono', monospace;
-  font-style: italic;
+  font-family: 'Inconsolata', monospace;
   font-weight: 300;
 }
 
@@ -42,8 +42,15 @@ code {
   padding: 1px 4px;
 }
 
+pre {
+  font-family: 'Inconsolata', monospace;
+  background: #fcfcfc;
+  border: 1px solid #f8f6f6;
+  padding: 20px;
+}
+
 .sphinxsidebarwrapper .logo a {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-weight: normal;
   color: black;
   border: 0;
@@ -55,5 +62,12 @@ code {
 }
 
 div.sphinxsidebarwrapper h3 {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
+}
+.section {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+.section:last-child {
+  border-bottom: 0;
 }
