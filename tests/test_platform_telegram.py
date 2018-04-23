@@ -110,14 +110,18 @@ def test_build_message_without_text(message_data, engine):
 
 
 def test_reply_decorator(message):
-    '''
-    Telegram can send a message as a reply to other message.
-    This test should verify if the reply option is added to
-    the message _request_payload.
-    '''
     @reply()
     def view(message):
         return ''
 
     view(message)
     assert message._request_payload['reply_to_message_id'] == message.id
+
+
+def test_reply_decorator_to_previous_message(message):
+    @reply(to=lambda message: message.id - 2)
+    def view(message):
+        return ''
+
+    view(message)
+    assert message._request_payload['reply_to_message_id'] == message.id - 2

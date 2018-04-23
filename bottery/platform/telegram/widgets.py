@@ -52,4 +52,8 @@ class Keyboard(BaseDecorator):
 
 class Reply(BaseDecorator):
     def prepare(self, message):
-        return {'reply_to_message_id': message.id}
+        reply_to = self.kwargs.get('to')
+        if not reply_to:
+            return {'reply_to_message_id': message.id}
+
+        return {'reply_to_message_id': reply_to(message)}
