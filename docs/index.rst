@@ -17,12 +17,12 @@ User's guide
 This part of the documentation, which is mostly prose, begins with some background information about Bottery, then focuses on step-by-step instructions for bot development with Bottery.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    installation
    quickstart
-   platforms
    views
    handlers
+   platforms
    contributing
    Telegram

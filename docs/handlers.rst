@@ -55,11 +55,9 @@ The *startswith* handler allows you to receive a message that only starts with a
         handlers.startswith('hello', how_are_you)
     ]
 
-With this pattern, if you receive a message such as `hello, my bot!` it will call our function and
-return an answer.
+With this pattern, if you receive a message such as `hello, my bot!` it will call our function and return an answer.
 
-You should remember that this pattern **is not case-sensitive**! If you wish to
-make a case-sensitive pattern, include the `case_sensitive` parameter:
+You should remember that this pattern **is not case-sensitive**! If you wish to make a case-sensitive pattern, include the `case_sensitive` parameter:
 
 .. code-block:: py
 
@@ -71,8 +69,7 @@ make a case-sensitive pattern, include the `case_sensitive` parameter:
 ``handlers.regex``
 ------------------
 
-The *regex* handler allows you to process a message that matches to a regex pattern.
-If there is a positive match, the view will be executed.
+The *regex* handler allows you to process a message that matches to a regex pattern. If there is a positive match, the view will be executed.
 
 .. code-block:: py
 
@@ -83,8 +80,22 @@ If there is a positive match, the view will be executed.
         handlers.regex('\d+', numbers),
     ]
 
-Handling order
---------------
+handlers.default
+----------------
+
+The *default* handler allows you to define view that will respond to any message. This should be used carefully, if the handler is defined above any other handler, those ones will never be reached.
+
+.. code-block:: py
+
+    def ops(message):
+        return "Sorry, couldn't understand your message. Please, use /help to see the available options"
+
+    msghandlers = [
+        handlers.default(ops),
+    ]
+
+Process order
+-------------
 
 Note that **Bottery** will follow the order declared in `msghandlers` list to decide which handler will be used. It tries each handler pattern, in order, and stops at the first one that matches.
 
@@ -101,5 +112,5 @@ If you want to have a default handler, executed if no message is previously capt
 
         # This MUST be the last one and it will be executed if none of the
         # previously defined handlers matches the message
-        handlers.regex('.*', default_response),
+        handlers.default(default_response),
     ]
