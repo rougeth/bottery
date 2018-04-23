@@ -119,18 +119,9 @@ def test_reply_decorator(message):
 
 
 def test_reply_decorator_to_previous_message(message):
-    @reply(lambda message: message.id - 2)
+    @reply(to=lambda message: message.id - 2)
     def view(message):
         return ''
 
     view(message)
     assert message._request_payload['reply_to_message_id'] == message.id - 2
-
-
-def test_reply_decorator_to_previous_message_not_passed_a_function(message):
-    @reply('123')
-    def view(message):
-        return ''
-
-    with pytest.raises(Exception):
-        view(message)

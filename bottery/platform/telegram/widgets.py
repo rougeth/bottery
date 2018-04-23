@@ -52,10 +52,8 @@ class Keyboard(BaseDecorator):
 
 class Reply(BaseDecorator):
     def prepare(self, message):
-        if not self.args:
+        reply_to = self.kwargs.get('to')
+        if not reply_to:
             return {'reply_to_message_id': message.id}
 
-        get_message_id = self.args[0]
-        if not callable(get_message_id):
-            raise Exception('Function is not callable')
-        return {'reply_to_message_id': get_message_id(message)}
+        return {'reply_to_message_id': reply_to(message)}
