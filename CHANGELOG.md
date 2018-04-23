@@ -1,4 +1,7 @@
-## Bottery Unreleased
+## Bottery Nightly
+_Changes to be released_
+
+## Bottery 0.1.0 (2018-04-22)
 
 ### Features
 
