@@ -1,5 +1,9 @@
 ## Bottery Nightly
-_Changes to be released_
+
+### Docs
+
+- Add Github templates for issues and pull requests ([#151](https://github.com/rougeth/bottery/issues/151)).
+
 
 ## Bottery 0.1.0 (2018-04-22)
 
