@@ -6,8 +6,8 @@ If you are submiting a...
 fix it. Some questions that can help you guide your issue:
 	- What happend?
 	- What is the expected behavior?
-	- What are the steps to reproduce the isso?
-	- What is your environment?
+	- What are the steps to reproduce it?
+	- In which environment the it happend?
 	- Stacktraces, related issues, logs, etc.
 
 - **feature request**, tells us about the motivation of the change, some use
