@@ -1,5 +1,9 @@
 ## Bottery Nightly
 
+### Features
+
+- Add Middlewares to message/response process ([#155](https://github.com/rougeth/bottery/issues/155)).
+
 ### Docs
 
 - Add Github templates for issues and pull requests ([#151](https://github.com/rougeth/bottery/issues/151)).

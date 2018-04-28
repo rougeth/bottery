@@ -2,6 +2,7 @@ import inspect
 import logging
 
 from bottery.message import Response
+from bottery.conf import settings
 
 
 logger = logging.getLogger('bottery.platforms')
@@ -35,11 +36,17 @@ class BaseEngine:
         """Called by App instance to configure the platform"""
         raise NotImplementedError('configure not implemented')
 
-    async def get_response(self, view, message):
+    async def _get_response(self, message):
         """
         Get response running the view with await syntax if it is a
         coroutine function, otherwise just run it the normal way.
         """
+
+        view = self.discovery_view(message)
+        if not view:
+            logger.info('[%s] View not found for %s message',
+                        self.engine_name, message.id)
+            return
 
         if inspect.iscoroutinefunction(view):
             response = await view(message)
@@ -51,6 +58,17 @@ class BaseEngine:
 
         return Response(source=message, text=response)
 
+    async def prepare_get_response(self):
+        get_response = self._get_response
+        for middleware in reversed(settings.MIDDLEWARES):
+            get_response = await middleware(get_response)
+
+        return get_response
+
+    async def get_response(self, message):
+        f = await self.prepare_get_response()
+        return await f(message)
+
     def discovery_view(self, message):
         """
         Use the new message to search for a registered view according
@@ -61,3 +79,25 @@ class BaseEngine:
                 return view
 
         return None
+
+    async def message_handler(self, data):
+        """
+        For each new message, build its platform specific message
+        object and get a response.
+        """
+
+        message = self.build_message(data)
+        if not message:
+            logger.error(
+                '[%s] Unable to build Message with data, data=%s, error',
+                self.engine_name,
+                data
+            )
+            return
+
+        logger.info('[%s] New message from %s: %s', self.engine_name,
+                    message.user, message.text)
+
+        response = await self.get_response(message)
+        if response:
+            await self.send_response(response)
