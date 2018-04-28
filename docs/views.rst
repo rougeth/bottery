@@ -1,6 +1,11 @@
 Views
 =====
 
+A view function is simply a Python function that takes a message, process it and
+returns or not a response. If the view returns a `str` or a **Response**
+object, Bottery will use the returned object as a response. If it doesn't
+returns anything, Bottery will consider that message doesn't need response.
+
 
 Working with templates
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -9,8 +14,8 @@ Sometimes you need complex and big messages to be returned by your patterns.
 Bottery is able to render and respond messages using templates written in
 markdown.
 
-On your project directory, create a folder named "**templates**". Your templates should be
-kept inside this folder so Bottery can find them. For other configuration,
+On your project directory, create a folder named "**templates**". Your templates
+should be kept inside this folder so Bottery can find them. For other configuration,
 please check the `settings`  section.
 
 Let's create a template called `hello.md`:

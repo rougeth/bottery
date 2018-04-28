@@ -53,10 +53,22 @@ class BaseEngine:
         else:
             response = view(message)
 
+        return self.prepare_response(response, message)
+
+    def prepare_response(self, response, message):
         if isinstance(response, Response):
             return response
 
-        return Response(source=message, text=response)
+        if isinstance(response, str):
+            return Response(source=message, text=response)
+
+        if response is not None:
+            logger.error(
+                '[%s] View should only return str or Response',
+                self.engine_name,
+            )
+
+        return None
 
     async def prepare_get_response(self):
         get_response = self._get_response

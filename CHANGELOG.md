@@ -2,6 +2,10 @@
 
 _Changes to be released_
 
+#### Bug fixes
+
+- Stop responding with `null` when a view doesn't return anything ([#154](https://github.com/rougeth/bottery/issues/154))
+
 
 ## Bottery 0.1.1 (2018-04-28)
 
