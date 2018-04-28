@@ -4,6 +4,7 @@ from unittest import mock
 
 import pytest
 
+from bottery.message import Response
 from bottery.platform import BaseEngine
 from utils import AsyncMock
 
@@ -55,6 +56,32 @@ async def test_get_response_from_views(view, settings):
     engine.discovery_view = mock.Mock(return_value=view)
     response = await engine.get_response('ping')
     assert response.text == 'pong'
+
+
+def test_prepare_response():
+    engine = BaseEngine()
+    response = engine.prepare_response('response', 'message')
+    assert isinstance(response, Response)
+    assert response.source == 'message'
+    assert response.text == 'response'
+
+
+def test_prepare_response_with_response_obj():
+    expected_response = Response(source='message', text='response')
+    engine = BaseEngine()
+    response = engine.prepare_response(expected_response, 'message')
+    assert response == expected_response
+
+
+@mock.patch('bottery.platform.logger.error')
+def test_prepare_response_none(mocked_error):
+    """
+    If response is not a str or a Response, it should returns None
+    """
+
+    engine = BaseEngine()
+    assert engine.prepare_response(0, 'message') is None
+    assert mocked_error.call_count == 1
 
 
 def test_baseengine_handling_message():
