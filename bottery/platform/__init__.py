@@ -58,15 +58,16 @@ class BaseEngine:
 
         return Response(source=message, text=response)
 
-    async def decorate_get_response(self, message):
+    async def prepare_get_response(self):
         get_response = self._get_response
         for middleware in reversed(settings.MIDDLEWARES):
             get_response = await middleware(get_response)
 
-        return await get_response(message)
+        return get_response
 
     async def get_response(self, message):
-        return await self.decorate_get_response(message)
+        f = await self.prepare_get_response()
+        return await f(message)
 
     def discovery_view(self, message):
         """
