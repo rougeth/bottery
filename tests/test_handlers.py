@@ -106,7 +106,7 @@ def test_startswith_handler_check_negative_match_with_case_sensitive(message):
 
 def test_default_handler_check(message):
     message.text = 'pong'
-    assert handlers.DefaultHandler().check(message)
+    assert handlers.DefaultHandler('view').check(message)
 
 
 def test_regex_handler_check(message):

@@ -85,21 +85,25 @@ def test_prepare_response_none(mocked_error):
 
 
 def test_baseengine_handling_message():
-    fake_handler = type('Handler', (object,), {'check': lambda msg: True})
+    fake_handler = type('Handler', (object,), {
+        'check': lambda msg: True,
+        'view': True,
+    })
 
-    view = True
     engine = BaseEngine()
-    engine.registered_handlers = [(fake_handler, view)]
+    engine.registered_handlers = [fake_handler]
     returned_view = engine.discovery_view('new message')
     assert returned_view
 
 
 def test_baseengine_handler_not_found():
-    fake_handler = type('Handler', (object,), {'check': lambda msg: False})
+    fake_handler = type('Handler', (object,), {
+        'check': lambda msg: False,
+        'view': True,
+    })
 
-    view = True
     engine = BaseEngine()
-    engine.registered_handlers = [(fake_handler, view)]
+    engine.registered_handlers = [fake_handler]
     returned_view = engine.discovery_view('new message')
     assert not returned_view
 

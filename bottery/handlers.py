@@ -1,5 +1,4 @@
 import re
-from functools import partial
 
 from bottery.exceptions import ValidationError
 
@@ -25,8 +24,9 @@ class PlatformsOptionMixin:
 
 
 class BaseHandler(PlatformsOptionMixin):
-    def __init__(self, pattern=None, *args, **kwargs):
+    def __init__(self, pattern=None, view=None, *args, **kwargs):
         self.pattern = pattern
+        self.view = view
         self.kwargs = kwargs
 
     def check(self, message):
@@ -77,6 +77,9 @@ class StartswithHandler(CaseSensitiveOptionMixin, BaseHandler):
 
 
 class DefaultHandler(BaseHandler):
+    def __init__(self, view, *args, **kwargs):
+        super().__init__(view=view, *args, **kwargs)
+
     def check(self, message):
         return True
 
@@ -89,7 +92,7 @@ def _handle_msg(pattern, view=None, Handler=None, *args, **kwargs):
     return (Handler(pattern, **kwargs), view)
 
 
-default = partial(_handle_msg, Handler=DefaultHandler)
-message = partial(_handle_msg, Handler=MessageHandler)
-regex = partial(_handle_msg, Handler=RegexHandler)
-startswith = partial(_handle_msg, Handler=StartswithHandler)
+default = DefaultHandler
+message = MessageHandler
+regex = RegexHandler
+startswith = StartswithHandler
