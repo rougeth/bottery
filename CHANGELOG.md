@@ -6,6 +6,10 @@ _Changes to be released_
 
 - Stop responding with `null` when a view doesn't return anything ([#154](https://github.com/rougeth/bottery/issues/154))
 
+#### Docs
+
+- Simplify Github templates ([#157](https://github.com/rougeth/bottery/issues/157))
+
 
 ## Bottery 0.1.1 (2018-04-28)
 
