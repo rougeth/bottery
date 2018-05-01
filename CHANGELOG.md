@@ -2,6 +2,10 @@
 
 _Changes to be released_
 
+#### Enhancements
+
+- Handler instances returns the selected view ([#161](https://github.com/rougeth/bottery/issues/161))
+
 #### Bug fixes
 
 - Stop responding with `null` when a view doesn't return anything ([#154](https://github.com/rougeth/bottery/issues/154))
