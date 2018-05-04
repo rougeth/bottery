@@ -43,7 +43,7 @@ class MessengerEngine(BaseEngine):
         if not content.get('object') == 'page':
             return web.HTTPBadRequest()
 
-        messages = content['entry'][0]['messaging']
+        messages = content['entry']['messaging'][0]
         updates = [self.message_handler(message) for message in messages]
         await asyncio.gather(*updates)
         return web.Response(text='EVENT_RECEIVED')
