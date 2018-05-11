@@ -1,6 +1,5 @@
 import asyncio
 import importlib
-import logging
 from datetime import datetime
 
 import aiohttp.web
@@ -9,7 +8,6 @@ import click
 import bottery
 from bottery.conf import settings
 from bottery.log import Spinner
-
 
 
 class Bottery:
