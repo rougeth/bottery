@@ -12,7 +12,7 @@ the last message by adding a decorator on the `view`:
 
 .. code-block:: py
 
-    from bottery.platform.telegram import reply
+    from bottery.telegram import reply
 
     @reply()
     def hello(message):

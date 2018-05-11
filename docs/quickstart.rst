@@ -50,7 +50,7 @@ When you have the token, put it on the Telegram platform configurations:
 
     PLATFORMS = {
         'telegram': {
-            'ENGINE': 'bottery.platform.telegram',
+            'ENGINE': 'bottery.telegram',
             'OPTIONS': {
                 'token': 'the-bot-token-here',
             }
