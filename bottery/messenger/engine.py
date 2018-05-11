@@ -5,8 +5,8 @@ from aiohttp import web
 
 from bottery.conf import settings
 from bottery.message import Message
+from bottery.messenger import MessengerAPI
 from bottery.platform import BaseEngine
-from bottery.platform.messenger import MessengerAPI
 
 logger = logging.getLogger('bottery.messenger')
 

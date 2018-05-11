@@ -2,7 +2,7 @@ from unittest import mock
 
 import pytest
 
-from bottery.platform import telegram
+from bottery import telegram
 
 
 def test_view_keyboard():

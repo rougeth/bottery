@@ -5,7 +5,7 @@ from aiohttp import web
 
 from bottery import platform
 from bottery.message import Message
-from bottery.platform.telegram import TelegramAPI
+from bottery.telegram import TelegramAPI
 
 logger = logging.getLogger('bottery.telegram')
 

@@ -5,3 +5,7 @@ class ImproperlyConfigured(Exception):
 
 class ValidationError(Exception):
     pass
+
+
+class BotteryDeprecationWarning(Warning):
+    pass

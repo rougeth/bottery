@@ -5,7 +5,7 @@ from aiohttp import web
 
 from bottery.conf import Settings
 from bottery.message import Message
-from bottery.platform.messenger import engine as Engine
+from bottery.messenger import engine as Engine
 
 
 @pytest.fixture
