@@ -3,8 +3,8 @@ import logging
 
 from aiohttp import web
 
-from bottery import platform
 from bottery.message import Message
+from bottery.platforms import BaseEngine
 from bottery.telegram import TelegramAPI
 
 logger = logging.getLogger('bottery.telegram')
@@ -56,7 +56,7 @@ class TelegramChat:
         return s.format(u=self)
 
 
-class TelegramEngine(platform.BaseEngine):
+class TelegramEngine(BaseEngine):
     platform = 'telegram'
 
     def __init__(self, *args, **kwargs):

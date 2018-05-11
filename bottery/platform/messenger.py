@@ -1,3 +1,4 @@
+# isort:skip_file
 # flake8: noqa
 import warnings
 from bottery.exceptions import BotteryDeprecationWarning

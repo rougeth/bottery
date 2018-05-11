@@ -1,8 +1,8 @@
 import inspect
 import logging
 
-from bottery.message import Response
 from bottery.conf import settings
+from bottery.message import Response
 
 logger = logging.getLogger('bottery.platforms')
 
