@@ -63,11 +63,7 @@ class Bottery:
             platform['OPTIONS'].update(global_options)
             platform['OPTIONS']['engine_name'] = engine_name
 
-            try:
-                mod = importlib.import_module(platform['ENGINE'])
-            except ImportError:
-                # TODO: log
-                continue
+            mod = importlib.import_module(platform['ENGINE'])
 
             with Spinner('Configuring %s' % engine_name.title()):
                 engine = mod.engine(**platform['OPTIONS'])

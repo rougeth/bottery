@@ -1,6 +1,6 @@
 import pytest
 
-from bottery.platform.messenger import MessengerAPI
+from bottery.messenger import MessengerAPI
 from utils import AsyncMock
 
 

@@ -51,7 +51,7 @@ Besides the `token`, the `mode` the bot will operates can be configured at `sett
    # settings.py
    PLATFORMS = {
         'telegram': {
-            'ENGINE': 'bottery.platform.telegram',
+            'ENGINE': 'bottery.telegram',
             'OPTIONS': {
                 'token': 'your-bot-token',
                 'mode': 'polling',  # or 'webhook'
@@ -73,7 +73,7 @@ The Messenger platform is more restricted. `webhook` mode is the only option ava
 
    PLATFORMS = {
         'messenger': {
-            'ENGINE': 'bottery.platform.messenger',
+            'ENGINE': 'bottery.messenger',
             'OPTIONS': {
                 'token': 'your-bot-token',
             }

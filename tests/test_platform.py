@@ -5,7 +5,7 @@ from unittest import mock
 import pytest
 
 from bottery.message import Response
-from bottery.platform import BaseEngine
+from bottery.platforms import BaseEngine
 from utils import AsyncMock
 
 
