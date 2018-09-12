@@ -34,16 +34,27 @@ class Settings:
         self._configure_settings_path()
         mod = import_module('settings')
 
+class Settings:
+    def configure(self):
+        self.global_settings()
+        self.import_settings()
+
+    def setattr_module(self, mod):
         for setting in dir(mod):
             if setting.isupper():
                 setattr(self, setting, getattr(mod, setting))
 
+    def local_settings(self):
+        base = os.getcwd()
+        sys.path.insert(0, base)
+        return import_module('settings')
 
-class LazySettings:
-    _wrapped = None
+    def global_settings(self):
+        self.setattr_module(global_settings)
 
-    def _setup(self):
-        self._wrapped = Settings()
+    def import_settings(self):
+        mod = self.local_settings()
+        self.setattr_module(mod)
 
     def __getattr__(self, name):
         if not self._wrapped:
