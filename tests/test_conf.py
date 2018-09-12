@@ -2,22 +2,64 @@ from unittest import mock
 
 import pytest
 
-from bottery.conf import Settings, UserSettingsHolder, lazy_obj_method
+from bottery.conf import (LazySettings, Settings, UserSettingsHolder,
+                          lazy_obj_method)
 
 
-@pytest.mark.parametrize('wrapped,expected_result', (
-    (False, True), (True, False),
-))
-def test_lazy_obj_method(wrapped, expected_result):
+def test_lazy_obj_method():
     class Settings:
-        _wrapped = wrapped
+        _wrapped = None
         _setup = mock.Mock()
         __dir__ = lazy_obj_method(dir)
 
     settings = Settings()
     dir(settings)
 
-    assert settings._setup.called is expected_result
+    assert settings._setup.called is True
+
+
+@mock.patch('bottery.conf.Settings')
+def test_lazysettings_setup(mock_settings):
+    lazy_settings = LazySettings()
+    lazy_settings._setup()
+
+    assert mock_settings.called is True
+    assert lazy_settings._wrapped.configure.called is True
+
+
+def test_lazysettings_set_wrapped():
+    lazy_settings = LazySettings()
+    lazy_settings._wrapped = 'test'
+    assert lazy_settings._wrapped == 'test'
+
+
+def test_lazysettings_setattr():
+    lazy_settings = LazySettings()
+    lazy_settings._wrapped = type('_wrapped', (), {})
+
+    lazy_settings.attr = 'value'
+
+    assert lazy_settings._wrapped.attr == 'value'
+
+
+def test_lazysettings_configure():
+    lazy_settings = LazySettings()
+    lazy_settings.configure(attr='value')
+
+    # Default settings
+    assert lazy_settings.TEMPLATES == []
+    assert lazy_settings.PLATFORMS == {}
+    assert lazy_settings.MIDDLEWARES == []
+    # Settings by params
+    assert lazy_settings.attr == 'value'
+
+
+def test_lazysettings_already_configured():
+    lazy_settings = LazySettings()
+    lazy_settings._wrapped = 'settings'
+
+    with pytest.raises(RuntimeError):
+        lazy_settings.configure()
 
 
 def test_settings_configure():

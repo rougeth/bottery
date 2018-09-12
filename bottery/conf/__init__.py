@@ -8,31 +8,39 @@ from bottery.conf import global_settings
 
 def lazy_obj_method(f):
     def inner(self, *args):
-        if not self._wrapped:
-            self._setup()
+        self._setup()
         return f(self._wrapped, *args)
 
     return inner
 
 
-class Settings:
-    def __init__(self):
-        self._global_settings()
-        self._import_settings()
+class LazySettings:
+    _wrapped = None
 
-    def _global_settings(self):
-        for key in dir(global_settings):
-            if key.isupper():
-                value = getattr(global_settings, key)
-                setattr(self, key, deepcopy(value))
+    __getattr__ = lazy_obj_method(getattr)
+    __dir__ = lazy_obj_method(dir)
 
-    def _configure_settings_path(self):
-        base = os.getcwd()
-        sys.path.insert(0, base)
+    def __setattr__(self, name, value):
+        if name == '_wrapped':
+            super().__setattr__(name, value)
+        else:
+            setattr(self._wrapped, name, value)
 
-    def _import_settings(self):
-        self._configure_settings_path()
-        mod = import_module('settings')
+    def _setup(self):
+        if not self._wrapped:
+            self._wrapped = Settings()
+            self._wrapped.configure()
+
+    def configure(self, default_settings=global_settings, **options):
+        if self._wrapped is not None:  # TODO: check for {}, (), '', etc
+            raise RuntimeError('Settings already configured.')
+
+        holder = UserSettingsHolder(default_settings)
+        for name, value in options.items():
+            setattr(holder, name, value)
+
+        self._wrapped = holder
+
 
 class Settings:
     def configure(self):
@@ -55,11 +63,6 @@ class Settings:
     def import_settings(self):
         mod = self.local_settings()
         self.setattr_module(mod)
-
-    def __getattr__(self, name):
-        if not self._wrapped:
-            self._setup()
-        return getattr(self._wrapped, name)
 
 
 class UserSettingsHolder:
