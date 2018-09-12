@@ -6,6 +6,15 @@ from importlib import import_module
 from bottery.conf import global_settings
 
 
+def lazy_obj_method(f):
+    def inner(self, *args):
+        if not self._wrapped:
+            self._setup()
+        return f(self._wrapped, *args)
+
+    return inner
+
+
 class Settings:
     def __init__(self):
         self._global_settings()

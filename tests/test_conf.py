@@ -2,29 +2,19 @@ from unittest import mock
 
 import pytest
 
-from bottery.conf import Settings
+from bottery.conf import UserSettingsHolder, lazy_obj_method
 
 
-@pytest.fixture
-def mocked_settings():
-    settings = mock.MagicMock()
-    sys.modules['settings'] = settings
-    yield settings
-    del sys.modules['settings']
+@pytest.mark.parametrize('wrapped,expected_result', (
+    (False, True), (True, False),
+))
+def test_lazy_obj_method(wrapped, expected_result):
+    class Settings:
+        _wrapped = wrapped
+        _setup = mock.Mock()
+        __dir__ = lazy_obj_method(dir)
 
-
-@pytest.mark.skip
-def test_global_settings():
     settings = Settings()
+    dir(settings)
 
-    assert settings.PLATFORMS == {}
-    assert settings.TEMPLATES == []
-
-
-@pytest.mark.skip
-def test_settings_from_module(mocked_settings):
-    mocked_settings.PLATFORM = 'matrix'
-
-    settings = Settings.from_object('settings')
-    assert settings.PLATFORM == 'matrix'
-    assert settings.PLATFORM == 'matrix'
+    assert settings._setup.called is expected_result
