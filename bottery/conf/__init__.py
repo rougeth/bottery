@@ -62,4 +62,12 @@ class Settings:
         return getattr(self._wrapped, name)
 
 
+class UserSettingsHolder:
+    def __init__(self, defaut_settings):
+        for key in dir(defaut_settings):
+            if key.isupper():
+                value = getattr(defaut_settings, key)
+                setattr(self, key, deepcopy(value))
+
+
 settings = LazySettings()

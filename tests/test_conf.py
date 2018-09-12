@@ -2,7 +2,7 @@ from unittest import mock
 
 import pytest
 
-from bottery.conf import Settings, lazy_obj_method
+from bottery.conf import Settings, UserSettingsHolder, lazy_obj_method
 
 
 @pytest.mark.parametrize('wrapped,expected_result', (
@@ -74,3 +74,16 @@ def test_settings_import_settings(mock_import_module):
     settings.import_settings()
 
     assert settings.DEBUG
+
+
+def test_usersettingsholder():
+    templates = []
+    default_settings = type('Settings', (), {
+        'TEMPLATES': templates,
+        'anotherconf': True,
+    })
+
+    settings = UserSettingsHolder(default_settings)
+    assert settings.TEMPLATES == templates
+    assert id(settings.TEMPLATES) != id(templates)
+    assert not hasattr(settings, 'anotherconf')
