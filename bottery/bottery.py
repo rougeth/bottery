@@ -39,9 +39,9 @@ class Bottery:
             self._server = aiohttp.web.Application()
         return self._server
 
-    def get_msghandlers(self):
-        # TODO: module `handlers` should be configurable on settings.py
-        return importlib.import_module('handlers').msghandlers
+    def import_msghandlers(self):
+        mod = importlib.import_module(settings.ROOT_MSGCONF)
+        return mod.msghandlers
 
     async def configure_platforms(self):
         platforms = settings.PLATFORMS.items()
@@ -50,7 +50,7 @@ class Bottery:
 
         global_options = {
             'active_conversations': self.active_conversations,
-            'registered_handlers': self.get_msghandlers(),
+            'registered_handlers': self.import_msghandlers(),
             'server': self.server,
             'loop': self.loop,
             'session': self.session,

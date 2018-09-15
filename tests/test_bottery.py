@@ -1,4 +1,5 @@
 import asyncio
+from unittest import mock
 
 import aiohttp
 import pytest
@@ -56,3 +57,17 @@ async def test_configure_no_platform_engine_found(bot):
         'ENGINE': 'module.fake_engine'
     }
     assert not bot.tasks
+
+
+@mock.patch('bottery.bottery.importlib.import_module')
+def test_bottery_import_msghandlers(mock_import_module):
+    # TODO: export settings to a fixture
+    from bottery.conf import settings
+    settings.configure(ROOT_MSGCONF='another_handlers')
+
+    expected_return = ['handlers']
+    mock_import_module.return_value.msghandlers = expected_return
+
+    bottery = Bottery()
+    assert bottery.import_msghandlers() == expected_return
+    assert mock_import_module.call_args == (('another_handlers',),)
