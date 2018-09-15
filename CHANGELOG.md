@@ -6,7 +6,8 @@ _Changes to be released_
 
 - Handler instances returns the selected view ([#161](https://github.com/rougeth/bottery/issues/161))
 - Move Telegram and Messenger modules to outside `platform` module. Also rename `platform` module to `platforms` (due to Python builtin `platform` module) ([#161](https://github.com/rougeth/bottery/issues/165))
-- Remove unused `settings_module` option from Bottery
+- Create option to change msg handlers module ([#172](https://github.com/rougeth/bottery/issues/172))
+- Remove unused `settings_module` option from Bottery ([#173](https://github.com/rougeth/bottery/issues/173))
 
 #### Bug fixes
 
