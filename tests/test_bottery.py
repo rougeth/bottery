@@ -11,13 +11,8 @@ class FakeSettings:
 
 
 @pytest.fixture
-def settings():
-    return FakeSettings()
-
-
-@pytest.fixture
-def bot(settings):
-    bot = Bottery(settings_module=settings)
+def bot():
+    bot = Bottery()
     yield bot
     bot.stop()
 
@@ -42,8 +37,8 @@ def test_default_properties(bot, attribute, instance_type):
 
 
 @pytest.mark.parametrize('attribute', ['loop', 'session'])
-def test_already_defined_properties(settings, attribute):
-    bot = Bottery(settings_module=settings)
+def test_already_defined_properties(attribute):
+    bot = Bottery()
     setattr(bot, '_{}'.format(attribute), attribute)
     assert getattr(bot, attribute) == attribute
 

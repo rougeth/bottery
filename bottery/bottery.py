@@ -18,7 +18,7 @@ class Bottery:
     # This is a feature trial, do NOT rely your application on it
     active_conversations = {}
 
-    def __init__(self, settings_module='settings'):
+    def __init__(self):
         self.tasks = []
 
     @property
@@ -49,7 +49,6 @@ class Bottery:
             raise Exception('No platforms configured')
 
         global_options = {
-            'settings': settings,
             'active_conversations': self.active_conversations,
             'registered_handlers': self.get_msghandlers(),
             'server': self.server,

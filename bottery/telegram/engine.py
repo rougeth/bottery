@@ -3,6 +3,7 @@ import logging
 
 from aiohttp import web
 
+from bottery.conf import settings
 from bottery.message import Message
 from bottery.platforms import BaseEngine
 from bottery.telegram import TelegramAPI
@@ -96,7 +97,7 @@ class TelegramEngine(BaseEngine):
         asyncio.ensure_future(self.polling(last_update))
 
     async def configure_webhook(self):
-        hostname = getattr(self.settings, 'HOSTNAME')
+        hostname = getattr(settings, 'HOSTNAME')
         if not hostname:
             raise Exception('Missing HOSTNAME setting')
 
