@@ -73,7 +73,7 @@ def test_prepare_response_with_response_obj():
     assert response == expected_response
 
 
-@mock.patch('bottery.platform.logger.error')
+@mock.patch('bottery.platforms.logger.error')
 def test_prepare_response_none(mocked_error):
     """
     If response is not a str or a Response, it should returns None
