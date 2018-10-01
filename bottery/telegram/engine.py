@@ -87,12 +87,14 @@ class TelegramEngine(BaseEngine):
 
         # If polling request returned at least one update, use its ID
         # to define the offset.
-        if len(updates.get('result', [])):
+        result = updates.get('result', [])
+        if len(result):
             last_update = updates['result'][-1]['update_id']
 
         # Handle each new message, send its responses and then request
         # updates again.
-        tasks = [self.message_handler(msg) for msg in updates['result']]
+
+        tasks = [self.message_handler(msg) for msg in result]
         await asyncio.gather(*tasks)
         asyncio.ensure_future(self.polling(last_update))
 
