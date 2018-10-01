@@ -12,6 +12,7 @@ _Changes to be released_
 #### Bug fixes
 
 - Stop responding with `null` when a view doesn't return anything ([#154](https://github.com/rougeth/bottery/issues/154))
+- Fixed `RuntimeWarning` while trying to stop the bot ([#175](https://github.com/rougeth/bottery/issues/175))
 
 #### Docs
 
