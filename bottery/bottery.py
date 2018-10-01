@@ -104,5 +104,5 @@ class Bottery:
         self.loop.run_forever()
 
     def stop(self):
-        self.session.close()
+        self.loop.run_until_complete(self.session.close())
         self.loop.close()
