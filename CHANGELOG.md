@@ -8,6 +8,7 @@ _Changes to be released_
 - Move Telegram and Messenger modules to outside `platform` module. Also rename `platform` module to `platforms` (due to Python builtin `platform` module) ([#161](https://github.com/rougeth/bottery/issues/165))
 - Create option to change msg handlers module ([#172](https://github.com/rougeth/bottery/issues/172))
 - Remove unused `settings_module` option from Bottery ([#173](https://github.com/rougeth/bottery/issues/173))
+- Added Python 3.7 to `tox.ini` ([#169](https://github.com/rougeth/bottery/issues/169))
 
 #### Bug fixes
 
