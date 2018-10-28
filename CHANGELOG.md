@@ -9,6 +9,7 @@ _Changes to be released_
 - Create option to change msg handlers module ([#172](https://github.com/rougeth/bottery/issues/172))
 - Remove unused `settings_module` option from Bottery ([#173](https://github.com/rougeth/bottery/issues/173))
 - Added Python 3.7 to `tox.ini` ([#169](https://github.com/rougeth/bottery/issues/169))
+- Use raw string in regex tests and docs ([#183](https://github.com/rougeth/issues/183))
 
 #### Bug fixes
 

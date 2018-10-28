@@ -78,7 +78,7 @@ The *regex* handler allows you to process a message that matches to a regex patt
         return 'You sent only numbers!'
 
     msghandlers = [
-        handlers.regex('\d+', numbers),
+        handlers.regex(r'\d+', numbers),
     ]
 
 
