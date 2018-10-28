@@ -111,19 +111,19 @@ def test_default_handler_check(message):
 
 def test_regex_handler_check(message):
     message.text = '20 pings'
-    handler = handlers.RegexHandler(pattern='\d+')
+    handler = handlers.RegexHandler(pattern=r'\d+')
     assert handler.check(message)
 
 
 def test_regex_handler_check_negative_match(message):
     message.text = 'pings'
-    handler = handlers.RegexHandler(pattern='\d+')
+    handler = handlers.RegexHandler(pattern=r'\d+')
     assert not handler.check(message)
 
 
 @mock.patch('re.compile')
 def test_regex_handler_double_match(mocked_compile, message):
-    handler = handlers.RegexHandler(pattern='\d+')
+    handler = handlers.RegexHandler(pattern=r'\d+')
     message.text = 'pings'
 
     handler.match(message)
