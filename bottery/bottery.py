@@ -15,9 +15,6 @@ class Bottery:
     _session = None
     _server = None
 
-    # This is a feature trial, do NOT rely your application on it
-    active_conversations = {}
-
     def __init__(self):
         self.tasks = []
 
@@ -49,7 +46,6 @@ class Bottery:
             raise Exception('No platforms configured')
 
         global_options = {
-            'active_conversations': self.active_conversations,
             'registered_handlers': self.import_msghandlers(),
             'server': self.server,
             'loop': self.loop,
@@ -94,11 +90,6 @@ class Bottery:
 
         if self._server is not None:
             self.configure_server(port=server_port)
-
-        # if not self.tasks:
-        #     click.secho('No tasks found.', fg='red')
-        #     self.stop()
-        #     sys.exit(1)
 
         click.echo('Quit the bot with CONTROL-C')
         self.loop.run_forever()

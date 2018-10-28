@@ -86,7 +86,7 @@ class TelegramEngine(BaseEngine):
         updates = await self.api.get_updates(**payload)
 
         # If polling request returned at least one update, use its ID
-        # to define the offset.
+        # to define the offset parameter.
         if len(updates.get('result', [])):
             last_update = updates['result'][-1]['update_id']
 
@@ -154,21 +154,6 @@ class TelegramEngine(BaseEngine):
             return message.user.id
 
         return message.chat.id
-
-    def activate_conversation(self, response):
-        handler = response.source._response_handler
-        if handler:
-            self.active_conversations[response.source.user.id] = handler
-
-    def check_active_conversation(self, message):
-        user_id = message.user.id
-
-        view = self.active_conversations.get(user_id)
-        if not view:
-            return False
-
-        del self.active_conversations[user_id]
-        return view
 
     async def send_response(self, response):
         chat_id = self.get_chat_id(response.source)
