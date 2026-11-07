@@ -1,15 +1,53 @@
-build: false  # Not C# project
-environment:
-  matrix:
-  - TOXENV: "py35"
-  - TOXENV: "py36"
-  - TOXENV: "py37"
-  - TOXENV: "check"
-  - TOXENV: "docs"
+name: CI
 
-install:
-  - C:\Python36\python -m pip install --upgrade tox pip
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
-test_script:
-  - C:\Python36\python -m tox
+jobs:
+  test:
+    name: ${{ matrix.toxenv }} (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.10", "3.11", "3.12"]
+        include:
+          # Mapeia dinamicamente a versão do Python para a variável TOXENV
+          - python-version: "3.10"
+            toxenv: "py310"
+          - python-version: "3.11"
+            toxenv: "py311"
+          - python-version: "3.12"
+            toxenv: "py312"
+          
+          # Tarefas específicas executadas apenas no Linux para economizar minutos de runner
+          - os: ubuntu-latest
+            python-version: "3.11"
+            toxenv: "check"
+          - os: ubuntu-latest
+            python-version: "3.11"
+            toxenv: "docs"
 
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar o Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Instalar Tox
+        run: |
+          python -m pip install --upgrade pip
+          pip install tox
+
+      - name: Executar Tox
+        env:
+          TOXENV: ${{ matrix.toxenv }}
+        run: tox
